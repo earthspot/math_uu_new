@@ -97,7 +97,7 @@ z=. ,x		NB. the object string
 n=. SP,y	NB. unit: y in numerator
 d=. SL,y	NB. unit: y in denominator
 whilst. -. w-:z do.
-  z=. (w=.z) rplc (n,d);MT ; (d,n);MT
+  z=. (w=.z) rplc (n,d);'' ; (d,n);''
 end.
 )
 
