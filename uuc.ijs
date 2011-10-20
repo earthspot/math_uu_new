@@ -32,6 +32,7 @@ UUC=: cmx 0 : 0
 0.01 /	[%]	Percentage
 1 *	[!]	YES-NO
 1 /s	[Hz]	Frequency; hertz
+1 Hz	[midi]	"midi" number
 1 Hz	[note]	Musical note
 1 kg m/s/s	[N]	Force; newtons
 1 N/m/m	[Pa]	Pressure; pascals
@@ -47,6 +48,7 @@ UUC=: cmx 0 : 0
 1 Wb/A	[H]	Inductance; Henrys
 1 cd m s	[lm]	Luminous flux; lumens
 1 lm/m/m	[lx]	Illumination; lux
+1e_6 m	[mu]	micron; micrometre
 1e_10 m	[Ang]	Angstrom-unit
 1e3 kg	[t]	tonne; metric
 1e4 m^2	[ha]	hectares

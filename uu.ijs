@@ -5,21 +5,25 @@ require 'strings dates'		NB. for: rplc, timestamp
 NB. ========== NOUNS ==========
 
 INVALID=: _.j_.
-NOTE=: <;._1 ' C C# D D# E F F# G G# A A# B C'
+NB. NOTE=: <;._1 ' C C# D D# E F F# G G# A A# B C'
 NOTFOUND=: _1
-NUN=: '??'
+NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 SL=: '/'
 SP=: ' '
 UNDEFINED=: _.	NB. should propagate in a formula
 mks=: ;:'m kg s A K cd mol rad eur'  NB. primitive SI-units
-SIG=: 3
-UNICODE=: 1
-MAXLOOP=: 30
-SAVEPATH=: '~user/tabula'
+SIG_z_=: 3		NB. used by: scino_z_ and format_sig
+SCI_z_=: 1e5	NB. used by: scino_z_
+UNICODE=: 1	NB. Used chiefly by: ucode
+MAXLOOP=: 30	NB. limits: convert
+SAVEPATH=: '~user/tabula'	NB. for lobrow use only
 UCASE=: 0	NB. =:1 for case-insensitive ssmx
 sess=: empty
 sess_umake=: empty
-CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. dummy short table
+	NB. currency exchange-rate tables, used by: quoted
+	NB. quoted currencies are expressed in terms of the Euro.
+	NB. if net is accessible, CUTAB to be updated from Eurobank figures
+CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0				NB. pre-start value
 
 
@@ -64,8 +68,6 @@ quoted=: 3 : 0
 	NB. =1 iff (y) is a quoted currency
 (<toupper y) e. {."1 CUTAB
 )
-
-
 
 NB. ========== ADVERBS ==========
 
@@ -340,18 +342,6 @@ else. debSL y
 end.
 )
 
-degreeformat=: 3 : 0
-	NB. output y as: '360deg 0amin 30asec'
-	NB. ucode -converts this to the usual symbols
-if. y-:'' do. y=. undeg 360 0 30 end.	NB. TEST <<<<<
-neg=. (y<0)#'-'
-NB. suf=. '° ' ; ''' ' ; '"'
-suf=. 'deg ' ; 'amin ' ; 'asec'
-z=._ 60 60 #: 3600*|y
-z=. ": each <. z
-neg , ; z ,each suf
-)
-
 eval=: 3 : 0
 	NB. used to evaluate numeric exprns in UUC
 y=. '/%'charsub ;y
@@ -368,37 +358,53 @@ format=: 3 : 0
 if. undefined y do. 'UNDEFINED' return.
 elseif. invalid y do. 'INVALID' return.
 end.
-y=. x adj y	NB. adjust y-value if needed by x
 select. ,x
 	NB. INSERT FURTHER fcase.s HERE for unicoded suffix
- case. 'asec'	do. z=. '"' upost sigformat y
- case. 'amin'	do. z=. '''' upost sigformat y
+ case. 'asec'	do. z=. '"' upost format_sig y
+ case. 'amin'	do. z=. '''' upost format_sig y
 fcase. 'Fahrenheit'	do.
 fcase. 'deg.F'	do.
 fcase. 'Celsius'	do.
- case. 'deg.C'	do. z=. 'deg' upost sigformat y
- case. 'deg'	do. z=. degreeformat y	NB. (deg amin asec)
+ case. 'deg.C'	do. z=. 'deg' upost format_sci x adj y
+ case. 'deg'	do. z=. format_deg y	NB. (deg amin asec)
  case. 'usd'	do. z=. '$',curfig y
 fcase. 'gbp'	do.
  case. 'eur'	do. z=. x upref curfig y  NB. 2 sig figures
  case. ,'!'	do. z=. >(y=0){'YES';'NO'
  case. 'midi'	do. z=.": rnd midino y	NB. MIDI-number
- case. 'note'	do. z=. note midino y	NB. musical note
+ case. 'note'	do. z=. note y	NB. musical note
 	NB. INSERT FURTHER fcase.s HERE for sci-notation
 fcase. ,'c'	do.	NB. lightspeed
 fcase. 'eV'	do.	NB. electron-volt
 fcase. 'Hz'	do.	NB. frequency: Hertz
- case. 'rad'	do. z=. sciformat y
+ case. 'rad'	do. z=. format_sci y
 	NB. INSERT FURTHER fcase.s HERE for SIG controlled
 fcase. ,'/'	do.	NB. dimensionless
- case. ,'*'	do. z=. sigformat y
+ case. ,'*'	do. z=. format_sig y
 	NB. ALL ELSE...
- case.		do. z=. sigformat y
+ case.		do. z=. format_general y
 end.
 ucode z
 )
 
-generalformat=: toupper@hy@":
+format_deg=: 3 : 0
+	NB. output y as: '360deg 0amin 30asec'
+	NB. ucode -converts this to the usual symbols
+if. y-:'' do. y=. undeg 360 0 30 end.	NB. TEST <<<<<
+neg=. (y<0)#'-'
+NB. suf=. '° ' ; ''' ' ; '"'
+suf=. 'deg ' ; 'amin ' ; 'asec'
+z=._ 60 60 #: 3600*|y
+z=. ": each <. z
+neg , ; z ,each suf
+)
+
+NB. format_general=: toupper@hy@":
+format_general=: format_sci
+format_sci=: toupper@hy@scino
+NB. format_sig=: 3 : 'hy (j. SIG)":y'
+format_sig=: format_sci
+
 hy=: '_-' charsub ]
 isNaN=: 128!:5
 
@@ -418,27 +424,42 @@ z=. }: ; (>y) ,. '|'
 brack z -. SP
 )
 
-midino=: 3 : '69 + 12* 2 ^. y % 440'
+midino=: 69 + 12 * 2 ^. 440 %~ ]	NB. "midi number" of freq: y (Hz)
 
 note=: 3 : 0
-	NB. musical note nearest to MIDI no: y
-,>NOTE {~ rnd 12 | y
-NB. smoutput note midino 440	NB. A
-NB. smoutput note midino 194.18	NB. G (the earth-rotation freq)
+	NB. nearest musical note of freq: y (Hz)
+NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
+,>NOTE {~ rnd 12 | midino y
+)
+
+0 : 0
+note 440	NB. A (concert-pitch is 440 Hz)
+note 194.18	NB. G (earth-rotation musical note)
 )
 
 np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
-sciformat=: toupper@hy@":
 set_ucase=: 3 : 'UCASE=: y'
 set_unicode=: 3 : 'UNICODE=: y'
 
-setsig=: 3 : 0
-	NB. set SIG (decimal places for: sigformat)
-SIG=: ". ": y
+setsci=: 3 : 0
+	NB. set SCI (significant figures for: format)
+SCI_z_=: ". ": y
 )
 
-sigformat=: 3 : 'hy (0 j. SIG)":y'
+setsig=: 3 : 0
+	NB. set SIG (decimal places for: format)
+SIG_z_=: ". ": y
+)
+
+scino=: 3 : 0
+	NB. Scientific notation for number: y
+NB. if. 0>4!:0 <'SIG_z_' do. SIG_z_=: 3 end.
+NB. if. 0>4!:0 <'SCI_z_' do. SCI_z_=: 1e5 end.
+if. y=0 do. ,'0' return. end.
+fmt=. j. SIG * 1 _1 {~ (SCI <: |y) +. ((10^-SIG) > |y)
+fmt ": y
+)
 
 sp1=: 3 : 0
 	NB. ensure ONE leading SP iff there is no SL
@@ -617,30 +638,53 @@ uu=: 3 : 0
 :
 	NB. x is target units: ux
 	NB. y is value;units
-select. datatype y
+select. dy=. datatype y
 case. 'literal' do.
   value=. ". ' 'taketo y
-  units=. ' 'takeafter y
+  units=. 0 ucode ' 'takeafter y
 case. 'boxed' do.
   'value units'=. y
 case. do.
   '>>> cannot handle:' ; y
   return.
 end. 
-ux=. x
+ux=. 0 ucode x		NB. de-unicoded x
 if. 0~:#x do.
-  if. -. x compatible units do.
+  if. -. units compatible ux do.
     0 ; nb '>>> incompatible units:' ; x ; units
     return.
   end.
 end.
 'uy c fy'=. convert units
-'ux c fx'=. convert x
+fx=. >{: convert ux
 z=. (value adj~ '_',units) * fy
-z=. (z adj~ x) % fx
-if. 0=#x do. z ; uy
-else. z ; x
+z=. (z adj~ ux) % fx
+if. 0=#x do. x=. ux=. uy end.
+if. dy-:'literal' do.
+  z=. ucode (ux format z),SP,x
+else.
+  z=. z ; x
 end.
+)
+
+0 : 0
+   uu '100 deg.C'
+   'deg.F' uu '100 deg.C'
+   'deg.C' uu '100 deg.C'
+   'deg.C' uu '100 K'
+   'Ω' uu '6.000 kg m²/A²/s³'
+   'Ohm' uu '6.000 kg m²/A²/s³'
+   'Ω' uu '6.000 kg m^2/A^2/s^3'
+   'Ohm' uu '6.000 kg m^2/A^2/s^3'
+   uu '6.000 kg m²/A²/s³'
+   uu '6.000 kg m^2/A^2/s^3'
+   uu '1 d'
+   uu '1 /d'
+   uu 1 ; '/d'
+   'Hz' uu 1 ; '/d'
+   'Hz' uu '1 /d'
+   'note' uu '1 /d'
+   'note' uu '440 Hz'	NB. A440 pitch standard
 )
 
 uurowsc=: 3 : '(UUC ssmx y){UUC'

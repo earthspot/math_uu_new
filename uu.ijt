@@ -2,9 +2,15 @@ LABTITLE=: 'Scientific Units'
 
 NB. =========================================================
 Lab Section INTRO
-UU is an addon to convert quantities between different units of measurement. It is based on the International System of Units (Le Système international d'unités) or "SI": http://en.wikipedia.org/wiki/SI_units
+UU is an addon to convert quantities between different 
+units of measurement. 
+It is based on the International System of Units 
+(Le Système International d'Unités) or "SI".
+   http://en.wikipedia.org/wiki/SI_units
 
-But it knows about other units too. (You can even define your own.)
+But it knows some other units too. 
+You can even define your own, by editing "UU-constants":
+   open '~addons/math/uu/uuc.ijs'
 )
 
 require 'math/uu'
@@ -15,9 +21,12 @@ uu '1 min'
 
 NB. =========================================================
 Lab Section CONVERT
-Monadic uu will convert to the fundamental units of SI: metre [m], kilogram [kg], second [s], Ampere [A], Kelvin [K], candela [cd], mole [mol].
+Monadic uu will convert to the fundamental units of SI:
+   metre [m], kilogram [kg], second [s], Ampere [A],
+   Kelvin [K], candela [cd], mole [mol].
 
-But if you specify a left argument of target units, uu will convert to those units:
+But if you specify target units as the left argument,
+uu will convert to those units instead...
 )
 
 'ft' uu '1 yd'
@@ -38,21 +47,22 @@ The Joule [J] is the SI unit of energy.
 
 How do you find out which units are compatible with [J]?
 
-Energy units all share the same expansion as basic units: [kg m^2/s^2]
+Energy units all share the same expansion as basic units:
+   [kg m^2/s^2], or [kg m²/s²]
 
-You could dream up units to test, one-by-one.
+You could dream up various units to test one-by-one...
 )
 
 uu '1 J'
 uu '1 erg'
 uu '1 eV'
 uu '1 cal'
-uu '1 ton.TNT'
-uu '1 kW'	NB. No -- a kilowatt is a unit of power not energy
+uu '1 Mton.TNT'
+uu '1 kW'  NB. No: kilowatt is a unit of power, not energy
 
 NB. =========================================================
 Lab Section COMPATIBLE3
-But locale _uu_ has a special verb to help you: compatible_uu_
+But locale _uu_ has a verb to help you: compatible_uu_
 )
 
 'cal' compatible_uu_ 'J'
@@ -62,33 +72,36 @@ But locale _uu_ has a special verb to help you: compatible_uu_
 
 NB. =========================================================
 Lab Section COMPATLIST
-You can even ask _uu_ to tell you all the units it knows about which are compatible with [J].
-
-There may be some unexpected ones...
+You can even ask _uu_ to tell you all the units it knows
+which are compatible with [J]...
 )
 
-> compatlist_uu_ 'J'
+compatlist_uu_ 'J'
 
 NB. =========================================================
 Lab Section COMPATLIST
-But if _uu_ doesn't know the units you tell it (or you've misspelt them) then it will reply with 0...
+But if _uu_ doesn't know the units you give it 
+(or you've misspelt them) then it will reply with 0...
 )
 
 'J' compatible_uu_ 'oodles'
 
-uu '1 oodles'	NB. NOTE the convention for: unknown units
+   NB. NOTE the convention for: unknown units...
+uu '1 oodles'
 
 NB. =========================================================
 Lab Section ARITHMETIC
-Giving uu a literal right-argument is just a convenience for use in "calculator mode".
+Giving uu a literal right-argument is just a convenience 
+for use in "calculator mode".
 
-When you use uu in a program, you will give it a right argument of the form:
+When you use uu in a program, you will call it with
+a right argument of the form:
 
 	number ; units
 
---where: (units) -is a character or literal vector.
+--where: (units) -is a single char, or a string.
 
-This, you'll realise, is the same format as its response.
+uu responds in the same format...
 )
 
 uu 1 ; 'r.p.m'
@@ -97,23 +110,40 @@ uu 1 ; 'r.p.m'
 
 NB. =========================================================
 Lab Section SLASH
-The way _uu_ spells-out units is not quite "SI" as we know it.
+The way _uu_ treats units is not quite "SI" as we know it.
 
-For a start, it uses '/' as in: [km/h] and [m/s/s] (= [m/s^2]).
-Not the [km s⁻¹] and [m s⁻²] of strict SI.
+For a start, it uses '/' as in: [km/h], [m/s/s] (= [m/s^2]).
+Not [km s⁻¹], [m s⁻²] as with strict SI units.
 
-This is a pragmatic decision to accord with units in general, not just SI units. A future release of uu may allow you to eliminate '/' in favour of negative superscripts, as strict SI demands.
+This is a pragmatic decision to help with units in general,
+not just SI.
 
-But we cannot discard '/' entirely: it is uu's convention for DIMENSIONLESS UNITS. (It stops the units string vanishing with a ratio.)
-
-Dimensionless units are mostly ratios (including sin, cos, etc, and specific gravities).
+A future release may offer an option to replace '/'
+in strictly SI-units by negative superscripts.
 )
 
-uu '1 km/mi'	NB. yields conversion factor: kilometres --> miles
+NB. =========================================================
+Lab Section SLASH2
+But we cannot discard '/' entirely...
+
+'/' is the _uu_ convention for DIMENSIONLESS UNITS.
+
+This prevents the units string vanishing when you divide
+compatible units by each other.)
+
+Dimensionless units are mostly ratios:
+   sin, cos, specific gravities, %, etc.
+)
+
+uu '1 km/mi'		NB. conversion factor: km --> miles
+'%' uu '1 km/mi'	NB. ditto, as a percentage
 
 NB. =========================================================
-Lab Section SLASH
-To "divide" two generalized units strings, use: udiv_uu_ (don't just put a slash between them unless you know the denominator doesn't contain slash).
+Lab Section SLASH3
+To "divide" two arbitrary units strings, use: udiv_uu_
+
+(Don't just put '/' between them, unless you know
+the denominator doesn't contain slash).
 
 Then use: uu -to cancel-out...
 )
@@ -125,17 +155,25 @@ uu  1 ; u1 udiv_uu_ u2
 
 NB. =========================================================
 Lab Section SI_LOOK
-You can approximate the "SI look" by applying the verb: ucode_uu_ to a given string containing units...
+uu approximates the "SI-look" by substituting unicode chars.
+To suppress this behaviour, set: UNICODE_uu_=: 0
+When UNICODE_uu_=1, uu will accept unicode as input too.
 )
 
-ucode_uu_ > {: 'Ohm' uu '1 kg m^2/A^2/s^3'
-ucode_uu_ > {:       uu '1 kg m^2/A^2/s^3'
+'Ohm' uu '1 kg m^2/A^2/s^3'
+      uu '1 kg m^2/A^2/s^3'
+UNICODE_uu_=: 0
+'Ohm' uu '1 kg m^2/A^2/s^3'
+      uu '1 kg m^2/A^2/s^3'
+UNICODE_uu_=: 1
 
 NB. =========================================================
 Lab Section ZEPTO
 "SI" allows you to attach a scaling prefix to units.
 
-Most people know about kilo [k-], mega [M-], milli [m-] and micro [mu-] or [µ]. But there are several others. The full range is:
+Most people know about kilo [k-], mega [M-], milli [m-]
+and micro [mu-] or [µ]. But there are others. 
+The full range is:
 
  	deca- 	hecto- 	kilo- 	mega- 	giga-
  	da 	h 	k 	M 	G
@@ -154,28 +192,64 @@ Most people know about kilo [k-], mega [M-], milli [m-] and micro [mu-] or [µ].
  	10^−12 	10^−15 	10^−18 	10^−21 	10^−24
 )
 
-ucode_uu_ '100 mum'	NB. use 'mu' for "micro-" in input to uu
+uu '1 GW'	NB. one gigawatt
+uu '1e21 zg'	NB. one gram, SI-style
+uu '1 g'	NB. -for comparison.
+   NB. ...SI takes [kg] not [g] as the basic unit of mass.
+
+NB. =========================================================
+Lab Section MICRON
+The term "micron" and the symbol µ, representing the
+micrometre, were officially accepted between 1879 and 1967, 
+but officially revoked by the ISI in 1967.
+   http://en.wikipedia.org/wiki/Micron
+
+However _uu_ accepts [µ] by itself to mean "micron".
+
+WARNING: not every unicode variant of µ will work!
+
+Use either 'mu' or 'µ' for entering microns [µm]...
+)
+
+uu '100 mum'	NB. 100 microns
+uu '100 µm'
+uu '100 mu'
+uu '100 µ'
+'Ang' uu '1 µm'	NB. microns --> Ångstrom units
+'Å' uu '1 µ'
+'µ' uu '1 Å'
 
 NB. =========================================================
 Lab Section ZEPTO2
 uu accepts scaling prefixes on some non-SI units too.
 
-Why? Because it's too much trouble to forbid them.
+Why?
+
+Because it's too much trouble to forbid them.
 )
 
-uu '1 GW'	NB. one gigawatt
-uu '1e21 zg'	NB. one gram, SI-style
-uu '1 g'	NB. SI picks [kg] not [g] for its basic unit of mass
-'ton' uu '1 Yg'	NB. heavy stuff! (Imperial tons, by the way)
-'t' uu '1000 Zg'	NB. the same, in metric tons (tonnes)
-uu '1 zft'	NB. zepto-feet ...need very small shoes.
+uu '1 zft'	NB. zepto-feet -need very small shoes.
+   NB. Earth mass, in zetta-elephants...
+'Zelephant' uu '1 ea.mass'
+   NB. Earth mass, in yotta-elephants...
+SCI_uu_=: 10	NB. force exponential numerals above 10
+SIG_uu_=: 5	NB. decimal places to show
+'Yelephant' uu '1 ea.mass'
+   NB. Restore recommended settings...
+SCI_uu_=: 1e5 [ SIG_uu_=: 3
 
 NB. =========================================================
 Lab Section MISC
-Various notable conversions...
+Miscellaneous conversions...
 )
 
-'elephant' uu '2030 t'	NB. Space shuttle, in African elephants
-'grav' uu '1 moon.g'	NB. Moon gravity, in Earth-gravity units
-uu '212 Fahrenheit'	NB. Temperature conversion is experimental
-'Celsius' uu '212 Fahrenheit'
+   NB. yottagrams -in Imperial tons. Heavy stuff...
+'ton' uu '1 Yg'
+   NB. ditto, in metric tons (tonnes)...
+'t' uu '1000 Zg'
+   NB. Weight of the Space shuttle -in African elephants...
+'elephant' uu '2030 t'
+   NB. Mass of the moon in terms of earth...
+'ea.mass' uu '1 moon.mass'
+   NB. Moon gravity, in units of earth-gravity...
+'grav' uu '1 moon.g'
