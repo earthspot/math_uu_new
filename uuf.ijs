@@ -25,13 +25,8 @@ cocurrent 'uu'
 
 UUF=: cmx noun define
 a/b^2 : a(kg),b(m)	[/]	body mass index
-abs a			[/]	absolute value
-int a			[/]	integer part
-sqr a			[/]	squared
-sqrt a			[/]	square root
-cube a			[/]	cubed
-((-b)+sqrt((b^2)-4*a*c))%2*a	[/]	quadratic root[+]
-((-b)-sqrt((b^2)-4*a*c))%2*a	[/]	quadratic root[-]
+((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[+]
+((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[-]
 (v^2)/r : v(m/s),r(m)		[m/s^2]	centripetal acceleration
 (v-u)/t : v(m/s),u(m/s),t(s)	[m/s^2]	acceleration to final speed
 a*3.281 ; a(m)		[ft]	convert m to ft <<<<< TEST ONLY

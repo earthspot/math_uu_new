@@ -5,6 +5,7 @@ CAPTION=: 'Scientific units conversion package'
 VERSION=: '1.0.2'
 
 FILES=: 0 : 0
+manifest.ijs
 uu.ijs
 uuc.ijs
 uuf.ijs

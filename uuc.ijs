@@ -73,7 +73,9 @@ UUC=: cmx 0 : 0
 1 cyc/min	[r.p.m]	rev per min
 1 cyc/h	[r.p.h]	rev per hour
 1.5 eur	[gbp]	UK pounds
+0.01 gbp	[p]	UK penny
 0.9 eur	[usd]	US dollars
+0.01 usd	[cent]	US cent
 1.60705 gbp/m^3	[cost.ws]	cost of water+sewerage - Yorkshire Water
 0.1659 gbp/kWh	[cost.ned]	cost of npower electricity - day units
 0.0331 gbp/kWh	[cost.nen]	cost of npower electricity - night units
