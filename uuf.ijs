@@ -57,7 +57,7 @@ a*a*1.5*RT3 : a(m)	[m^2]	area of regular hexagon
 400.0*(p^0.67) ; p(Mton.TNT)	[m^2]	area of destruction; CHECK THIS
 m*(v^2)/2 : m(kg),v(m/s)	[J]	kinetic energy
 m*f*h : m(kg),f(m/s^2),h(m)	[J]	potential energy
-m*g*h : m(kg),g(ea.g),h(m)	[J]	potential energy; earth surface
+9.812865328*m*h : m(kg),h(m)	[J]	potential energy; earth surface
 PI2*r : r(m)		[m]	circumference of circle
 73.3*m^0.75 ; m(kg)	[kcal/d]	basal metabolic rate
 0.01*m^0.7 ; m(kg)	[kg]	mammalian brain weight; not ape
