@@ -1,4 +1,5 @@
-NB. UU: scientific units conversion package
+NB. Tue 22 Nov 2011 09:21:22 UU: scientific units conversion package
+
 coclass 'uu'
 require 'strings dates'		NB. for: rplc, timestamp
 
@@ -16,7 +17,6 @@ SIG_z_=: 3		NB. used by: scino_z_ and format_sig
 SCI_z_=: 1e5	NB. used by: scino_z_
 UNICODE=: 1	NB. Used chiefly by: ucode
 MAXLOOP=: 30	NB. limits: convert
-SAVEPATH=: '~user/tabula'	NB. for lobrow use only
 UCASE=: 0	NB. =:1 for case-insensitive ssmx
 sess=: empty
 sess_umake=: empty
@@ -472,8 +472,14 @@ ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
 
 start=: 3 : 0
-load '~addons/math/uu/uuc.ijs'
-load '~addons/math/uu/uuf.ijs'
+	NB. start the addon: UU
+	NB. Not just called on loading,
+	NB. but can be called by apps using UU whenever
+	NB. the constants library (UUC) has been changed.
+	NB. (Not needed when the functions library (UUF) changed)
+load :: 0: TPATH_UU,'manifest.ijs'	NB. sets VERSION
+load TPATH_UUC
+load TPATH_UUF
 umake''
 )
 
@@ -668,6 +674,7 @@ end.
 )
 
 0 : 0
+	NB. Sample statements to test verb: uu
    uu '100 deg.C'
    'deg.F' uu '100 deg.C'
    'deg.C' uu '100 deg.C'
@@ -691,5 +698,24 @@ uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
 
-uu_z_=: uu_uu_
-start ''
+NB. ========== z-LOCALE ==========
+
+cocurrent 'z'
+
+TPATH_UU=: 3 : 0 ''
+	NB. returns directory containing this script
+	NB. also assigns global: WHEREAMI -the folder in question
+ws=. [: 'Not from script'"_`({ 4!:3@(0&$))@.(0&<:) [: 4!:4 [: < >
+WHEREAMI=: '<UNSET>'	NB. needed for ws to work with
+z=. >ws 'WHEREAMI'
+WHEREAMI=: (>: z i: PATHSEP_j_) {.z
+)
+
+TPATH_UUC=: TPATH_UU , 'uuc.ijs'
+TPATH_UUF=: TPATH_UU , 'uuf.ijs'
+
+uu=: uu_uu_
+uuc=: 3 : 'open TPATH_UUC'
+uuf=: 3 : 'open TPATH_UUF'
+
+start_uu_ ''

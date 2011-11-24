@@ -4,30 +4,36 @@ NB.	<value> can be calculated (but use '/' for division, not '%').
 NB.	<unitv> are the (elsewhere defined) units attached to <value>.
 NB.	<units> are the nominal units, which are DEFINED by this line.
 NB.	<description> is what should appear in the ttable.
-NB.	-a final '!' in <description> means "persistent hold". >>>ALL REMOVED
+NB.	-a final '!' in <description> means "persistent hold",
+NB.	--but '!' should not appear below:
+NB.	--it is added by TABULA to appended lines.
 NB.
 NB.	mks units (and SI-units) use 'kg' not 'g' as fundamental unit.
-NB.	This is built-into uu.ijs in verb: umake, which assigns: mks
-NB.	-a list of the most primitive SI units.
-NB.	This means that scaleunits_cal_ must handle [g], [kg] specially.
-NB.	Lines 0-10 of UUC define these basic units in terms of themselves.
-NB.	They are not "real" definitions: their vfact will always be 1. 
+NB.	This is built-into uu.ijs in verb: umake, which creates noun: mks
+NB.	Noun: mks is a list of the primitive SI units (=fundamental units)
+NB.	WARNING: The fundamental unit of mass in SI units is not [g] but [kg].
+NB.	This means that scaleunits_cal_ gives [g] and [kg] special treatment.
+NB.	The first 11 lines of UUC define fundamental units in terms of themselves.
+NB.	They are not "real" definitions: their conversion factor will always be 1. 
 NB.	They serve here as appendable lines for the sake of completeness.
 
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 m	[m]	metre
-1 kg	[kg]	kilogram
-1 s	[s]	second
-1 A	[A]	Current; Amperes
-1 K	[K]	Temperature; Kelvin
-1 cd	[cd]	Intensity; candelas
-1 mol	[mol]	Amount of matter; moles
-1 rad	[rad]	Angle; radians
-1 eur	[eur]	Currency; Euros
-1 /	[/]	Dimensionless
-1 *	[*]	Indifferent
+1 m	[m]	fundamental unit - metre (distance)
+1 kg	[kg]	fundamental unit - kilogramme (mass)
+1 s	[s]	fundamental unit - second (time)
+1 A	[A]	fundamental unit - Ampere (electric current)
+1 K	[K]	fundamental unit - Kelvin (temperature)
+1 cd	[cd]	fundamental unit - candela (light intensity)
+1 mol	[mol]	fundamental unit - mole (amount of matter)
+1 rad	[rad]	fundamental unit - radian (angle)
+1 eur	[eur]	fundamental unit - euro (currency)
+1 /	[/]	fundamental unit - (dimensionless)
+1 *	[*]	fundamental unit - (matches any units)
+1000 m	[km]	kilometre  (based on m)
+0.01 m	[cm]	centimetre (based on m)
+0.001 m	[mm]	millimetre (based on m)
 0.001 kg	[g]	gram (based on kg)
 0.01 /	[%]	Percentage
 1 *	[!]	YES-NO
@@ -280,7 +286,7 @@ UUC=: cmx 0 : 0
 100 cP	[P]	dynamic viscosity; poise
 1 cm^2/s	[cSt]	kinematic viscosity; cstoke
 100 cSt	[St]	kinematic viscosity; stoke
-331 m/s	[snd.air]	speed of sound in dry air!
+331 m/s	[snd.air]	speed of sound in dry air
 1500 m/s	[snd.sea]	speed of sound in ocean/approx
 11.2 km/s	[ea.esc]	earth escape velocity
 350 ppm	[p.S]	est sulphur content of gasoline

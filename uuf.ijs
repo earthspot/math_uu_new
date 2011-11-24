@@ -94,8 +94,9 @@ M*R*R*2/5 : M(kg),R(m)	[kg m^2]	1st moment; sphere; solid
 M*R*R/4 : M(kg),R(m)	[kg m^2]	1st moment; disk
 G*M/d^2 : G(G),M(ea.mass),d(eq.r)	[m/s^2]	gravitational attraction; earth; estimate
 G*M/d^2 : G(G),M(kg),d(m)		[m/s^2]	gravitational attraction;unit
-PI2*sqrt (a^3)/(G*M) : G(G),M(kg),a(m)	[s]	orbital period; small body; a=semimajor axis
-PI2*sqrt (a^3)/(G*(M+N)) : G(G),M(kg),N(kg),a(m)	[s]	orbital period; two bodies; a=semimajor axis
+PI2*sqrt(a/g) : g(grav),a(m)  [s]	earth orbital period
+PI2*sqrt((a^3)/(G*M)) : G(G),M(kg),a(m)	[s]	orbital period; small body; a=semimajor axis
+PI2*sqrt((a^3)/(G*(M+N))) : G(G),M(kg),N(kg),a(m)	[s]	orbital period; two bodies; a=semimajor axis
 -(G*M)/(2*a) : G(G),M(kg),a(m)		[MJ/kg]	specific orbital energy (vis-viva); elliptical orbit
 x/t : x(m),t(s)				[m/s]	average speed
 u+(f*t) : u(m/s),t(s),f(m/s^2)		[m/s]	final speed
