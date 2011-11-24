@@ -31,9 +31,6 @@ UUC=: cmx 0 : 0
 1 eur	[eur]	fundamental unit - euro (currency)
 1 /	[/]	fundamental unit - (dimensionless)
 1 *	[*]	fundamental unit - (matches any units)
-1000 m	[km]	kilometre  (based on m)
-0.01 m	[cm]	centimetre (based on m)
-0.001 m	[mm]	millimetre (based on m)
 0.001 kg	[g]	gram (based on kg)
 0.01 /	[%]	Percentage
 1 *	[!]	YES-NO
