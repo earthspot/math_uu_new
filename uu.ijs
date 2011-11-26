@@ -705,10 +705,12 @@ cocurrent 'z'
 TPATH_UU=: 3 : 0 ''
 	NB. returns directory containing this script
 	NB. also assigns global: WHEREAMI -the folder in question
+	NB. plus SEP -the platform-dependent path-separator.
 ws=. [: 'Not from script'"_`({ 4!:3@(0&$))@.(0&<:) [: 4!:4 [: < >
 WHEREAMI=: '<UNSET>'	NB. needed for ws to work with
 z=. >ws 'WHEREAMI'
-WHEREAMI=: (>: z i: PATHSEP_j_) {.z
+SEP=: '/\' {~ '\' e. z
+WHEREAMI=: (>: z i: SEP) {.z
 )
 
 TPATH_UUC=: TPATH_UU , 'uuc.ijs'
