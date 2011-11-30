@@ -16,6 +16,13 @@ NB.	This means that scaleunits_cal_ gives [g] and [kg] special treatment.
 NB.	The first 11 lines of UUC define fundamental units in terms of themselves.
 NB.	They are not "real" definitions: their conversion factor will always be 1. 
 NB.	They serve here as appendable lines for the sake of completeness.
+NB.
+NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
+NB.	--e.g '1 C.dgr' is equivalent to a rise in temperature of 1 K
+NB.	--but '1 degC' is equivalent to a temperature (absol) of 274.16 K
+NB.	Temperatures in [degC] [degF] [Celsius] [Centigrade] and [Fahrenheit]
+NB.	have their converted values decremented at display-time, to deduct the
+NB.	absolute temperature of their zero-points.
 
 cocurrent 'uu'
 
@@ -103,7 +110,7 @@ UUC=: cmx 0 : 0
 1.356 J	[ft.lbf]	foot-pound
 4.184 J	[cal]	gram-calorie
 1 kcal	[Cal]	Calorie; diet
-4.1855 J	[cal.15]	calories at 15deg.C
+4.1855 J	[cal.15]	calories at 15degC
 4.1868 J	[cal.IT]	calories I.T
 1.055e3 J	[Btu]	British thermal units
 1e5 Btu	[therm]	therms
@@ -127,14 +134,17 @@ UUC=: cmx 0 : 0
 1e_5 N	[dyn]	dyne
 0.138255 N	[pdl]	poundal
 4.44822 N	[lbf]	pound-force
-9.96402E3 N	[tonf]	ton-force
+9.96402e3 N	[tonf]	ton-force
 9.80665e_3 N	[gf]	gram-force
 373.16 K	[boil.w]	Water boils; Kelvin
 273.16 K	[frez.w]	Water freezes; Kelvin
-5/9 K	[deg.F]	temperature
+5/9 K	[F.dgr]	temperature range
+5/9 K	[degF]	temperature
 5/9 K	[Fahrenheit] temperature
-1 K	[deg.C]	temperature
+1 K	[C.dgr]	temperature range
+1 K	[degC]	temperature
 1 K	[Celsius]	temperature
+1 K	[Centigrade]	temperature
 1 kcal/kg/K [sht.w]	Specific heat of water
 0.0254 m	[in]	inch
 12 in	[ft]	feet
@@ -215,8 +225,8 @@ UUC=: cmx 0 : 0
 2 gal.Imp	[bucket]	bucketful
 0.159 m^3	[barrel.oil]	barrel; petroleum
 1181 l	[oil.t]		vol of tonne of petroleum
-2.241e_2 m^3/mol	[molv.0]	molar volume at 0 deg.C
-2.447e_2 m^3/mol	[molv.25]	molar volume at 25 deg.C
+2.241e_2 m^3/mol	[molv.0]	molar volume at 0 degC
+2.447e_2 m^3/mol	[molv.25]	molar volume at 25 degC
 6.022e23 /mol	[Avogadro]	Avogadro constant
 0.5 pt.USA		[cup.USA]	cup; USA
 1/16 cup.USA	[tbl.USA]	tablespoon; USA

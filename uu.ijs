@@ -29,6 +29,8 @@ CUTAB=: CUTAB0				NB. pre-start value
 
 NB. ========== PREREQS ==========
 
+all=: *./
+and=: *.
 any=: +./
 brack=:	1 |. '][' , ":	NB. layout tool for message string ->'[y]'
 cmx=: [: > <;._2	NB. expects trailing LF
@@ -79,12 +81,12 @@ adj=: 4 : 0
 	NB. adjust numeral y for units: x
 	NB. cases prefixed '_' are inverse adjustments used by: setvalue
 select. x
-case. 'deg.C'	do.	z=. y-273.16
-case.'_deg.C'	do.	z=. y+273.16
+case. 'degC'	do.	z=. y-273.16
+case.'_degC'	do.	z=. y+273.16
 case. 'Celsius'	do.	z=. y-273.16
 case.'_Celsius'	do.	z=. y+273.16
-case. 'deg.F'	do.	z=. y-459.688
-case.'_deg.F'	do.	z=. y+459.688
+case. 'degF'	do.	z=. y-459.688
+case.'_degF'	do.	z=. y+459.688
 case. 'Fahrenheit'	do.	z=. y-459.688
 case.'_Fahrenheit'	do.	z=. y+459.688
 case.		do.     z=. y	NB. default adjustment (none)
@@ -111,7 +113,7 @@ z=. ; |. each sort |. each utoks y
 	sess nb 'canon:' ; TAB ; 'z=' ; z
 	NB. Cancel-out/collect each unit from global boxed list: mks in turn...
 for_w. mks do. m=. ,>w		NB. m== next unit from list: mks
-  if. +./ m E. z do.		NB. only if m is present in z
+  if. any m E. z do.		NB. only if m is present in z
     z=. (z canc m) coll m
 	sess nb 'canon:' ; TAB ; (brack m) ; 'z=' ; z
   end.
@@ -150,6 +152,7 @@ y
 
 cnvj=: 3 : 0
 	NB. cut prefs/suffs from a cunit (eg: '/kg^3')
+if. (SL~:{.y) and ('-' e. y) do. y=. SL,dlb y-.'-' end.	NB. fix for: 0 deslash
 k=. p=. 1 [ z=. y
 if. j=.(SL={. sp1 z) do. z=. }.z end.	NB. bool:j remembers dropped prefix: SP|SL
 if. '^' e. z do.			NB. recognise a power...
@@ -246,10 +249,10 @@ z
 compatible=: 4 : 0
 	NB. =1 iff units x,y compatible
 	NB. '*' is compatible with everything...
-if. ('*'= {.>x) +. ('*'= {.>y) do. 1 return. end.
+if. ('*'= {.>x) or ('*'= {.>y) do. 1 return. end.
 ux=. compat cnvv >x [ uy=. compat cnvv >y
 	sess nb 'compatible:'; 'ux='; ux; 'uy='; uy
-if. (0<#uy) *. (uy-:ux) do. 1 return. end.
+if. (0<#uy) and (uy-:ux) do. 1 return. end.
 a=. {.convert >x [ b=. {.convert >y
 a-:b	NB. match their canonical units
 )
@@ -257,7 +260,6 @@ a-:b	NB. match their canonical units
 compatlist=: 3 : 0
 	NB. return extract of (units) compatible with units: y
 z=. ''
-y_uu_=: y
 	NB. if there's a compat-code (uy), get its mates
 	NB. else lookup its cfm in: unitx
 if. 0<#uy=. compat cnvv >y do.
@@ -266,7 +268,10 @@ else.
   cn=. {.convert y
   z=. (I. cn=unitx){units
 end.
-z=. ~. (<,y),z,{.convert y	NB. incl uy itself and its canon
+	NB. If [m] present include [mm] [cm] [km] too
+if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
+	NB. incl uy itself and its canon
+z=. ~. (<,y),z,{.convert y
 )
 
 convert=: 3 : 0
@@ -319,7 +324,7 @@ for_i. i.MAXLOOP do.
   if. t-:,'*' do. ('*' ; loop ; 1) return. end.	NB. '*' factor always 1
   'j k tt p'=. cnvj t		NB. separate: t -eg: '/ms^2' --> 1;0.001;'s';2
   'f ttt lk'=. cnvf tt		NB. lookup tt in UUC --> factor(f) ; new_tt(ttt) ; UUC_line#(lk)
-  if. (isNaN f)+.(lk=_1) do. (NUN ; loop ; _) return. end.	NB. SIGNALS FAILURE !!
+  if. (isNaN f) or (lk=_1) do. (NUN ; loop ; _) return. end.	NB. SIGNALS FAILURE !!
   subfac=. (f*k)^p
 	NB. accumulate subfac into fac, according to whether j specifies numerator/denominator
   fac=. fac * subfac^(np j)
@@ -342,9 +347,33 @@ else. debSL y
 end.
 )
 
+deslash=: 3 : 0
+1 deslash y
+:
+	NB. convert cunits with '/' into '^_n' form
+	NB. inverse transformation iff x=0
+NB.   y_uu_=: y=. 'Ang m kg^-1 sec^-2' [ x=. 0	NB. <<<< TEST 
+NB.   y_uu_=: y=. 'Ang m/kg/sec^2'	NB. <<<< TEST 
+if. UNICODE<2 do. y return. end.
+r=. ''	NB. accumulates modified cunits
+for_cu. utoks y do. cunit=. >cu
+  if. (x=0) or SL={.cunit do.	NB. inverse: do BOTH SP SL
+    'j k z p'=. cnvj cunit
+    if. x do.
+      cunit=. SP, (}. '^' taketo cunit),'^-',":p
+    else.
+      NB. smoutput cunit ; j ; k ; z ; p
+      cunit=. (j{SP,SL), (}. '^' taketo cunit) ,(p>1)# '^',":p
+    end.
+  end.
+  r=. r,cunit
+end.
+dlb r
+)
+
 eval=: 3 : 0
 	NB. used to evaluate numeric exprns in UUC
-y=. '/%'charsub ;y
+y=. '/%-_Ee'charsub ;y
 try. {.".y catch. INVALID end.
 )
 
@@ -363,9 +392,9 @@ select. ,x
  case. 'asec'	do. z=. '"' upost format_sig y
  case. 'amin'	do. z=. '''' upost format_sig y
 fcase. 'Fahrenheit'	do.
-fcase. 'deg.F'	do.
+fcase. 'degF'	do.
 fcase. 'Celsius'	do.
- case. 'deg.C'	do. z=. 'deg' upost format_sci x adj y
+ case. 'degC'	do. z=. 'deg' upost format_sci x adj y
  case. 'deg'	do. z=. format_deg y	NB. (deg amin asec)
  case. 'usd'	do. z=. '$',curfig y
 fcase. 'gbp'	do.
@@ -440,7 +469,6 @@ note 194.18	NB. G (earth-rotation musical note)
 np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
 set_ucase=: 3 : 'UCASE=: y'
-set_unicode=: 3 : 'UNICODE=: y'
 
 setsci=: 3 : 0
 	NB. set SCI (significant figures for: format)
@@ -457,7 +485,7 @@ scino=: 3 : 0
 NB. if. 0>4!:0 <'SIG_z_' do. SIG_z_=: 3 end.
 NB. if. 0>4!:0 <'SCI_z_' do. SCI_z_=: 1e5 end.
 if. y=0 do. ,'0' return. end.
-fmt=. j. SIG * 1 _1 {~ (SCI <: |y) +. ((10^-SIG) > |y)
+fmt=. j. SIG * 1 _1 {~ (SCI <: |y)  or  ((10^-SIG) > |y)
 fmt ": y
 )
 
@@ -517,21 +545,24 @@ ucode=: 3 : 0
 	NB. subst (x=1) symbol for PI etc and back again (x=0)
 1 ucode y	NB. forces (wchar) by default (x=1)
 :
-if. -.UNICODE do. y return. end.
-if. x do. 7 u: y rplc ,cspel,.csymb
-else. y rplc ,csymb,.cspel
+if. x do.
+  if. ((,SL)-:,y) or (0=UNICODE) do. y return. end.
+  7 u: (deslash y) rplc ,cspel,.csymb
+else.	NB. convert y back to utf-8 before rplc...
+  0 deslash (8 u: y) rplc ,csymb,.cspel
 end.
 )
 
 ucods=: 3 : 0
 	NB. subst (x=1) symbol for PI etc and back again (x=0)
 	NB. c/f ucode, but this version ignores currency symbols
-1 ucods y	NB. forces (wchar) by default (x=1)
+1 ucods y
 :
-if. -.UNICODE do. y return. end.
-if. x do. 7 u: y rplc ,sspel,.ssymb
-else. y rplc ,ssymb,.sspel
-end.
+sav=. cspel ;< csymb
+'cspel csymb'=: sspel ;< ssymb
+z=. x ucode y
+'cspel csymb'=: sav
+z
 )
 
 udat=: 4 : 0
@@ -557,7 +588,7 @@ udiv=: 4 : 0
 	NB. For use by (eg): combine in: cal
 	NB. The simple result: x,SL,y is ok unless y is a complex of units
 	NB. in which case y must be tokenised and inverted piecemeal.
-if. +./ (SP,SL) e. y do.
+if. any (SP,SL) e. y do.
   z=. 1 cnvi utoks y	NB. invert tokenised y
   x , ;z		NB. combine x, z as if multiplied.
 else.
@@ -577,8 +608,8 @@ umake=: 3 : 0
 	NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
 	NB. (sspel ssymb_ -used by: ucods (ditto, omits currency symbols)
 sess_umake 'umake: enters...'
-sspel=: <;._1 ' PI mu Ang Ohm ^2 ^3'
-ssymb=: <;._1 '|π|µ|Å|Ω|²|³'
+sspel=: <;._1 ' PI mu Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
+ssymb=: <;._1 '|π|µ|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
 	NB. cspel,csymb converts these also...
 cspel=: sspel, <;._1 ' deg amin asec eur cnt gbp'
 csymb=: ssymb, <;._1 '|°|''|"|€|¢|£'
@@ -589,7 +620,7 @@ mkss=: (SP,each mks),(SL,each mks),<,SL
 units=: unitv=: uvalu=: 0$0
 for_i. iu=.i.#UUC do.
   'zdesc znits znitv zvalu'=. 0 udat i{UUC
-  if. x *. quoted znits do.
+  if. x and quoted znits do.
     sess_umake i ; znits ; zvalu ; '=:' ; %exrate znits
     zvalu=. ": %exrate znits
   end.
@@ -604,9 +635,9 @@ uvalx=: ;2{z	NB. conversion ratio to canonical units
 compat=: unitx i. unitx		NB. compat-code: > earlier UUC-row#
 	NB. z is boolean mask for: (units)
 z=. cycs=0
-z=. z+.(isNaN uvalu)+.(uvalu e. 0 _ __)
-z=. z+.(isNaN uvalx)+.(uvalx e. 0 _ __)
-if. +./ z do.
+z=. z or (isNaN uvalu) or (uvalu e. 0 _ __)
+z=. z or (isNaN uvalx) or (uvalx e. 0 _ __)
+if. any z do.
   t=. ;,((I.z){units) ,. (brack each I.z),.<' '
   msg=. '>>> WARNING: these units convert badly:',LF,t
   wd 'mb TABULA_UU ',dquote msg
@@ -617,8 +648,8 @@ i.0 0
 )
 
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
-upost=: 4 : 'y,(UNICODE#x)'
-upref=: 4 : '(UNICODE#x),y'
+upost=: 4 : 'y,(x#~*UNICODE)'
+upref=: 4 : '(x#~*UNICODE),y'
 
 utab=: 3 : 0
 	NB. TEST diagnostics table of caches
@@ -646,7 +677,7 @@ uu=: 3 : 0
 	NB. y is value;units
 select. dy=. datatype y
 case. 'literal' do.
-  value=. ". ' 'taketo y
+  value=. eval ' 'taketo y
   units=. 0 ucode ' 'takeafter y
 case. 'boxed' do.
   'value units'=. y
@@ -673,25 +704,11 @@ else.
 end.
 )
 
-0 : 0
-	NB. Sample statements to test verb: uu
-   uu '100 deg.C'
-   'deg.F' uu '100 deg.C'
-   'deg.C' uu '100 deg.C'
-   'deg.C' uu '100 K'
-   'Ω' uu '6.000 kg m²/A²/s³'
-   'Ohm' uu '6.000 kg m²/A²/s³'
-   'Ω' uu '6.000 kg m^2/A^2/s^3'
-   'Ohm' uu '6.000 kg m^2/A^2/s^3'
-   uu '6.000 kg m²/A²/s³'
-   uu '6.000 kg m^2/A^2/s^3'
-   uu '1 d'
-   uu '1 /d'
-   uu 1 ; '/d'
-   'Hz' uu 1 ; '/d'
-   'Hz' uu '1 /d'
-   'note' uu '1 /d'
-   'note' uu '440 Hz'	NB. A440 pitch standard
+uunicode=: 3 : 0
+	NB. read/set UNICODE flag
+if. 0=#y do. UNICODE
+else. UNICODE=: {.y
+end.
 )
 
 uurowsc=: 3 : '(UUC ssmx y){UUC'
@@ -719,5 +736,33 @@ TPATH_UUF=: TPATH_UU , 'uuf.ijs'
 uu=: uu_uu_
 uuc=: 3 : 'open TPATH_UUC'
 uuf=: 3 : 'open TPATH_UUF'
+uunicode=: uunicode_uu_
 
 start_uu_ ''
+
+0 : 0
+	NB. Sample statements to test verb: uu
+   uunicode 0	NB. no unicode
+   uunicode 1	NB. unicoded with slashes
+   uunicode 2	NB. unicoded with negative powers
+   uu '100 degC'
+   'degC' uu '100 degC'
+   'degF' uu '100 degC'
+   'degC' uu '212 degF'
+   'degC' uu 373.16 ; 'K'
+   'degF' uu 373.16 ; 'K'
+   uu '1 Ohm'
+   'Ω' uu '6.000 kg m²/A²/s³'
+   'Ohm' uu '6.000 kg m²/A²/s³'
+   'Ω' uu '6.000 kg m^2/A^2/s^3'
+   'Ohm' uu '6.000 kg m^2/A^2/s^3'
+   uu '6.000 kg m²/A²/s³'
+   uu '6.000 kg m^2/A^2/s^3'
+   uu '1 d'
+   uu '1 /d'
+   uu 1 ; '/d'
+   'Hz' uu 1 ; '/d'
+   'Hz' uu '1 /d'
+   'note' uu '1 /d'
+   'note' uu '440 Hz'	NB. A440 pitch standard
+)

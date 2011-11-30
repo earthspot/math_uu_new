@@ -109,23 +109,7 @@ uu 1 ; 'r.p.m'
 'mi/h' uu  88 ; 'ft/sec'
 
 NB. =========================================================
-Lab Section SLASH
-The way _uu_ treats units is not quite "SI" as we know it.
-
-For a start, it uses '/' as in: [km/h], [m/s/s] (= [m/s^2]).
-Not [km s⁻¹], [m s⁻²] as with strict SI units.
-
-This is a pragmatic decision to help with units in general,
-not just SI.
-
-A future release may offer an option to replace '/'
-in strictly SI-units by negative superscripts.
-)
-
-NB. =========================================================
-Lab Section SLASH2
-But we cannot discard '/' entirely...
-
+Lab Section SLASH1
 '/' is the _uu_ convention for DIMENSIONLESS UNITS.
 
 This prevents the units string vanishing when you divide
@@ -139,11 +123,11 @@ uu '1 km/mi'		NB. conversion factor: km --> miles
 '%' uu '1 km/mi'	NB. ditto, as a percentage
 
 NB. =========================================================
-Lab Section SLASH3
+Lab Section SLASH2
 To "divide" two arbitrary units strings, use: udiv_uu_
 
-(Don't just put '/' between them, unless you know
-the denominator doesn't contain slash).
+(Don't just put '/' between them, unless you know for certain
+that the denominator doesn't contain slash).
 
 Then use: uu -to cancel-out...
 )
@@ -154,21 +138,47 @@ u1 udiv_uu_ u2
 uu  1 ; u1 udiv_uu_ u2
 
 NB. =========================================================
-Lab Section SI_LOOK
-uu approximates the "SI-look" by substituting unicode chars.
-To suppress this behaviour, set: UNICODE_uu_=: 0
-When UNICODE_uu_=1, uu will accept unicode as input too.
+Lab Section SI_LOOK1
+uu approximates the "SI look-and-feel" with unicode chars
+(in utf-8 encoding, the standard for the J session).
+
+To suppress this behavior, enter: uunicode 0
+
+If you enter: uunicode 1
+-then uu will not only output utf-8 chars,
+but accept them as input too.
 )
 
 'Ohm' uu '1 kg m^2/A^2/s^3'
       uu '1 kg m^2/A^2/s^3'
-UNICODE_uu_=: 0
+
+uunicode 0
 'Ohm' uu '1 kg m^2/A^2/s^3'
       uu '1 kg m^2/A^2/s^3'
-UNICODE_uu_=: 1
+
+uunicode 1	NB. reset to the default
 
 NB. =========================================================
-Lab Section ZEPTO
+Lab Section SI_LOOK2
+Strict SI units do not use '/' to represent units quotients.
+Thus uu accepts [m/s/s] and [m/s^2] (units of acceleration)
+whereas SI insists on the format [m s⁻²].
+
+You can force UU to output units in the strict SI convention
+by setting: uunicode 2
+)
+
+uunicode 0
+   uu '1 J'
+
+uunicode 2
+   uu '1 J'
+
+uunicode 1	NB. reset to the default
+
+
+NB. =========================================================
+Lab Section ZEPTO1
 "SI" allows you to attach a scaling prefix to units.
 
 Most people know about kilo [k-], mega [M-], milli [m-]
