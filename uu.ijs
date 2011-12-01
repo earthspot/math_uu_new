@@ -1,4 +1,4 @@
-NB. Tue 22 Nov 2011 09:21:22 UU: scientific units conversion package
+NB. Thu 01 Dec 2011 04:39:47 UU: scientific units conversion package
 
 coclass 'uu'
 require 'strings dates'		NB. for: rplc, timestamp
@@ -81,14 +81,16 @@ adj=: 4 : 0
 	NB. adjust numeral y for units: x
 	NB. cases prefixed '_' are inverse adjustments used by: setvalue
 select. x
+fcase. 'Celsius'	do.
+fcase. 'Centigrade'	do.
 case. 'degC'	do.	z=. y-273.16
+fcase. '_Celsius'	do.
+fcase. '_Centigrade'	do.
 case.'_degC'	do.	z=. y+273.16
-case. 'Celsius'	do.	z=. y-273.16
-case.'_Celsius'	do.	z=. y+273.16
+fcase. 'Fahrenheit'	do.
 case. 'degF'	do.	z=. y-459.688
+fcase. '_Fahrenheit'	do.
 case.'_degF'	do.	z=. y+459.688
-case. 'Fahrenheit'	do.	z=. y-459.688
-case.'_Fahrenheit'	do.	z=. y+459.688
 case.		do.     z=. y	NB. default adjustment (none)
 end.
 )
@@ -391,10 +393,11 @@ select. ,x
 	NB. INSERT FURTHER fcase.s HERE for unicoded suffix
  case. 'asec'	do. z=. '"' upost format_sig y
  case. 'amin'	do. z=. '''' upost format_sig y
-fcase. 'Fahrenheit'	do.
 fcase. 'degF'	do.
-fcase. 'Celsius'	do.
- case. 'degC'	do. z=. 'deg' upost format_sci x adj y
+ case. 'degC'	do. z=. format_sci x adj y
+fcase. 'Fahrenheit'	do.
+fcase. 'Centigrade'	do.
+ case. 'Celsius'	do. z=. 'deg' upost format_sci x adj y
  case. 'deg'	do. z=. format_deg y	NB. (deg amin asec)
  case. 'usd'	do. z=. '$',curfig y
 fcase. 'gbp'	do.
@@ -675,32 +678,37 @@ uu=: 3 : 0
 :
 	NB. x is target units: ux
 	NB. y is value;units
+NB. x_uu_=: x [ y_uu_=: y
+err=. 4 : 'if. x-:''literal'' do. y else. 0 ; y end.'
 select. dy=. datatype y
 case. 'literal' do.
-  value=. eval ' 'taketo y
-  units=. 0 ucode ' 'takeafter y
+  val=. eval ' 'taketo y
+  uns=. 0 ucode ' 'takeafter y
 case. 'boxed' do.
-  'value units'=. y
+  'val uns'=. y
 case. do.
-  '>>> cannot handle:' ; y
-  return.
+  smoutput nb '>>> cannot handle:' ; y
+  '' return.
 end. 
 ux=. 0 ucode x		NB. de-unicoded x
 if. 0~:#x do.
-  if. -. units compatible ux do.
-    0 ; nb '>>> incompatible units:' ; x ; units
-    return.
+  if. -. uns compatible ux do.
+    z=. nb '>>> incompatible units:' ; x ; uns
+    dy err z return.
   end.
 end.
-'uy c fy'=. convert units
-fx=. >{: convert ux
-z=. (value adj~ '_',units) * fy
-z=. (z adj~ ux) % fx
+'uy c fy'=. convert uns	NB. y is in SI units
+if. fy=_ do.
+  z=. nb '>>> unknown units:' ; uns
+  dy err z return.
+end.
 if. 0=#x do. x=. ux=. uy end.
+fx=. >{: convert ux
+z=. (fy%fx) * ('_',uns) adj val
 if. dy-:'literal' do.
-  z=. ucode (ux format z),SP,x
+  z=. (ucode 8 u: ux format z),SP,(ucode x)
 else.
-  z=. z ; x
+  z=. (ux adj z) ; (ucode x)
 end.
 )
 
@@ -745,12 +753,21 @@ start_uu_ ''
    uunicode 0	NB. no unicode
    uunicode 1	NB. unicoded with slashes
    uunicode 2	NB. unicoded with negative powers
-   uu '100 degC'
-   'degC' uu '100 degC'
-   'degF' uu '100 degC'
-   'degC' uu '212 degF'
-   'degC' uu 373.16 ; 'K'
-   'degF' uu 373.16 ; 'K'
+   		uu '100 degC'
+   		uu '212 degF'
+   'degC' 	uu '100 degC'
+   'degF' 	uu '100 degC'
+   'degC' 	uu '212 degF'
+   'degC' 	uu 373.16 ; 'K'
+   'degF' 	uu 373.16 ; 'K'
+   'Fahrenheit'	uu 373.16 ; 'K'
+   'Centigrade'	uu 373.16 ; 'K'
+   'Celsius' 	uu 373.16 ; 'K'
+   'degC' 	uu '373.16 K'
+   'degF' 	uu '373.16 K'
+   'Fahrenheit'	uu '373.16 K'
+   'Centigrade'	uu '373.16 K'
+   'Celsius'	uu '373.16 K'
    uu '1 Ohm'
    'Ω' uu '6.000 kg m²/A²/s³'
    'Ohm' uu '6.000 kg m²/A²/s³'

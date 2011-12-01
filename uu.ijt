@@ -13,7 +13,7 @@ You can even define your own, by editing "UU-constants":
    open '~addons/math/uu/uuc.ijs'
 )
 
-require 'math/uu'
+require 'dev/uu'
 
 uu '3 ft'
 uu '1 yd'
@@ -86,8 +86,10 @@ But if _uu_ doesn't know the units you give it
 
 'J' compatible_uu_ 'oodles'
 
-   NB. NOTE the convention for: unknown units...
+   NB. NOTE the behavior for: unknown units...
 uu '1 oodles'
+
+uu 1 ; 'oodles'
 
 NB. =========================================================
 Lab Section ARITHMETIC
