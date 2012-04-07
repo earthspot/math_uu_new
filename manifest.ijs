@@ -2,7 +2,7 @@ NB. uu manifest
 
 CAPTION=: 'Scientific units conversion package'
 
-VERSION=: '1.0.8'
+VERSION=: '1.0.9'
 
 FILES=: 0 : 0
 manifest.ijs
