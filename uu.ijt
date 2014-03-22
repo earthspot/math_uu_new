@@ -1,19 +1,20 @@
 LABTITLE=: 'Scientific Units'
+LABDEPENDS=: 'math/uu'
 
 NB. =========================================================
 Lab Section INTRO
-UU is an addon to convert quantities between different 
-units of measurement. 
-It is based on the International System of Units 
+UU is an addon to convert quantities between different
+units of measurement.
+It is based on the International System of Units
 (Le Système International d'Unités) or "SI".
    http://en.wikipedia.org/wiki/SI_units
 
-But it knows some other units too. 
+But it knows some other units too.
 You can even define your own, by editing "UU-constants":
    open '~addons/math/uu/uuc.ijs'
 )
 
-require 'dev/uu'
+require 'math/uu'
 
 uu '3 ft'
 uu '1 yd'
@@ -80,7 +81,7 @@ compatlist_uu_ 'J'
 
 NB. =========================================================
 Lab Section COMPATLIST
-But if _uu_ doesn't know the units you give it 
+But if _uu_ doesn't know the units you give it
 (or you've misspelt them) then it will reply with 0...
 )
 
@@ -93,7 +94,7 @@ uu 1 ; 'oodles'
 
 NB. =========================================================
 Lab Section ARITHMETIC
-Giving uu a literal right-argument is just a convenience 
+Giving uu a literal right-argument is just a convenience
 for use in "calculator mode".
 
 When you use uu in a program, you will call it with
@@ -184,7 +185,7 @@ Lab Section ZEPTO1
 "SI" allows you to attach a scaling prefix to units.
 
 Most people know about kilo [k-], mega [M-], milli [m-]
-and micro [mu-] or [µ]. But there are others. 
+and micro [mu-] or [µ]. But there are others.
 The full range is:
 
  	deca- 	hecto- 	kilo- 	mega- 	giga-
@@ -212,7 +213,7 @@ uu '1 g'	NB. -for comparison.
 NB. =========================================================
 Lab Section MICRON
 The term "micron" and the symbol µ, representing the
-micrometre, were officially accepted between 1879 and 1967, 
+micrometre, were officially accepted between 1879 and 1967,
 but officially revoked by the ISI in 1967.
    http://en.wikipedia.org/wiki/Micron
 

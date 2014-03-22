@@ -1,7 +1,6 @@
 NB. Thu 01 Dec 2011 04:39:47 UU: scientific units conversion package
 
 coclass 'uu'
-require 'strings dates'		NB. for: rplc, timestamp
 
 NB. ========== NOUNS ==========
 
