@@ -2,7 +2,7 @@ NB. uu manifest
 
 CAPTION=: 'Scientific units conversion package'
 
-VERSION=: '1.0.10'
+VERSION=: '1.0.11'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -17,7 +17,7 @@ UU (units-to-units) is a scientific units conversion package
 based on the SI system of units.
 )
 
-RELEASE=: 'j801'
+RELEASE=: 'j802'
 
 LABCATEGORY=: 'Math'
 
