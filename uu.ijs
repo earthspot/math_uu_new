@@ -1,11 +1,11 @@
 NB. UU: scientific units conversion package
 0 :0
-Thursday 7 June 2018  10:14:43
+Thursday 7 June 2018  10:51:01
 -
 NEW uu.ijs	…concatenated from the files:
-/Users/ianclark/Xcode projects/TABULA/TABULA/UU/format.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/init.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/main.ijs
+/Users/ianclark/Xcode projects/TABULA/TABULA/UU/format.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/start.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/uu-make-tpaths.ijs
 )
