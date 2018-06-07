@@ -1,0 +1,16 @@
+Thursday 7 June 2018  03:47:21
+
+This is a trial change to "commit" and move to the remote.
+
+----
+Thursday 7 June 2018  02:23:17
+
+This is an edit, to get a handle on what branch I've got.
+
+----
+Thursday 7 June 2018  02:07:13   earthspot
+
+This is a trial change to the branch: changes-from-xcoded-version
+of the repo: math_uu
+cloned from: jsoftware
+
