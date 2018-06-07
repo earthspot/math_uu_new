@@ -6,9 +6,11 @@ VERSION=: '1.1.00'
 
 FILES=: 0 : 0
 manifest.ijs
+readme.ijs
 uu.ijs
 uuc.ijs
 uuf.ijs
+uum.ijs
 uu.ijt
 )
 

@@ -1082,6 +1082,7 @@ if. 0<$files=. {."1 (1!:0) path,'/*' do.
   for_fi. files do.  r=. r, 'm'freads path,>fi end.
 end.
 $(uut)=: r ,~ uut~
+i.0 0
 )
 
 start=: 3 : 0
@@ -1095,7 +1096,7 @@ NB. 0 enlog 0   NB. start a new log file -- c/f _cal_
 factory''
 VERSION=: 'v.v.00'
 NB. …REPLACES DODGY: getversion TPATH_UU
-loaddefs each 'C';'F'
+loaddefs each 'C';'F';'M'
 umake''
 )
 
@@ -1104,6 +1105,7 @@ cocurrent 'z'
 
 NB. UU definitive paths - kept in _z_
 
+0 :0
 TPATH_UU=: 3 : 0 ''
 	NB. returns directory containing this script
 	NB. also assigns global: WHEREAMI -the folder in question
@@ -1115,9 +1117,10 @@ SEP=: '/\' {~ '\' e. z
 WHEREAMI=: (>: z i: SEP) {.z
 )
 
-TPATH_UUC=: TPATH_UU , 'uuc.ijs'	NB. constants
-TPATH_UUF=: TPATH_UU , 'uuf.ijs'	NB. functions
-TPATH_UUM=: TPATH_UU , 'uum.ijs'	NB. conversns
+]TPATH_UU=: jpath'~addons/math/'
+]TPATH_UUC=: TPATH_UU , 'uuc.ijs'	NB. constants
+]TPATH_UUF=: TPATH_UU , 'uuf.ijs'	NB. functions
+]TPATH_UUM=: TPATH_UU , 'uum.ijs'	NB. conversns
 
 NB. aliases in _z_
 
@@ -1128,4 +1131,4 @@ uum=: 3 : 'open TPATH_UUM'		NB. TEST ONLY: view conversns
 uunicode=: uunicode_uu_		NB. unicode level for SI-units
 
 NB. ============================================
-start''
+start_uu_''
