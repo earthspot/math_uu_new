@@ -1,15 +1,4 @@
-(0 0 $ 1!:2&2) '==> loading: ',WS_UU_readme_z_=: >{:4!:3''
-
-'==================== [uu] readme.ijs ===================='
-NB. IAC Wednesday 5 August 2015  15:13:00
-
-cocurrent 'uu'
-
-NB. The noun README is written out on demand
-NB. to user-customizable folders in TPATH_TTABLES
-
-README=: 0 : 0
-== CONSTANTS ==
+== CONSTANTS: uuc.ijs ==
 
 ++ Syntax of a line:
 
@@ -38,7 +27,7 @@ Temperatures in [degC] [degF] [Celsius] [Centigrade] and [Fahrenheit]
 have their converted values decremented at display-time, to deduct the
 absolute temperature of their zero-points.
 
-== FORMULAS ==
+== FORMULAS: uuf.ijs ==
 
 ++ Syntax of a line:
    <formula>                  [<units>] <desc>
@@ -68,4 +57,3 @@ a/b : a(m),b(s) [m/s]
 u+(t*f) : u(m/s),t(s),f(m/s^2) [m/s]
    --f will be converted as needed.
 If units not specified for a given var (say a) then a(*) assumed.
-)
