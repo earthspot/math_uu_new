@@ -1,17 +1,70 @@
 NB. UU: scientific units conversion package
 0 :0
-Thursday 7 June 2018  10:51:01
+Friday 8 June 2018  12:15:52
 -
 NEW uu.ijs	…concatenated from the files:
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/init.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/main.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/format.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/start.ijs
-/Users/ianclark/Xcode projects/TABULA/TABULA/UU/uu-make-tpaths.ijs
 )
 
+0 :0	NB. Sample statements to test verb: uu
+sessuu_uu_=: empty
+sessuu_uu_=: smoutput
+uunicode''	NB. query setting
+uunicode 0	NB. no unicode
+uunicode 1	NB. unicoded with slashes
+uunicode 2	NB. unicoded with negative powers
+	uu '100 degC'
+	uu '212 degF'
+'degC' 	uu '100 degC'
+'degF' 	uu '100 degC'
+'degC' 	uu '212 degF'
+'degC' 	uu 373.16 ; 'K'
+'degF' 	uu 373.16 ; 'K'
+'Fahrenheit'	uu 373.16 ; 'K'
+'Centigrade'	uu 373.16 ; 'K'
+'Celsius' 	uu 373.16 ; 'K'
+'degC' 	uu '373.16 K'
+'degF' 	uu '373.16 K'
+'Fahrenheit'	uu '373.16 K'
+'Centigrade'	uu '373.16 K'
+'Celsius'	uu '373.16 K'
+uu '1 Ohm'
+'Ω' uu '6.000 kg m²/A²/s³'
+'Ohm' uu '6.000 kg m²/A²/s³'
+'Ω' uu '6.000 kg m^2/A^2/s^3'
+'Ohm' uu '6.000 kg m^2/A^2/s^3'
+uu '6.000 kg m²/A²/s³'
+uu '6.000 kg m^2/A^2/s^3'
+uu '1 d'
+uu '1 /d'
+uu 1 ; '/d'
+'Hz' uu 1 ; '/d'
+'Hz' uu '1 /d'
+'note' uu '1 /d'
+'note' uu '440 Hz'	NB. A440 pitch standard
+)
+
+
+DIVIDER=:'==================== [uu] utilities ===================='
+
 coclass 'uu'
-sessuu=: empty  NB. override to activate
+clear 'uu'	NB. <<<<<<<<<<<<<<<<<<<<<<< TEST ONLY
+
+NB. ADJUST for trace output…
+sessuu=: empty
+NB. sessuu=: smoutput
+
+ddefine=: 1 : 'm&$: : (4 : 0)'
+isBoxed=: 32 = 3!:0
+llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
+sllog=: sessuu&llog
+msg=: smoutput&sw  NB. for error signal
+smresolve=: (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
+sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
+
 
 DIVIDER=:'==================== [uu] init.ijs ===================='
 
@@ -55,11 +108,13 @@ CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0			NB. pre-start value
 
 HD=: '·'		NB. hi-dot, optional SI convention
+INVALID=: _.j_.
 NOTFOUND=: _1	NB. used by: cnvf cnvv
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 SL=: '/'
 SP=: ' '
 UL=: '_'
+UNDEFINED=: _.	NB. should propagate in a formula
 
   NB. UNICODE
   NB. controls SI-compliance via utf-8 chars
@@ -78,6 +133,21 @@ UNICODE=: 1	NB. Used chiefly by: ucode
 MAXLOOP=: 30	NB. limits: convert
 UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
 )
+
+UUC=: cmx 0 : 0
+1 m	[m]	fundamental unit - metre (distance)
+1 kg	[kg]	fundamental unit - kilogramme (mass)
+1 s	[s]	fundamental unit - second (time)
+)
+
+UUF=: cmx 0 : 0
+PI*r*r : r(m)		[m^2]	area of circle
+sin a ; a(rad)		[/]	sine
+cos a ; a(rad)		[/]	cosine
+tan a ; a(rad)		[/]	tangent
+)
+
+UUM=: ''
 
   NB. the primitive SI-units (+ some "honorary" primitive units)
 mks=: ;:'m kg s A K cd mol rad eur item'
@@ -131,8 +201,6 @@ quoted=: 3 : 0
 DIVIDER=:'==================== [uu] main.ijs ===================='
 
 cocurrent 'uu'
-
-NB. sessuu=: empty  NB. override to activate
 
 adj=: 4 : 0
 sessuu nb 'adj: ENTERED:' ; 'x=' ; x ; 'y=' ; y
@@ -585,7 +653,7 @@ format_sig=: format_sci
 getversion=: 3 : 0
 try.
 bad=. fread''
-assert. -. bad -: z=. fread y,'manifest.ijs'
+assert. -. bad -: z=. fread y sl 'manifest.ijs'
 assert. 0< # z=. LF taketo 'VERSION' dropto z
 ".z 
 catch. end.
@@ -665,6 +733,8 @@ if. 0=#y do. SIG
 else. SIG_z_=: {.y  NB. actually resides in z-locale
 end.
 )
+
+sl=: 4 : '(x,SL,y) rplc ''///'';SL;''//'';SL'
 
 slash1=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) single-slash convention
@@ -755,6 +825,7 @@ end.
 )
 
 ucode=: 1&$: : (4 : 0)
+Y=: y	NB. SAVE IT for line-by-line testing
 y=. utf8 y  NB. This algo needs y to be bytes not wchars
 if. x do.  NB. subst 'π' for 'PI' etc
   if. -.isascii y do. y return. end.  NB. already converted
@@ -764,16 +835,18 @@ if. x do.  NB. subst 'π' for 'PI' etc
 else.      NB. subst 'PI' for 'π' etc
   if. isascii y do. y return. end.  NB. no utf codes to convert
   NB. convert unicode back to utf-8 before rplc...
-  z=. y rplc HD;SP
-  z=. undeslash z rplc ,csymb,.cspel
+  ]z=. y rplc HD;SP
+  ]z=. undeslash z rplc ,csymb,.cspel
   NB. Change only the scaling prefix, 'µ' ...
   if. z begins ,'µ' do. z=. 'u',2}.z end.
 end.
 )
 0 :0
-0&ucode 'm² K⁻¹ s⁻²'	NB. m^2 K^-1 s^-2
-0&ucode 'ft/(s·s)'  	NB. ft/(s s)
-ucode 'm^2/K/s^2'    	NB. m²/K/s²
+0 ucode 'm² K⁻¹ s⁻²'	NB. m^2/K/s^2	-SL instead of ⁻¹
+1 ucode 'm² K⁻¹ s⁻²'	NB. m² K⁻¹ s⁻²
+0 ucode 'ft/(s·s)'  	NB. ft/(s s)
+1 ucode 'ft/(s·s)'  	NB. ft/(s·s)
+  ucode 'm^2/K/s^2'    	NB. m²/K/s²
 )
 
 ucods=: 1&$: : (4 : 0)
@@ -954,10 +1027,58 @@ z=. sp1 y	NB. ensure leading sign-byte: SP|SL
 z=. (z e. SP,SL) <;.1 z
 )
 
+uu=: '' ddefine
+  NB. transform y (value;units) to: x (ux)
+  NB. x is target units: ux
+  NB. y is 2boxed expression, e.g. 9.5 ; 'kg'
+  NB. OR…
+  NB. y is string expression, e.g. '9.5 kg'
+  NB. returns 2boxed OR string according to y
+if. 32=3!:0 y do.x uuboxed y
+else. x uustring y
+end.
+)
+
+uustring=: 4 : 0
+  NB. transform a string expression, e.g. '9.5 kg'
+me=. 'uustring'
+val=. eval SP taketo y
+uns=. SP takeafter y
+'va un'=. x uuboxed val ; uns
+NB. (":va),SP,un
+(ucode 8 u: un format va),SP,(ucode un)
+)
+
+uuboxed=: 4 : 0
+  NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
+me=. 'uuboxed'
+'val uns'=. y
+	sessuu llog 'me val uns'
+'ux uy'=. bris each x;uns  NB. Make x, uns kosher
+if. 0<#x do. if. -. ux compatible uy do.
+  msg'>>> uu: incompatible units: (ux) || (uy)'
+  return.
+end. end.
+'unsc c fy'=. convert uns  NB. unsc is in SI units
+if. fy = _ do.
+  msg'>>> uu: unknown units: (uns)' return. 
+end.
+  NB. Default x to: unsc (uns converted to SI units)
+if. 0=#x do. ux=. bris x=. unsc end.
+fx=. > {: convert ux  NB. get the conversion factor: fx
+qty=. (fy%fx) * ('_',uns) adj val
+uno=. uniform x  NB. units for output
+	sessuu llog 'me fy fx val uno uns ux x'
+(ux adj qty) ; uno
+)
+
+
+0 :0
 uu=: ''&$: : (4 : 0)
 	NB. transform y (value;units) to: x (ux)
 	NB. x is target units: ux
 	NB. y is value;units
+me=. 'uu'
 err=. 4 : 'if. x-:''literal'' do. y else. 0 ; y end.'
 ]dy=. datatype y
 select. dy
@@ -989,8 +1110,8 @@ if. 0=#x do. ux=. bris x=. unsc end.
 ]fx=. >{: convert ux  NB. get the conversion factor: fx
 ]qty=. (fy%fx) * ('_',uns) adj val
 ]uno=. uniform x  NB. units for output
-	sllog 'fy fx val'
-	sllog 'uno uns ux x'
+  sessuu llog 'me fy fx val'
+  sessuu llog 'me uno uns ux x'
 if. dy-:'literal' do.
   z=. (ucode utf8 ux format qty),SP,uno
 else.
@@ -1068,17 +1189,18 @@ DIVIDER=:'==================== [uu] start.ijs ===================='
 cocurrent 'uu'
 
 loaddefs=: 3 : 0
+@@'DID THIS EVER WORK?'
   NB. load additional defs kept in TPATH_UU*
   NB.  y='C'	TPATH_UUC
   NB.  y='F'	TPATH_UUF
-path=. ('TPATH_UU',y)~
-uut=. 'UU',y
+]path=: ('TPATH_UU',y)~
+]uut=. 'UU',y
   NB. Ensure these folders exist
 1!:5 :: _1: <}: TPATH_UU  NB. contains: (path)
 1!:5 :: _1: <}: path
   NB. load contents of TPATH_UU*
 r=. i.0 0
-if. 0<$files=. {."1 (1!:0) path,'/*' do.
+if. 0<$files=. {."1 (1!:0) path sl'*' do.
   for_fi. files do.  r=. r, 'm'freads path,>fi end.
 end.
 $(uut)=: r ,~ uut~
@@ -1087,16 +1209,23 @@ i.0 0
 
 start=: 3 : 0
 sessuu 'start: ENTERED'
-  NB. start the addon: UU
+erase 'DIVIDER'
+  NB. start the locale: _uu_
   NB. Not only intended to be called on loading,
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
 NB. 0 enlog 0   NB. start a new log file -- c/f _cal_
+if. -.fexist TPATH_UUC do.
+  smoutput z=.'>>> start: file not found: ',TPATH_UUC
+  z return.
+end.
 factory''
-VERSION=: 'v.v.00'
-NB. …REPLACES DODGY: getversion TPATH_UU
-loaddefs each 'C';'F';'M'
+badversion=. 'v.v.v'"_
+]VERSION=: getversion :: ('v.v.v'"_) TPATH_UU
+load :: 0: TPATH_UUC
+load :: 0: TPATH_UUF
+load :: 0: TPATH_UUM
 umake''
 )
 
@@ -1105,22 +1234,10 @@ cocurrent 'z'
 
 NB. UU definitive paths - kept in _z_
 
-0 :0
-TPATH_UU=: 3 : 0 ''
-	NB. returns directory containing this script
-	NB. also assigns global: WHEREAMI -the folder in question
-	NB. plus SEP -the platform-dependent path-separator.
-ws=. [: 'Not from script'"_`({ 4!:3@(0&$))@.(0&<:) [: 4!:4 [: < >
-WHEREAMI=: '<UNSET>'	NB. needed for ws to work with
-z=. >ws 'WHEREAMI'
-SEP=: '/\' {~ '\' e. z
-WHEREAMI=: (>: z i: SEP) {.z
-)
-
-]TPATH_UU=: jpath'~addons/math/'
-]TPATH_UUC=: TPATH_UU , 'uuc.ijs'	NB. constants
-]TPATH_UUF=: TPATH_UU , 'uuf.ijs'	NB. functions
-]TPATH_UUM=: TPATH_UU , 'uum.ijs'	NB. conversns
+]TPATH_UU=: jpath'~addons/math/uu'
+]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'	NB. constants
+]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'	NB. functions
+]TPATH_UUM=: TPATH_UU sl 'uum.ijs'	NB. conversns
 
 NB. aliases in _z_
 

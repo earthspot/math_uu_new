@@ -27,6 +27,7 @@ NB.	absolute temperature of their zero-points.
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
+1 /	[saved]	Friday 8 June 2018  12:16:34
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
