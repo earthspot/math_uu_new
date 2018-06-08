@@ -21,7 +21,7 @@ based on the SI system of units.
 
 RELEASE=: ''
 
-FOLDER=: 'math/uu'
+FOLDER=: 'earthspot/uu'
 
 LABCATEGORY=: 'Math'
 
