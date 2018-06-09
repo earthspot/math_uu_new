@@ -2,7 +2,7 @@ NB. uu manifest
 
 CAPTION=: 'Scientific units conversion package'
 
-VERSION=: '1.1.4'
+VERSION=: '1.1.0'
 
 FILES=: 0 : 0
 manifest.ijs
@@ -21,7 +21,7 @@ based on the SI system of units.
 
 RELEASE=: ''
 
-FOLDER=: 'earthspotty/uu'
+FOLDER=: 'math/uu'
 
 LABCATEGORY=: 'Math'
 
