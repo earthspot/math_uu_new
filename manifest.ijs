@@ -15,6 +15,7 @@ uu.ijt
 )
 
 DESCRIPTION=: 0 : 0
+Sunday 10 June 2018  03:05:31
 UU (units-to-units) is a scientific units conversion package
 based on the SI system of units.
 )
