@@ -1,18 +1,22 @@
 NB. UU: scientific units conversion package
 0 :0
-Friday 8 June 2018  12:15:52
-Saturday 9 June 2018  14:58:30
+Saturday 9 June 2018  12:34:25
 -
 NEW uu.ijs	…concatenated from the files:
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/init.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/main.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/format.ijs
 /Users/ianclark/Xcode projects/TABULA/TABULA/UU/start.ijs
+-
+ot 176	NB. new _nuu_
+ot 177	NB. expandedunits and dipower
 )
 
 0 :0	NB. Sample statements to test verb: uu
-sessuu_uu_=: empty
-sessuu_uu_=: smoutput
+trace 1
+trace 0
+make_msg 1	NB. enable diagnostics
+make_msg 0	NB. DISABLE diagnostics
 uunicode''	NB. query setting
 uunicode 0	NB. no unicode
 uunicode 1	NB. unicoded with slashes
@@ -32,6 +36,7 @@ uunicode 2	NB. unicoded with negative powers
 'Fahrenheit'	uu '373.16 K'
 'Centigrade'	uu '373.16 K'
 'Celsius'	uu '373.16 K'
+
 uu '1 Ohm'
 'Ω' uu '6.000 kg m²/A²/s³'
 'Ohm' uu '6.000 kg m²/A²/s³'
@@ -39,6 +44,9 @@ uu '1 Ohm'
 'Ohm' uu '6.000 kg m^2/A^2/s^3'
 uu '6.000 kg m²/A²/s³'
 uu '6.000 kg m^2/A^2/s^3'
+
+uu '1 s'				NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+'h' uu '1 d'
 uu '1 d'
 uu '1 /d'
 uu 1 ; '/d'
@@ -48,28 +56,49 @@ uu 1 ; '/d'
 'note' uu '440 Hz'	NB. A440 pitch standard
 )
 
-
-DIVIDER=:'==================== [uu] utilities ===================='
-
 coclass 'uu'
-clear 'uu'	NB. <<<<<<<<<<<<<<<<<<<<<<< TEST ONLY
+clear 'uu'	NB. <<<<<<<<<<<<<<<<<<<<<<< WARNING: NO PRELOADS
 
-NB. ADJUST for trace output…
-sessuu=: empty
-NB. sessuu=: smoutput
+sd=: 3 : 'wd''msgs'' [ smoutput y-.''='''
+sd DIVIDER=:'==================== [uu] utilities ===================='
+
+cocurrent 'uu'
 
 ddefine=: 1 : 'm&$: : (4 : 0)'
-isBoxed=: 32 = 3!:0
+isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
-sllog=: sessuu&llog
-msg=: smoutput&sw  NB. for error signal
 smresolve=: (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
 sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
+emsg=: smoutput&sw		NB. for error signal: always smoutputs
+ssw=: smoutput&sw		NB. the standard verb: always smoutputs
+zeroifabsent=: [: {. ".
+
+NB. ADJUST for trace output…
+trace=: 3 : 'TRACE_z_=: | * y'
+NB. trace 0
+trace 1
+
+make_msg=: 3 : 0
+  NB. USED: start
+  NB. These diagnostics get switched off/on by: start
+if. y do.
+  sessuu=: 3 : 'if. zeroifabsent''TRACE'' do. smoutput y else. i.0 0 end.'
+  msg=: sessuu&sw	NB. for alert signal: governed by TRACE
+  sllog=: sessuu&llog
+else.
+  sessuu=: empty
+  msg=: empty
+  sllog=: empty
+end.
+y return.
+)
+
+make_msg 1	NB. ENABLE diagnostics
 
 
-DIVIDER=:'==================== [uu] init.ijs ===================='
+sd DIVIDER=:'==================== [uu] init.ijs ===================='
 
-coclass 'uu'
+cocurrent 'uu'
 
 public=: 3 : 0
 NB. Makes aliases to UU public verbs in locale (y)
@@ -126,8 +155,8 @@ UNDEFINED=: _.	NB. should propagate in a formula
   NB. UNICODE=3	utf-8, no '/', uses '·'
 
 factory=: 3 : 0
-	NB. set/restore factory settings of alterable globals
-	NB. ONLY SCI and SIG reside in z-locale
+  NB. init/restore factory settings of alterable globals
+  NB. ONLY SCI and SIG reside in z-locale
 SIG_z_=: 3	NB. used by: scino_z_ and format_sig
 SCI_z_=: 5	NB. used by: scino_z_
 UNICODE=: 1	NB. Used chiefly by: ucode
@@ -135,7 +164,9 @@ MAXLOOP=: 30	NB. limits: convert
 UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
 )
 
+  NB. data table stubs for basic testing
 UUC=: cmx 0 : 0
+1 /	[saved]	Saturday 9 June 2018  05:16:54
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -150,9 +181,9 @@ tan a ; a(rad)		[/]	tangent
 
 UUM=: ''
 
-  NB. the primitive SI-units (+ some "honorary" primitive units)
+  NB. the primitive SI-units (+ extra "honorary" primitive units)
 mks=: ;:'m kg s A K cd mol rad eur item'
-mks=: mks , (<'item'),each ":each i.10
+NB. mks=: mks , (<'item'),each ":each i.10  NB. append "units": item0 … item9
 
 NB. ========== UTILITIES ==========
 
@@ -167,7 +198,7 @@ not=: -.
 to=:    [ + [: i. [: >: -~	NB. eg: 3 to 5 <--> 3 4 5
 
 cx=: 3 : 0
-	NB. check for complex nouns in given locale
+  NB. check for complex nouns in given locale
 loc=. >coname''
 nocomplex=. 1
 for_no. (nl 0) -. <'INVALID' do.  val=. ".nom=. >no
@@ -176,35 +207,41 @@ for_no. (nl 0) -. <'INVALID' do.  val=. ".nom=. >no
     nocomplex=. 0
   end.
 end.
-NB. Suppress ok-confirmation...
+  NB. Suppress ok-confirmation...
 NB. if. nocomplex do. smoutput 'cx: no nouns are complex in: ',loc end.
 i.0 0
 )
 
 undefined=: (3 : 0)"0
-	NB. test for presence of UNDEFINED
+  NB. test for presence of UNDEFINED
 if. -. 128!:5 y do. 0 return. end.
 '_.' -: 5!:6 <'y'
 )
 
 invalid=: (3 : 0)"0
-	NB. test for presence of INVALID
+  NB. test for presence of INVALID
 if. -. 128!:5 y do. 0 return. end.
 '_.j_.' -: 5!:6 <'y'
 )
 
 quoted=: 3 : 0
-	NB. =1 iff (y) is a quoted currency
+  NB. =1 iff (y) is a quoted currency
 (<toupper y) e. {."1 CUTAB
 )
 
+utoks=: 3 : 0
+  NB. tokenize y, ensuring leading SP|SL
+z=. sp1 y	NB. ensure leading sign-byte: SP|SL
+z=. (z e. SP,SL) <;.1 z
+)
 
-DIVIDER=:'==================== [uu] main.ijs ===================='
+
+sd DIVIDER=:'==================== [uu] main.ijs ===================='
 
 cocurrent 'uu'
 
 adj=: 4 : 0
-sessuu nb 'adj: ENTERED:' ; 'x=' ; x ; 'y=' ; y
+msg '+++ adj: ENTERED: x=(x) y=(y)'
   NB. Adjusts quantity: y for units: x
   NB. Used by: format and: uu
   NB. This mainly serves temperature units, degC degF and K
@@ -267,7 +304,7 @@ fcase. '_°Ré'	do.
 NB. default scale  --needs no adj
  case.		do.	z=. y 
 end.
-NB. 	z [sllog 'z x y'
+z [msg '--- adj: EXITS: z=(z)'
 )
 
 bris=: unucode@unslash1@undotted@deb"1  NB. circumcises units: y
@@ -288,16 +325,17 @@ canon=: 3 : 0
 	NB. y must be fully-resolved units, ie all from boxed list: mks
 	NB. Sort tokens EACH REVERSED. This brings num+denom terms together
 z=. ; |. each sort |. each utoks y
-	sessuu nb 'canon:' ; TAB ; 'z=' ; z
+	msg '+++ canon: ENTERED: z=(z)'
 	NB. Cancel-out/collect each unit from global boxed list: mks in turn...
 for_w. mks do. m=. ,>w		NB. m== next unit from list: mks
   if. any m E. z do.		NB. only if m is present in z
     z=. (z canc m) coll m
-	sessuu nb 'canon:' ; TAB ; (brack m) ; 'z=' ; z
+	msg '... canon:   [(m)] z=(z)'
   end.
 end.
 z=. debnSL dlb ; sort utoks z	NB. k-m-s order, with denominators gathered behind
 if. 0=#z do. z=. ,SL end.  	NB. CONVENTION: (empty z) --> ,'/'
+z [ msg '--- canon: EXITS: z=(z)'
 )
 
 cnvf=: 3 : 0
@@ -308,8 +346,8 @@ if. LK=NOTFOUND do. z return. end.
 try. z=. (f=.LK{uvalu); t; LK		NB. item-value from LK: UU-row found by: cnvv
 catch.
 end.
-	sessuu nb 'cnvf:' ; TAB ; 'f=' ; f ; (linz t)
-z
+	msg '... cnvf:   f=(f) (linz t)'
+z return.
 )
 
 cnvi=: 1&$: : (4 : 0)
@@ -325,7 +363,7 @@ zz return.
 )
 
 cnvj=: 3 : 0
-sessuu 'cnvj: ENTERED'
+msg '+++ cnvj: ENTERED'
 	NB. cut prefs/suffs from a cunit (eg: '/kg^3')
 k=. p=. 1 [ z=. y
 if. (SL~:{.z) and (any '^-' E. z) do. NB. elim -ve power
@@ -368,8 +406,8 @@ if. (iskg z) or (not validunits z) do.
   end.
 end.
 z=. deb z
- sessuu nb 'cnvj:' ; TAB ; '/-?' ; j ; 'scale(k)=' ; k ; 'units(z)=' ; z ; 'power(p)=' ; p
-j ; k ; z ; p		NB. here z has NO prefixed SP (or SL)
+	msg '--- cnvj:   j=(j) scale:k=(k) units:z=(z) power:p=(p)'
+j ; k ; z ; p return.	NB. here z has NO prefixed SP (or SL)
 )
   NB. Scaling prefixes recognised above:
   NB.	------------------------------------------------------------------------------
@@ -391,7 +429,7 @@ if. i<#y do.
 else.
   t=. ''		NB. and y is unchanged
 end.
- sessuu nb 'cnvnon:' ; TAB ; 'next non-mks token=' ; (brack t) ; 'leaving:' ; (linz y)
+	msg '... cnvnon:   next non-mks token=[(t)] leaving: (linz y)'
 (deb t) ; <y
 )
 
@@ -419,25 +457,25 @@ n=. SP,y		NB. unit: y in numerator
 d=. SL,y		NB. unit: y in denominator
 for_p. 4 3 2 do.	NB. 4th-power units are highest recognised
   z=. z rplc ((p*$n)$n);(n,P,":p) ; ((p*$d)$d);(d,P,":p)
-  sessuu nb 'coll:' ; TAB ; 'z=' ; z ; 'j=' ; j
+	msg '... coll:   z=(z) power:p=(p)'
 end.
 z
 )
 
 compatible=: 4 : 0
-sessuu 'compatible: ENTERED'
+msg 'compatible: ENTERED'
 	NB. =1 iff units x,y compatible
 	NB. '*' is compatible with everything...
 if. ('*'= {.>x) or ('*'= {.>y) do. 1 return. end.
 ux=. compat cnvv >x [ uy=. compat cnvv >y
-	sessuu nb 'compatible:'; 'ux='; ux; 'uy='; uy
+	msg '... compatible: ux=(ux) uy=(uy)'
 if. (0<#uy) and (uy-:ux) do. 1 return. end.
 a=. {.convert >x [ b=. {.convert >y
 a-:b	NB. match their canonical units
 )
 
 compatlist=: 3 : 0
-sessuu 'compatlist: ENTERED'
+msg 'compatlist: ENTERED'
   NB. return extract of (units) compatible with units: y
 z=. ''
   NB. if there's a compat-code (uy), get its mates
@@ -455,7 +493,6 @@ z=. ~. (<,y),z,{.convert y
 )
 
   NB. convert
-  NB. y (units) --> cu ; loop_count ; cf
   NB. Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
   NB. Needed to compare two arbitrary units to see if compatible / inter-convertible.
   NB. Simplifies the result of a division of 2 physical quantities.
@@ -486,16 +523,18 @@ z=. ~. (<,y),z,{.convert y
   NB. Fn: cnvf also returns conversion factor (f)
   NB. Finally when no more units to expand (max cycles=30 as failsafe)
   NB. the result is converted to canonical form using: canon.
+  NB.
 convert=: 1&$: : (4 : 0)"1
-sessuu nb 'convert: ENTERED:' ; 'x=' ; x ; 'y=' ; y
-y=. bris y  NB. extend the range of acceptible units formats
+  NB. y (units) --> cu ; loop_count ; cf
+yb=. bris y  NB. extend the range of acceptible units formats
+	msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
   NB. x=1 --use: uvalx
 if. x do.	NB. SPEEDUP: try: unitx, uvalx (if there)
-  if. 0<#z=.cnvx y do. (z ; 1 ; LK{uvalx) return. end.
+  if. 0<#z=.cnvx yb do. (z ; 1 ; LK{uvalx) return. end.
 end.
 fac=. 1				NB. conversion factor init'd
-z=. utoks y			NB. needs y tokenised
-sessuu nb 'convert:' ; 'utoks=' ; z
+z=. utoks yb			NB. needs yb tokenised
+msg '... convert: utoks=(linz z)'
 	NB. Comb repeatedly through tokenized (boxed) z, converting tokens by lookup in UUC,
 	NB. each converted token (expanded) is appended to back of z, to be combed again,
 	NB. Repeat until all tokens in z are mks (=metre-kilogram-second)
@@ -511,11 +550,12 @@ for_i. i.MAXLOOP do.
 	NB. accumulate subfac into fac, according to whether j specifies numerator/denominator
   fac=. fac * subfac^(np j)
   z=. rz,p#(j cnvi ttt)		NB. put back into z: p-replicated (inverted) ttt
-	sessuu nb 'convert:';(brack loop); 'z=';(linz z); 'fac=';fac; 'j=';j; 'subfac=';subfac
+	msg '... convert: [(loop)] z=(linz z) fac=(fac) j=(j) subfac=(subfac)'
 end.
 	NB. if MAXLOOP reached then must assume not all non-mks tokens have been converted
 if. loop=MAXLOOP do. loop=. 0 end. NB. signalling a suspicious result
-(canon ;z) ; loop ; fac [sessuu 'convert: EXITTED'
+wd'msgs' [ msg '--- convert: EXITS'
+(canon ;z) ; loop ; fac return.
 )
 
 curfig=: 3 : 'hy (0 j. 2)":y'
@@ -529,12 +569,10 @@ else. debSL y
 end.
 )
 
+deslash=: 1&$: : (4 : 0)
   NB. deslash
   NB. x=1 --converts cunits with '/' into '^_n' form
   NB. x=0 --converts '^_n' cunits back into '/'
-deslash=: 1&$: : (4 : 0)
-NB. if. UNICODE e. 2 3 do. y return. end.
-  NB. no-op unless slashed units possible
 r=. ''	NB. accumulates modified cunits
 for_cu. utoks y do. cunit=. >cu
   if. (x=0) or SL={.cunit do.  NB. inverse: do BOTH SP SL
@@ -542,7 +580,7 @@ for_cu. utoks y do. cunit=. >cu
     if. x do.
       cunit=. SP, (}. '^' taketo cunit),'^-',":p
     else.
-      sessuu cunit ; j ; k ; z ; p
+      sllog 'deslash__ cunit j k z p'
       cunit=. (j{SP,SL), (}. '^' taketo cunit) ,(p>1)# '^',":p
     end.
   end.
@@ -555,9 +593,8 @@ NB. deslash'ft/s^2'
 dotted=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) dotted (·) convention
   NB. cf: slash1
-  NB. dotted convention is ONLY applied if UNICODE=3 (or more)
 ]z=. utf8 deb y
-if. x and (UNICODE>:3) do.  NB. apply convention
+if. x do.  NB. apply convention
   if. any HD E. z do. y return. end.  NB. convention already applied
   ]z=. z rplc SP;HD
 else.  NB. unapply convention
@@ -577,7 +614,7 @@ exrate=: exrate_exch_
 unhms=: 3600 %~ _ 60 60 #. 3 {. ]
 
 format_hms=: 3 : 0
-sessuu 'format: ENTERED'
+msg 'format: ENTERED'
   NB. output y as: 'hh:mm:ss.sss'
 if. y-:'' do. y=. unhms 23 59 59.567 end.  NB. TEST <<<<<
 neg=. (y<0)#'-'
@@ -683,13 +720,12 @@ brack z -. SP
 midino=: 69 + 12 * 2 ^. 440 %~ ]	NB. "midi number" of freq: y (Hz)
 
 note=: 3 : 0
-	NB. nearest musical note of freq: y (Hz)
+  NB. nearest musical note of freq: y (Hz)
 NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
 ,>NOTE {~ rnd 12 | midino y
 )
-
-0 : 0
-note 440	NB. A (concert-pitch is 440 Hz)
+0 :0
+note 440		NB. A (concert-pitch is 440 Hz)
 note 194.18	NB. G (earth-rotation musical note)
 )
 
@@ -697,16 +733,17 @@ np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
 
 scino=: 3 : 0
-sessuu nb 'scino: ENTERED:' ; 'y=' ; y
+msg '+++ scino: y=(y)'
   NB. Scientific notation for number: y
   NB. but returns ordinary integer for integer (y)
   NB. Uses current values of SIG and SCI (they can change)
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
-if. (y=<.y) and (y<10^SCI) do. ":y else. fmt ": y end.
+if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ": y end.
+z [ msg '--- scino: z=(z)'
 )
 
 selfcanc=: 3 : 0
-sessuu 'selfcanc: ENTERED'
+msg '+++ selfcanc: ENTERED'
   NB. Self-cancel unitstr (y) without reducing to mks
   NB. Sort tokens EACH REVERSED -collects num+denom terms
 z=. ; |.each sort |.each ut=. utoks y
@@ -716,11 +753,11 @@ for_cb. ~.t do.
   z=. z coll >cb
 end.
 z=. dlb canon z
-z rplc '/^2';'/';'/^3';'/';'/^4';'/';'/^5';'/';'/^6';'/';'/^7';'/';'/^8';'/';'/^9';'/'
+z=. z rplc '/^2';'/';'/^3';'/';'/^4';'/';'/^5';'/';'/^6';'/';'/^7';'/';'/^8';'/';'/^9';'/'
+z [ msg '--- selfcanc: EXITS: z=(z)'
 )
 
 sci=: 3 : 0
-sessuu 'sci: ENTERED'
   NB. get/set SCI (sci notation threshold)
 if. 0=#y do. SCI
 else. SCI_z_=: {.y  NB. actually resides in z-locale
@@ -728,7 +765,6 @@ end.
 )
 
 sig=: 3 : 0
-sessuu 'sig: ENTERED'
   NB. get/set SIG (decimal places for: format)
 if. 0=#y do. SIG
 else. SIG_z_=: {.y  NB. actually resides in z-locale
@@ -797,7 +833,7 @@ end.
 )
 
 ucase=: 3 : 0
-sessuu 'ucase: ENTERED'
+msg 'ucase: ENTERED'
 if. 0=#y do. UCASE
 else. UCASE=: {.y
 end.
@@ -808,25 +844,9 @@ isascii=: [: *./ 128 > a. i. ]  NB. y is pure ASCII (no utf8s)
 NB. isascii 'm² K⁻¹ s⁻²'
 NB. isascii 'able'
 
-NB. OLD VERSION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-ucode0=: 1&$: : (4 : 0)
-	NB. x=1 -- subst 'π' for PI etc
-	NB. x=0 -- subst PI for 'π' etc
-if. x do.
-  if. 0=#y do. y=. ,SL end.  NB. avoid returning '' 
-  if. UNICODE=0 do. y return. end.  NB. no need to convert
-  ]z=. deslash unslash1 undotted y
-  ]z=. 7 u: z rplc ,cspel,.csymb
-else.
-  if. isascii y do. y return. end.  NB. no need to convert
-  NB. convert unicode back to utf-8 before rplc...
-  z=. (utf8 y) rplc HD;SP
-  z=. undeslash z rplc ,csymb,.cspel
-end.
-)
+undeslash=: 0&deslash
 
 ucode=: 1&$: : (4 : 0)
-Y=: y	NB. SAVE IT for line-by-line testing
 y=. utf8 y  NB. This algo needs y to be bytes not wchars
 if. x do.  NB. subst 'π' for 'PI' etc
   if. -.isascii y do. y return. end.  NB. already converted
@@ -842,12 +862,14 @@ else.      NB. subst 'PI' for 'π' etc
   if. z begins ,'µ' do. z=. 'u',2}.z end.
 end.
 )
-0 :0
-0 ucode 'm² K⁻¹ s⁻²'	NB. m^2/K/s^2	-SL instead of ⁻¹
-1 ucode 'm² K⁻¹ s⁻²'	NB. m² K⁻¹ s⁻²
-0 ucode 'ft/(s·s)'  	NB. ft/(s s)
-1 ucode 'ft/(s·s)'  	NB. ft/(s·s)
-  ucode 'm^2/K/s^2'    	NB. m²/K/s²
+3 :0''
+if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
+assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
+assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
+assert. 'ft/(s s)'		-: 0 ucode 'ft/(s·s)'
+assert. 'ft/(s·s)'		-: 1 ucode 'ft/(s·s)'
+assert. 'm²/K/s²'		-:   ucode 'm^2/K/s^2'
+i.0 0
 )
 
 ucods=: 1&$: : (4 : 0)
@@ -859,7 +881,7 @@ z [ 'cspel csymb'=: SAV
 )
 
 udat=: 4 : 0
-sessuu 'udat: ENTERED'
+msg 'udat: ENTERED'
 	NB. raw boxed data from y=. seltext''
   NB. x=0 -const
   NB. x=1 -formula
@@ -882,7 +904,7 @@ end.
   NB. For use by (eg): combine in: cal
 
 udiv=: 4 : 0
-sessuu 'udiv: ENTERED'
+msg 'udiv: ENTERED'
 if. (1=#y) and (y=SL) do. x return. end.
 z=. cnvi utoks y    NB. invert token-list y
 z=. selfcanc x , ;z NB. combine x, z as if multiplied
@@ -890,7 +912,7 @@ z=. z rplc '/^2';'/'
 )
 
 udumb=: 3 : 0
-sessuu 'udumb: ENTERED'
+msg 'udumb: ENTERED'
 'zdesc znits znitv zvalu'=. y
 zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
 )
@@ -969,41 +991,51 @@ NB.    make_cutuuc''
 NB.    cutuuc '-1.5 my-u [my-new] test'
 
 NB. ============================================
+
 uniform=: _&$: : (4 : 0)"1
-sessuu nb 'uniform: ENTERED:' ; 'x=' ; x ; 'y=' ; y
+	msg '+++ uniform: ENTERED: x=(x) y=(y)'
   NB. change units (y) to acceptable format for (UNICODE)
-	y_uu_=: y
-	x_uu_=: x
 y=. utf8 deb y  NB. convert from possible datatype=='unicode'
 if. x=_ do. x=. UNICODE end.
 select. x
 case. 0 do.  NB. ASCII only
   z=. unucode undotted y
-
 case. 1 do.  NB. SI units with /
   ]z=. undotted y
   if. 1< +/SL=y do.  NB. if more than 1 slash
     ]z=. slash1 z
   end.
   ]z=. ucode z
-
 case. 2 do.  NB. Standard SI units
-  if. y-: ,SL do. '' return. end.  NB. No bare '/' in Standard SI
+  if. y-: ,SL do. '' [ msg '--- uniform: RETURNS NIL' return. end.
+  NB. …no bare '/' in Standard SI
   ]z=. unucode undotted y	NB. c/f case 0
   ]z=. ucode deslash unslash1 z
-
 case. 3 do.  NB. Standard SI units with dots
-  if. y-: ,SL do. '' return. end.  NB. No bare '/' in Standard SI
+  if. y-: ,SL do. '' [ msg '--- uniform: RETURNS NIL' return. end.
+  NB. …no bare '/' in Standard SI
   z=. dotted 2 uniform y
 end.
-z
+z [ msg '--- uniform: EXITS'
 )
-NB. 2 uniform 'm m/(K s s)'
-NB. 1 uniform 'm^2/K/s^2'
-NB. 2 uniform 'ft/s^2'
+3 :0''
+if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
+assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
+assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
+assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uniform 'm m/(K s s)'
+assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uniform 'm m/(K s s)'
+assert. 'm^2/K/s^2'	-: 0 uniform 'm^2/K/s^2'
+assert. 'm²/(K s²)'	-: 1 uniform 'm^2/K/s^2'
+assert. 'm² K⁻¹ s⁻²'	-: 2 uniform 'm^2/K/s^2'
+assert. 'm²·K⁻¹·s⁻²'	-: 3 uniform 'm^2/K/s^2'
+assert. 'ft/s^2'		-: 0 uniform 'ft/s^2'
+assert. 'ft/s²'		-: 1 uniform 'ft/s^2'
+assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
+assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
+i.0 0
+)
 
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
-undeslash=: 0&deslash
 undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
@@ -1022,12 +1054,6 @@ for_i. y do.
 end.
 )
 
-utoks=: 3 : 0
-	NB. tokenize y, ensuring leading SP|SL
-z=. sp1 y	NB. ensure leading sign-byte: SP|SL
-z=. (z e. SP,SL) <;.1 z
-)
-
 uu=: '' ddefine
   NB. transform y (value;units) to: x (ux)
   NB. x is target units: ux
@@ -1035,9 +1061,10 @@ uu=: '' ddefine
   NB. OR…
   NB. y is string expression, e.g. '9.5 kg'
   NB. returns 2boxed OR string according to y
-if. 32=3!:0 y do.x uuboxed y
-else. x uustring y
+if. isBoxed y do. z=. x uuboxed y
+else. z=. x uustring y
 end.
+z [ msg LF,LF,LF
 )
 
 uustring=: 4 : 0
@@ -1050,95 +1077,39 @@ NB. (":va),SP,un
 (ucode 8 u: un format va),SP,(ucode un)
 )
 
-uuboxed=: 4 : 0
+uuboxed=: '' ddefine
   NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
-me=. 'uuboxed'
+	x_uu_=: x [ y_uu_=: y
+msg '+++ uuboxed: ENTERED'
 'val uns'=. y
-	sessuu llog 'me val uns'
+	sllog 'x uuboxed__ val uns'
 'ux uy'=. bris each x;uns  NB. Make x, uns kosher
 if. 0<#x do. if. -. ux compatible uy do.
-  msg'>>> uu: incompatible units: (ux) || (uy)'
+  emsg'>>> uuboxed: incompatible units: (ux) || (uy)'
   return.
 end. end.
 'unsc c fy'=. convert uns  NB. unsc is in SI units
 if. fy = _ do.
-  msg'>>> uu: unknown units: (uns)' return. 
+  emsg'>>> uuboxed: unknown units: (uns)' return. 
 end.
   NB. Default x to: unsc (uns converted to SI units)
-if. 0=#x do. ux=. bris x=. unsc end.
+if. 0=#x do. ]ux=. bris x=. unsc end.
 fx=. > {: convert ux  NB. get the conversion factor: fx
 qty=. (fy%fx) * ('_',uns) adj val
 uno=. uniform x  NB. units for output
-	sessuu llog 'me fy fx val uno uns ux x'
-(ux adj qty) ; uno
+	sllog 'uuboxed__ fy fx uno ux'
+z=. (ux adj qty) ; uno
+z [ msg '--- uuboxed: EXITS'
 )
 
-
-0 :0
-uu=: ''&$: : (4 : 0)
-	NB. transform y (value;units) to: x (ux)
-	NB. x is target units: ux
-	NB. y is value;units
-me=. 'uu'
-err=. 4 : 'if. x-:''literal'' do. y else. 0 ; y end.'
-]dy=. datatype y
-select. dy
-case. 'literal' do.
-  ]val=. eval SP taketo y
-  uns=. SP takeafter y
-case. 'boxed' do.
-  ]'val uns'=. y
-  if. -.isNo val do. val=. eval ":val end.
-case. do.
-  nb '>>> cannot handle:' ; y return.
-end.
-NB. ]uns=. unslash1 undotted uns
-NB. ux=. 0 ucode x		NB. de-unicoded x
-NB. ]ux=. unucode unslash1 undotted x  NB. ASCII-ized x
-  NB. Make uy, ux kosher for compatibility test
-]uy=. bris uns
-]ux=. bris x
-if. 0<#x do.
-  if. -. ux compatible uy do.
-    z=. '>>> incompatible units: ', x ,SP, uns
-    dy err z return.
-  end.
-end.
-'unsc c fy'=. convert uns	NB. unsc is in SI units
-if. fy=_ do. dy err '>>> unknown units: ',uns return. end.
-  NB. Default x to: unsc (uns converted to SI units)
-if. 0=#x do. ux=. bris x=. unsc end.
-]fx=. >{: convert ux  NB. get the conversion factor: fx
-]qty=. (fy%fx) * ('_',uns) adj val
-]uno=. uniform x  NB. units for output
-  sessuu llog 'me fy fx val'
-  sessuu llog 'me uno uns ux x'
-if. dy-:'literal' do.
-  z=. (ucode utf8 ux format qty),SP,uno
-else.
-  z=. (ux adj qty) ; uno
-end.
-)
-
-uunicode=: 3 : 0
-if. 0=#y do. UNICODE
-else. UNICODE=: {.y
-end.
-)
-
-uurowsc=: 3 : 0
-sessuu 'uurowsc: ENTERED'
-(UUC ssmx y){UUC
-)
-
-uurowsf=: 3 : 0
-sessuu 'uurowsf: ENTERED'
-(UUF ssmx y){UUF
-)
-
+uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
+uurowsc=: 3 : '(UUC ssmx y){UUC'
+uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
 
-DIVIDER=:'==================== [uu] format.ijs =================='
+sd DIVIDER=:'==================== [uu] format.ijs =================='
+
+cocurrent 'uu'
 
 NB. ┌────────────────────────────────────────────────┐
 NB. │See DEV 97 for new pattern-matching technique   │
@@ -1158,8 +1129,6 @@ NB. collection in this script.
 NB.
 NB. This arrangement allows ad-hoc 'give_' and 'take_' verbs
 NB. to be defined in the t-table itself (which is a J script).
-
-cocurrent 'uu'
 
 give=: 4 : 0
   NB. implements verb: format
@@ -1185,38 +1154,20 @@ errif -. x-: 'test2'
 'give_test2: ',":y
 )
 
-DIVIDER=:'==================== [uu] start.ijs ===================='
+
+sd DIVIDER=:'==================== [uu] start.ijs ===================='
 
 cocurrent 'uu'
 
-loaddefs=: 3 : 0
-@@'DID THIS EVER WORK?'
-  NB. load additional defs kept in TPATH_UU*
-  NB.  y='C'	TPATH_UUC
-  NB.  y='F'	TPATH_UUF
-]path=: ('TPATH_UU',y)~
-]uut=. 'UU',y
-  NB. Ensure these folders exist
-1!:5 :: _1: <}: TPATH_UU  NB. contains: (path)
-1!:5 :: _1: <}: path
-  NB. load contents of TPATH_UU*
-r=. i.0 0
-if. 0<$files=. {."1 (1!:0) path sl'*' do.
-  for_fi. files do.  r=. r, 'm'freads path,>fi end.
-end.
-$(uut)=: r ,~ uut~
-i.0 0
-)
-
 start=: 3 : 0
-sessuu 'start: ENTERED'
-erase 'DIVIDER'
   NB. start the locale: _uu_
   NB. Not only intended to be called on loading,
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
-NB. 0 enlog 0   NB. start a new log file -- c/f _cal_
+wd'msgs' [ msg '+++ start: ENTERED'
+make_msg 0	NB. disable diagnostics
+erase 'DIVIDER'
 if. -.fexist TPATH_UUC do.
   smoutput z=.'>>> start: file not found: ',TPATH_UUC
   z return.
@@ -1228,9 +1179,13 @@ load :: 0: TPATH_UUC
 load :: 0: TPATH_UUF
 load :: 0: TPATH_UUM
 umake''
+STARTED=: 1	NB. enable in-script test-verbs
+make_msg 1	NB. enable diagnostics
+wd'msgs' [ msg '--- start: EXITS'
 )
 
-NB. ============================================
+sd DIVIDER=:'==================== [z] paths ===================='
+
 cocurrent 'z'
 
 NB. UU definitive paths - kept in _z_
@@ -1248,5 +1203,4 @@ uuf=: 3 : 'open TPATH_UUF'		NB. TEST ONLY: view functions
 uum=: 3 : 'open TPATH_UUM'		NB. TEST ONLY: view conversns
 uunicode=: uunicode_uu_		NB. unicode level for SI-units
 
-NB. ============================================
 start_uu_''
