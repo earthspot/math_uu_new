@@ -14,7 +14,7 @@ NB.	Noun: mks is a list of the primitive SI units (=fundamental units)
 NB.	WARNING: The fundamental unit of mass in SI units is not [g] but [kg].
 NB.	This means that scaleunits_cal_ gives [g] and [kg] special treatment.
 NB.	The first 11 lines of UUC define fundamental units in terms of themselves.
-NB.	They are not "real" definitions: their conversion factor will always be 1. 
+NB.	They are not "real" definitions: their conversion factor will always be 1.
 NB.	They serve here as appendable lines for the sake of completeness.
 NB.
 NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
@@ -27,7 +27,7 @@ NB.	absolute temperature of their zero-points.
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 saved	[saved]	Friday 8 June 2018  18:20:50
+1 /	[saved]	Sunday 10 June 2018  17:40:05
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
