@@ -1,9 +1,24 @@
-NB. uu - build
+NB. uu - build.ijs
 
-NB. IAC Fri 3 Jul 2015  09:45:51
-t=. 'BUILT=: ',quote 6!:0@('YYYY-MM-DD  hh:mm:ss'"_)''
-t fwrites '~Dev/uu/source/whenbuilt.ijs'
+HEADERFILE_z_=: '~Gituu/source/header.ijs'
+BUILTFILE_z_=: 1!:1 <jpath'~Gituu/builtfile'	NB. '~Gituu/uu.ijs'
 
+RB=: ')'
 
-writesourcex_jp_ '~Dev/uu/source';'~Release/uu.ijs'
+ferase HEADERFILE
+HEADERFILE fappend~ sw 0 :0
+0 :0
+(date'')
+-
+UU: scientific units conversion package
+(RB)
 
+clear 'uu'
+coclass 'uu'
+)
+
+writesourcex_jp_ '~Gituu/source';BUILTFILE
+
+0 :0
+open BUILTFILE
+)

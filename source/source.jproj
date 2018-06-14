@@ -1,12 +1,9 @@
-NB. project: uu
-NB.
-NB. defines list of source files.
-NB. path defaults to project directory.
-
-init.ijs
-whenbuilt.ijs
+header.ijs
+constants.ijs
+utilities.ijs
 main.ijs
-getversion.ijs
-whereami.ijs
-zfns.ijs
+pp_encoding.ijs
+format.ijs
+public.ijs
+paths.ijs
 start.ijs
