@@ -10,8 +10,7 @@ start=: 3 : 0
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
 wd'msgs' [ msg '+++ start: ENTERED'
-make_msg 0	NB. disable diagnostics
-erase 'DIVIDER'
+make_msg 0	NB. disable diagnostics while caches are being built
 if. -.fexist TPATH_UUC do.
   smoutput z=.'>>> start: file not found: ',TPATH_UUC
   z return.
@@ -23,8 +22,15 @@ load :: 0: TPATH_UUC
 load :: 0: TPATH_UUF
 load :: 0: TPATH_UUM
 make_units''
-cx''	NB. check if any noun has become complex
-STARTED=: 1	NB. enable in-script test-verbs
+  NB. Make (NEW): unitc based on pp_encoding
+make_unitc''  NB. builds unitc itself on 1st pass
+unitc=: 1 make_unitc''  NB. 2nd pass
+unitc=: 1 make_unitc''  NB. 3rd pass
+report_complex_nouns''  NB. NO NOUNS should be complex
+  NB. Enable inline test-verbs (in main.ijs)…
+STARTED=: 1
+  NB. …such verbs only act if the script is loaded
+  NB. once verb: start has been run.
 make_msg 1	NB. enable diagnostics
 wd'msgs' [ msg '--- start: EXITS'
 )

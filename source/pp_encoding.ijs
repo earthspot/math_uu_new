@@ -1,93 +1,48 @@
 	NB. uu - pp_encoding.ijs
 '==================== [uu] pp_encoding.ijs ===================='
-
+	NB. The notes which were here have been moved to temp 181
 cocurrent 'uu'
 
-make_ucodex=: (3 : 0)"1
-  NB. make list of code numbers of units in UUC
-i=. units i. <unit=. y
-z=. i pick unitx
-t=. utoks i pick unitx
-	t_z_=:t
-ssw'make_ucodex: y=(y) i=(i) z=(z) t=[(crex t)]'
-code4xunit (,>t) -. SL,SP	NB. TOO LIMITED <<<<<<<<<
-)
-
-make_ucode=: (3 : 0)"1
-  NB. make ucode - the list of codes of units in UUC
-NB. FOR EACH cunit in the next utoks of unitv…
-i=. units i. <unit=. y
-code=. i pick ucode
-NB. IS code absent?
-NB. Work thru its (unitv) fetching and combining codes
-)
-
-0 :0
-ot 177 -initial utils for u* nouns, plus viewtable for UUC
--
-TRIAL UNITS:
-1 kg m/s^2 [N]	Force; Newton
-1 N m	[J]	Energy; joules
-1 J/s	[W]	Power; watts
-1 A s	[C]	Charge; coulombs
-1 J/C	[V]	Potential; volts
-1 C/V	[F]	Capacitance; farads
-1 V/A	[Ohm]	Resistance; Ohms
-  unitv   units
-A good replacement for verb: convert
--expands tokens until all are basic & repeated
-	i.e. /s/s -not: s^-2
-	-one of the cnv* already does this.
--then looks-up code for each token
--then accumulates the codes.
-HOW DO WE KNOW a token is basic? (i{units) -: (i{unitv)
--
-MORE EFFICIENT…
-loop thru tokens, fetching the code for each *token* (NOT unit)
- -work recursively for tokens without codes (yet)
--
-make_ucodex -tries to find code from unitx.
-BUT… we're planning to replace unitx (-costly to compute)
-THE GOAL: -make each new code from ucode (existing entries)
-CONTENTS OF ucode come from…
-  basic units: m kg s A K cd mol rad eur
-  named units: [N]=A/
-Strategy:
-Typical UUC table entries
-1	kg m/s/s	[N]	Force; newtons
-1	N/m/m	[Pa]	Pressure; pascals
-^	^^^^^	 ^^
-uvalu	unitv	units	-->(uvalx unitx)
-------------------------
-uvalu	numeric value of the quantity
-units	stated [nominal] units, e.g. [Pa]
-unitv	given units of the quantity, e.g. [N/m/m]
-unitx	fully expanded unitv, viz: [kg/m/s^2]
-NB. uvalx	conversion factor: units ÷ unitx
-)
--
-pp4xunit '/s'
-encoded 0 0 _1 0 0 0 0 0 0
-code4xunit '/s'
-make_ucodex 'Hz'
--
-but this won't work in general, only for 1 basic unit.
-make_ucode -to work with code, not xunit
- -or at least the simple xunit
- -accumulates valid codes in: ucode
- -needs to build ucode, and at the same time lookup in it.
- -It cannot simply exploit verb-rank ("0)
- --it must loop
-)
+UNSETCODE=:   _1x
+BADCODE=:     _17389x	NB. must be prime
+TRIVIALCODE=:  1x
+KILLERCODE=:   0x
+OUTSIDECODE=: _99991x	NB. must be prime
 
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PW=: '^'		NB. power
 MI=: '-'		NB. minus (==HY)
 
-mks=: ;:'m kg s A K cd mol rad eur'
+NB. mks=: ;:'m kg s A K cd mol rad eur'
+	NB. <<< mks IS ALREADY ASSIGNED IN: constants.ijs
+	NB. It is only here for reference.
 Nmks=: #mks	NB. # of basic mks units = # of primes for pp-coding
   NB. …Nmks used in tacit verbs. Otherwise scarcely faster than #mks
 Pmks=: x:p:i.#mks	NB. the first (#mks) primes
+
+scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'  NB. now handled by: cnvj
+
+NB. ---------------------------------------------------------
+irregulars=: 3 : 0
+smoutput llog 'TRIVIALCODE KILLERCODE'
+smoutput llog 'OUTSIDECODE UNSETCODE BADCODE'
+)
+
+dip=: 3 : 0
+  NB. y is bool e.g. u2~:unitc or: unitc=_
+assert (#y)=(#UUC)
+smoutput '+++ how many? - ',": (+/y)
+if. 0<+/y do.
+smoutput '+++ their IDs?'
+smoutput list I. y
+smoutput '+++ their names?'
+smoutput list units pick~ I. y
+smoutput '+++ their codes?'
+smoutput list unitc pick~ I. y
+end.
+smoutput 75#'-'
+)
+NB. ---------------------------------------------------------
 
 randompp=: 3 : '? Nmks#>:y'
 encoded=:  3 : '*/ Pmks ^ y'		NB. pp-> code
@@ -95,8 +50,9 @@ decodedx=: 3 : 'x:^:_1 Nmks q: y'	NB. (extended)code-> pp
 decodedr=: 3 : 'x:^:_1 -/decodedx 2 x: y'  NB. (rational)code-> pp
 decoded=: decodedx :: decodedr
 
-expandcode=: 0 ddefine
+expandcode=: (0 ddefine)"0
   NB. the canonical expansion (xunit) of code: y
+if. y=0 do. '' return. end.  NB. AVOIDS J HANGING <<<<<<<<<<<<<
 asTokens=. x  NB. (bool): x=1 -return list of boxed tokens (not string)
 for_p. decoded y[z=.'' do.
   unit=. p_index pick mks  NB. the mks unit, e.g. 'mol'
@@ -126,16 +82,200 @@ upp4utok=: 3 : 0
 unit;power return.
 )
 
+isValid=: 3 : 0
+-. y e. UNSETCODE,BADCODE
+)
+
+0 :0
+isNontrivial=: 3 : 0
+-. y e. TRIVIALCODE,KILLERCODE
+)
+
+isRegular=: (3 : 0)"0
+IRREGULARS=. KILLERCODE,UNSETCODE,BADCODE,OUTSIDECODE
+if. y e. IRREGULARS do. 0 return. end.
+if. y = TRIVIALCODE do. 1 return. end.
+]z=. 1 -.~ 2 x: |y
+]z=. ; q:each z
+-. any z e. | IRREGULARS
+)
+
+isIrregular=: -.&isRegular
+
+make_unitc=: 0 ddefine
+  NB. x=0 for 1st pass: build unitc from scratch
+  NB. x=1 for 2nd pass: resolve forward refs
+  NB. returns new candidate unitc
+  NB. BUT ALSO incrementally builds GLOBAL unitc if x-:0
+rebuild=. x-:0
+z=. 0$0x  NB. candidate unitc
+for_i. i.#UUC do.
+  codex=. i pickc unitc  NB. known code else OUTSIDECODE
+  code=. (code4i :: BADCODE) i  NB. uses unitc -as much as exists
+  msg '--- make_unitc: i=(i) rebuild?:(rebuild) codex=(codex) code=(code)'
+  z=. z,code
+  assert 64 128 e.~ 3!:0 z  NB. z must remain extended|rational
+  if. rebuild do. unitc=: z end.
+end.
+z return.
+)
+
+pickc=: pick :: OUTSIDECODE
+
+code4i=: (3 : 0)"0
+  NB. code for index(es): y
+	y_uu_=: y
+if. (y<0) or (y>:#UUC) do. BADCODE return. end.
+]units_y=. y pick units  NB. nominal units
+]unitv_y=. y pick unitv  NB. units definition
+  msg '=== code4i[(y)]: units_y=(units_y) unitv_y=(unitv_y)'
+  NB. Recognise a basic unit and return its prime…
+if. Nmks > i=. mks i. <,units_y do. i{Pmks return. end.
+if. unitv_y -: ,SL do. TRIVIALCODE return. end.
+if. unitv_y -: ,ST do. KILLERCODE return. end.
+  NB. if unitc has a "regular" code at (y), use the code…
+]code=. y pickc unitc
+  msg '--- code4i: code=(crex code)'
+if. isRegular code do. code return. end.
+NB. ]code=. code4xunit unitv_y
+]code=. code4anyunit unitv_y
+if. isValid code do. code return. end.
+  msg '--- code4i: no more code4* verbs to try'
+BADCODE return.
+)
+
+0 :0
+code4i 15
+VIEWTABLE=: 10  NB. number of lines in viewtable output
+smoutput viewtable 0 10 20
+smoutput viewtable 30	NB. the problem area!
+smoutput viewtable 40
+canon expandcode 3r50
+canon expandcode 30625r12	NB. [F] 24
+xxu 18 19
+xxu 30 + i.10
+)
+
+xxu=: (3 : 0)"0
+  NB. cross-check unitc against unitx for index: y
+UNC=: canon expandcode y{unitc
+UNX=: >y{unitx
+if. UNC -: UNX do. smoutput 'hooray!'
+else. UNC ; UNX end.
+)
+
+units4i=: (3 : 0)"0
+  NB. units for index(es): y
+y pick units
+)
+
+
+code4unit=: 3 : 0
+  NB. lookup the code for SINGLE NAMED unit: y
+]i=. units i. <,y
+try. i pickc unitc
+catch. BADCODE end.
+)
+
 pp4xunit=: 3 : 0
-  NB. pp (prime-powers) for canonical expansion (xunit): y
-  NB. accum into z the prime-power corresp to: unit
+  NB. pp (prime-powers) for CANONICAL EXPANSION (xunit): y
+  NB. accum in z the prime-power corresp to: unit
 for_t. utoks y [ z=.Nmks#0 do.
+  msg '--- pp4xunit: token=[(crex t)]'
   'unit power'=. upp4utok t
   index=. mks i. <unit
-NB.   smoutput t_index ; unit ; power ; index
+  msg '--- pp4xunit: token=[(crex t)]--> unit=(unit) , power=(power)'
   if. index<Nmks do. z=. power index}z end.  NB. insert one z-entry
 end.
 z return.
 )
 
-code4xunit=: encoded&pp4xunit
+code4xunit=: encoded&pp4xunit  NB. for CANONICAL EXPANSION only (no repeated units)
+
+stripscale=: 3 : 0
+  NB. strip off the scaling prefix from (bare) unit: y
+  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
+NB. if. ({.y) e. scalingPrefixes do. }.y else. y end.
+'^' -.~ 2 pick cnvj ,y
+)
+
+0 :0
+stripscale '/km^-3'
+stripscale '/km^_3'
+stripscale '/km^3'
+stripscale 'km^-3'
+stripscale 'km^_3'
+stripscale 'km^3'
+stripscale 'km'
+stripscale 'm'
+)
+
+c4a=: code4anyunit=: 3 : 0
+  NB. code for ANY entry (y) in (units)
+  NB. multiply the codes for each (powered)token
+  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
+if. 0=#y    do. TRIVIALCODE return. end.
+if. SL-: >y do. TRIVIALCODE return. end.
+if. ST-: >y do. KILLERCODE return. end.
+for_t. utoks y[z=.0$0x do.
+  'unit power'=. upp4utok t
+  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
+  if. -.isRegular code=.code4unit unit do.
+    code=. code4unit stripscale unit
+  end.
+  z=. z,code^power
+  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
+end.
+muz=. */z  NB. combine all the codes
+NB. msg '--- code4anyunit: muz=[(crex muz)] re-expanded=(expandcode muz)'
+msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
+muz return.
+)
+
+0 :0
+code4anyunit=: 3 : 0
+  NB. code for ANY entry (y) in (units)
+  NB. multiply the codes for each (powered)token
+  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
+  y_uu_=: y
+if. 0=#y    do. TRIVIALCODE return. end.
+if. SL-: >y do. TRIVIALCODE return. end.
+if. ST-: >y do. KILLERCODE return. end.
+for_t. utoks y[z=.0$0x do.
+  'unit power'=. upp4utok t
+  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
+  NB. IF code NO GOOD: might (unit) be a [scaled] basic unit?
+  if. -.isRegular ]code=.code4unit unit do.
+    code=. code4unit stripscale unit
+  end.
+NB. ---------------------------------------------------------
+NB. THE [acre] SECTION ---
+NB.   NB. IF code STILL NO GOOD: might (unit) be a DERIVED unit, e.g. 'acre'?
+NB.   if. -.isRegular code do.
+NB.     code=. code4anyunit unitv4unit unit
+NB.     NB. <<<<<<<<<<<<<<<<<< COMPUTE A BETTER (code) HERE
+NB.   end.
+NB. ---------------------------------------------------------
+  NB. IF code STILL NO GOOD: give up…
+  if. -.isRegular code do. OUTSIDECODE return. end.
+  NB. At this juncture we have a regular code to use…
+  z=. z,code^power
+  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
+end.
+muz=. */z  NB. combine all the codes
+NB. msg '--- code4anyunit: muz=[(crex muz)] re-expanded=(expandcode muz)'
+msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
+muz return.
+)
+
+0 :0
+code4unit 'acre'
+code4xunit 'acre'
+code4anyunit 'acre'
+code4anyunit 'rd'
+)
+
+0 :0
+make_unitc''  NB. build the working cache: (unitc) -to match: (units)
+…now called within: start'' (defined in start.ijs)
+)

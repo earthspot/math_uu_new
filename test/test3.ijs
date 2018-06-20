@@ -1,93 +1,60 @@
-NB. UU test suite
+NB. UU: scientific units conversion package - test3
 0 :0
-Wednesday 13 June 2018  15:31:09
+Friday 15 June 2018  11:22:33
+-
+>>>>>>>>>>> WARNING !!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+uunicode setting & their effect NEED FIXING
+…then so will this script!
 -
 Sample statements to test verb: uu
 )
-smoutput '=== test.ijs - entered'
+smoutput '=== test3.ijs - entered'
 
 cocurrent 'uu'
 
-smoutput uu '3 ft'
-smoutput uu '1 yd'
-smoutput uu '1 min'
-smoutput 'ft' uu '1 yd'
-smoutput 'yd' uu '6 ft'
-smoutput 'km' uu '56789 m'
+uunicode 0	NB. no unicode in units
+assert '0.914 m' -:	uu '3 ft'
+assert '0.914 m' -:	uu '1 yd'
+assert '60 s' -:		uu '1 min'
+assert '3 ft' -:		'ft' uu '1 yd'
+assert '2 yd' -:		'yd' uu '6 ft'
+assert '56.789 km' -:	'km' uu '56789 m'
 
 uunicode 0	NB. no unicode in units
-smoutput uu '15 Ang/s/s'
-smoutput 'Ang' uu '1 mm'
-smoutput 'Ang/s^2' uu '0.0001 ft/s/s'
-smoutput 'ft/s^2' uu '1 Å h⁻²'
-smoutput 'ft/s^2' uu '1 Å/h^2'
-smoutput 'ft/s^2' uu '1 Å/h/h'
-smoutput 'ft/s^2' uu '1 Ang/h/h'
+assert '1.500E-9 m/s²' -:	uu '15 Ang/s/s'		NB. >>>>>> SO WHY IS uu OUTPUTTING UNICODE?
+assert '1.000E7 Å' -:	'Ang' uu '1 mm'
+assert '3.048E5 Å/s²' -:	'Ang/s^2' uu '0.0001 ft/s/s'
+z=. '2.532E-17 ft/s²'
+assert z -:	  	'ft/s^2' uu '1 Å h⁻²'
+assert z -:	 	'ft/s^2' uu '1 Å/h^2'
+assert z -:	 	'ft/s^2' uu '1 Å/h/h'
+assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
 
 uunicode 1	NB. unicoded with slashes
-smoutput uu '15 Ang/s/s'
-smoutput 'Ang' uu '1 mm'
-smoutput 'Ang/s^2' uu '0.0001 ft/s/s'
-smoutput 'ft/s^2' uu '1 Å h⁻²'
-smoutput 'ft/s^2' uu '1 Å/h^2'
-smoutput 'ft/s^2' uu '1 Å/h/h'
-smoutput 'ft/s^2' uu '1 Ang/h/h'
+assert '1.500E-9 m/s²' -:	uu '15 Ang/s/s'
+assert '1.000E7 Å' -:	'Ang' uu '1 mm'
+assert '3.048E5 Å/s²' -:	'Ang/s^2' uu '0.0001 ft/s/s'
+z=. '2.532E-17 ft/s²'
+assert z -:	  	'ft/s^2' uu '1 Å h⁻²'
+assert z -:	 	'ft/s^2' uu '1 Å/h^2'
+assert z -:	 	'ft/s^2' uu '1 Å/h/h'
+assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
+NB. assert 'xx' -:	  uu '15 Ang/s/s'
+NB. assert 'xx' -:	  'Ang' uu '1 mm'
+NB. assert 'xx' -:	  'Ang/s^2' uu '0.0001 ft/s/s'
+NB. assert 'xx' -:	  'ft/s^2' uu '1 Å h⁻²'
+NB. assert 'xx' -:	  'ft/s^2' uu '1 Å/h^2'
+NB. assert 'xx' -:	  'ft/s^2' uu '1 Å/h/h'
+NB. assert 'xx' -:	  'ft/s^2' uu '1 Ang/h/h'
 
 uunicode 2	NB. unicoded with negative powers
-smoutput uu '15 Ang/s/s'
-smoutput 'Ang' uu '1 mm'
-smoutput 'Ang/s^2' uu '0.0001 ft/s/s'
-smoutput 'ft/s^2' uu '1 Å h⁻²'
-smoutput 'ft/s^2' uu '1 Å/h^2'
-smoutput 'ft/s^2' uu '1 Å/h/h'
-smoutput 'ft/s^2' uu '1 Ang/h/h'
-
-
-0 :0
-empty uunicode 2
-uu '15 Ang/s/s'
-'Ang' uu '1 mm'
-'Ang/s^2' uu '0.0001 ft/s/s'
-'ft/s^2' uu '1 Å h⁻²'
-'ft/s^2' uu '1 Å/h^2'
-'ft/s^2' uu '1 Å/h/h'
-'ft/s^2' uu '1 Ang/h/h'
-)
-
-0 : 0
-NB. More sample statements
-uunicode 0	NB. no unicode
-uunicode 1	NB. unicoded with slashes
-uunicode 2	NB. unicoded with negative powers
-		uu '100 degC'
-		uu '212 degF'
-'degC' 		uu '100 degC'
-'degF' 		uu '100 degC'
-'degC' 		uu '212 degF'
-'degC' 		uu 373.16 ; 'K'
-'degF' 		uu 373.16 ; 'K'
-'Fahrenheit'	uu 373.16 ; 'K'
-'Centigrade'	uu 373.16 ; 'K'
-'Celsius' 	uu 373.16 ; 'K'
-'degC' 		uu '373.16 K'
-'degF' 		uu '373.16 K'
-'Fahrenheit'	uu '373.16 K'
-'Centigrade'	uu '373.16 K'
-'Celsius'		uu '373.16 K'
-		uu '1 Ohm'
-'Ω' 		uu '6.000 kg m²/A²/s³'
-'Ohm' 		uu '6.000 kg m²/A²/s³'
-'Ω' 		uu '6.000 kg m^2/A^2/s^3'
-'Ohm' 		uu '6.000 kg m^2/A^2/s^3'
-		uu '6.000 kg m²/A²/s³'
-		uu '6.000 kg m^2/A^2/s^3'
-		uu '1 d'
-		uu '1 /d'
-		uu 1 ; '/d'
-'Hz' 		uu 1 ; '/d'
-'Hz' 		uu '1 /d'
-'note' 		uu '1 /d'
-'note' 		uu '440 Hz'  NB. "A440" pitch standard
-)
+assert '1.500E-9 m s⁻²' -:	  uu '15 Ang/s/s'
+assert '1.000E7 Å' -:	  'Ang' uu '1 mm'
+assert '3.048E5 Å s⁻²' -:	  'Ang/s^2' uu '0.0001 ft/s/s'
+z=. '2.532E-17 ft s⁻²'
+assert z -:	  	'ft/s^2' uu '1 Å h⁻²'
+assert z -:	 	'ft/s^2' uu '1 Å/h^2'
+assert z -:	 	'ft/s^2' uu '1 Å/h/h'
+assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
 
 smoutput '=== test3.ijs - completed'

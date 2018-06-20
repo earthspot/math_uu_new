@@ -27,3 +27,9 @@ uurowsc=: uurowsc_uu_
 uurowsf=: uurowsf_uu_
 i.0 0
 )
+
+  NB. public_uu_ -is not intended for making aliases in _z_
+  NB. Of all _uu_ verbs, only these should have aliases in _z_
+uunicode_z_=: uunicode_uu_		NB. test/set unicode level for UU output
+uu_z_=: uu_uu_			NB. the "keyhole" (for manual use)
+

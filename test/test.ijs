@@ -1,10 +1,10 @@
 NB. UU test suite
 0 :0
-Wednesday 13 June 2018  15:30:56
+Friday 15 June 2018  11:07:57
 )
 smoutput '=== test.ijs - entered'
 
-trace_z_=: 3 : 'TRACE_z_=: | * y'
+trace 0	NB. TURN TRACE OFF FOR ALL TESTS…
 
 load '~Gituu/test/test1.ijs'
 load '~Gituu/test/test2.ijs'

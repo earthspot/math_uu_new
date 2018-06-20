@@ -25,10 +25,12 @@ if. y do.
   sessuu=: 3 : 'if. zeroifabsent''TRACE'' do. smoutput y else. i.0 0 end.'
   msg=: sessuu&sw	NB. for alert signal: governed by TRACE
   sllog=: sessuu&llog
+  msg '+++ make_msg: msg is ACTIVE'  NB. self-confirmation
 else.
   sessuu=: empty
   msg=: empty
   sllog=: empty
+  smoutput '--- make_msg: msg is empty'
 end.
 y return.
 )
@@ -46,7 +48,7 @@ or=:  +.
 not=: -.
 to=:    [ + [: i. [: >: -~	NB. eg: 3 to 5 <--> 3 4 5
 
-cx=: 3 : 0
+report_complex_nouns=: 3 : 0
   NB. check for complex nouns in given locale
 loc=. >coname''
 nocomplex=. 1
@@ -83,3 +85,19 @@ utoks=: 3 : 0
 z=. sp1 y	NB. ensure leading sign-byte: SP|SL
 z=. (z e. SP,SL) <;.1 z
 )
+
+vt=: viewtable=: (a:&$: : (4 : 0))"0
+  NB. y == index into list: units
+  NB. x == BOXED list of names of nouns (the table's columns)
+  NB. x MUST BE scalar, to allow ("0) to apply to y (…also x)
+  NB. x == a: (defaulted) - use the default list
+if. a: -:x do. x=. <'units unitv uvalu unitx uvalx unitc i' end.
+st =. (":&.>)"0	NB. string version of numlist
+cst=. ([: st [) ,. [: st ]  NB. combine st-ed lists
+]h=. ;: cols=. >x
+]i=. i.#UUC
+]t=. ". cols rplc SP;' cst '
+]z=. t{~ y + i.10 ifabsent 'VIEWTABLE'  NB. #lines of output
+h,z,h
+)
+
