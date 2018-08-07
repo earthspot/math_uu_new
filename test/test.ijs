@@ -10,6 +10,8 @@ load '~Gituu/test/test1.ijs'
 load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
 
+VALIDATE_unitc_uu_''
+
 smoutput '=== test.ijs - completed'
 
 NB. ---------------------------------------------------------

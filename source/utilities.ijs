@@ -91,7 +91,7 @@ vt=: viewtable=: (a:&$: : (4 : 0))"0
   NB. x == BOXED list of names of nouns (the table's columns)
   NB. x MUST BE scalar, to allow ("0) to apply to y (…also x)
   NB. x == a: (defaulted) - use the default list
-if. a: -:x do. x=. <'units unitv uvalu unitx uvalx unitc i' end.
+if. a: -:x do. x=. <'units unitv unitx uvalu uvalx uvalc unitc i' end.
 st =. (":&.>)"0	NB. string version of numlist
 cst=. ([: st [) ,. [: st ]  NB. combine st-ed lists
 ]h=. ;: cols=. >x

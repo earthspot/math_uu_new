@@ -1,6 +1,6 @@
 NB. uu - build
 0 :0
-Friday 15 June 2018  11:48:24
+Monday 6 August 2018  16:28:44
 -
 open BUILTFILE
 )
@@ -24,7 +24,7 @@ HEADERFILE fappend~ sw 0 :0
 UU: scientific units conversion package
 (RB)
 
-clear 'uu'
+clear 'uu'	NB. >>>>> DELETE THIS LINE IN RELEASED ADDON
 coclass 'uu'
 )
 

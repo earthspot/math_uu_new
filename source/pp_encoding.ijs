@@ -1,13 +1,13 @@
 	NB. uu - pp_encoding.ijs
 '==================== [uu] pp_encoding.ijs ===================='
-	NB. The notes which were here have been moved to temp 181
+	NB. The notes which were here have been moved to temp 181 --which refers to temp 179
 cocurrent 'uu'
 
-UNSETCODE=:   _1x
-BADCODE=:     _17389x	NB. must be prime
-TRIVIALCODE=:  1x
-KILLERCODE=:   0x
-OUTSIDECODE=: _99991x	NB. must be prime
+UNSETCODE=:   131x    NB. must be prime
+BADCODE=:     99991x  NB. must be prime
+TRIVIALCODE=: 1x
+KILLERCODE=:  0x
+  NB. other big primes to use: 17383x 17389x
 
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PW=: '^'		NB. power
@@ -23,9 +23,27 @@ Pmks=: x:p:i.#mks	NB. the first (#mks) primes
 scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'  NB. now handled by: cnvj
 
 NB. ---------------------------------------------------------
-irregulars=: 3 : 0
-smoutput llog 'TRIVIALCODE KILLERCODE'
-smoutput llog 'OUTSIDECODE UNSETCODE BADCODE'
+
+VALIDATE_unitc=: 3 : 0
+  NB. verify (expanded) unitc matches unitx
+notmatches=. [: -. -:
+trace 0
+bads=. i.0
+for_i. i.#units [n=.0 do. unit=. i pick units
+  iux=. i pick unitx	NB. fully resolved units
+  iuc=. i pick unitc	NB. pp-code
+  ixc=. canon expandcode iuc	NB. resolved units from pp-code
+  if. iux notmatches ixc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad: [(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
+    n=.n+1
+  end.
+end.
+ssw '+++ VALIDATE_unitc: mismatches=(n)'
+smoutput '... bads…'
+smoutput bads
+smoutput '... bads+30…'
+smoutput bads+30
 )
 
 dip=: 3 : 0
@@ -71,81 +89,128 @@ end.
 if. asTokens do. z else. dlb z end.
 )
 
-toks4expandcode=: 1&expandcode
-
-upp4utok=: 3 : 0
-  NB. (unit;power) for utok: y
-]z=. sp1 >y
-]sign=. <: 2* SL~:{.z
-]unit=. PW taketo }.z
-]power=. sign * {. 1,~ ". PW takeafter z
-unit;power return.
+isNotOK=: -.&isOK=: (3 : 0)"0
+(isRegular y),(isNonTrivial y),(isNotKiller y)
 )
 
-isValid=: 3 : 0
--. y e. UNSETCODE,BADCODE
+isValid=: -.&isInvalid=: (3 : 0)"0
+y e. UNSETCODE,BADCODE
 )
 
-0 :0
-isNontrivial=: 3 : 0
--. y e. TRIVIALCODE,KILLERCODE
+isNonTrivial=: -.&isTrivial=: (3 : 0)"0
+y=TRIVIALCODE
 )
 
-isRegular=: (3 : 0)"0
-IRREGULARS=. KILLERCODE,UNSETCODE,BADCODE,OUTSIDECODE
+isNotKiller=: -.&isKiller=: (3 : 0)"0
+y=KILLERCODE
+)
+
+isIrregular=: -.&isRegular=: (3 : 0)"0
+IRREGULARS=. UNSETCODE,BADCODE
 if. y e. IRREGULARS do. 0 return. end.
+if. y = KILLERCODE do. 1 return. end.
 if. y = TRIVIALCODE do. 1 return. end.
 ]z=. 1 -.~ 2 x: |y
 ]z=. ; q:each z
 -. any z e. | IRREGULARS
 )
 
-isIrregular=: -.&isRegular
-
-make_unitc=: 0 ddefine
-  NB. x=0 for 1st pass: build unitc from scratch
-  NB. x=1 for 2nd pass: resolve forward refs
-  NB. returns new candidate unitc
-  NB. BUT ALSO incrementally builds GLOBAL unitc if x-:0
-rebuild=. x-:0
-z=. 0$0x  NB. candidate unitc
-for_i. i.#UUC do.
-  codex=. i pickc unitc  NB. known code else OUTSIDECODE
-  code=. (code4i :: BADCODE) i  NB. uses unitc -as much as exists
-  msg '--- make_unitc: i=(i) rebuild?:(rebuild) codex=(codex) code=(code)'
-  z=. z,code
-  assert 64 128 e.~ 3!:0 z  NB. z must remain extended|rational
-  if. rebuild do. unitc=: z end.
+make_unitc=: 1 ddefine
+  NB. x=pass# (1,2,3…)
+pass=. x
+rebuild=. pass<:1
+ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)(LF)'
+if. rebuild do.
+  ssw=. empty
+  uvalc=:(#UUC)$0
+  unitc=:(#UUC)$UNSETCODE
 end.
-z return.
-)
-
-pickc=: pick :: OUTSIDECODE
-
-code4i=: (3 : 0)"0
-  NB. code for index(es): y
-	y_uu_=: y
-if. (y<0) or (y>:#UUC) do. BADCODE return. end.
-]units_y=. y pick units  NB. nominal units
-]unitv_y=. y pick unitv  NB. units definition
-  msg '=== code4i[(y)]: units_y=(units_y) unitv_y=(unitv_y)'
-  NB. Recognise a basic unit and return its prime…
-if. Nmks > i=. mks i. <,units_y do. i{Pmks return. end.
-if. unitv_y -: ,SL do. TRIVIALCODE return. end.
-if. unitv_y -: ,ST do. KILLERCODE return. end.
-  NB. if unitc has a "regular" code at (y), use the code…
-]code=. y pickc unitc
-  msg '--- code4i: code=(crex code)'
-if. isRegular code do. code return. end.
-NB. ]code=. code4xunit unitv_y
-]code=. code4anyunit unitv_y
-if. isValid code do. code return. end.
-  msg '--- code4i: no more code4* verbs to try'
-BADCODE return.
+for_i. i.#UUC [n=.0 do.
+  val=. i{uvalc [code=. i{unitc
+  if. (isIrregular code) or (0=val) do.
+    ssw '--- i=(i) val=(val) code=(code) [(i pick units)]'
+    'val code'=. qty4i i
+    ssw '+++ i=(i) val=(val) code=(code)(LF)'
+    uvalc=: val  i}uvalc
+    unitc=: code i}unitc
+    n=. n+1
+    assert 64 128 e.~ 3!:0 unitc  NB. must remain extended|rational
+  end.
+end.
+n return.  NB. count of unitc entries reassigned
 )
 
 0 :0
-code4i 15
+make_unitc''		NB. 1st pass
+VALIDATE_unitc''
+dip isInvalid unitc			NB. should be 0
+dip isIrregular unitc
+dip 0=uvalc
+dip (0=uvalc) or isIrregular unitc
+2 make_unitc''	NB. 2nd pass
+3 make_unitc''	NB. 3rd pass
+4 make_unitc''	NB. 4th pass
+)
+
+0 :0
+make_unitc=: 0 ddefine
+  NB. x=0 for 1st pass: build unitc from scratch
+  NB. x=1 for 2nd pass: resolve forward refs	---> USE: }
+  NB. returns new candidate unitc and uvalc
+  NB. BUT ALSO incrementally builds GLOBAL unitc if x-:0
+rebuild=. x-:0
+v=. z=. 0$0x  NB. candidate uvalc and unitc
+for_i. i.#UUC do.
+  'val code'=. qty4i i
+  msg '--- make_unitc: i=(i) rebuild?:(rebuild) code=(code)'
+  v=. v,val
+  z=. z,code
+  assert 64 128 e.~ 3!:0 z  NB. z must remain extended|rational
+NB. >>>>>> WHAT ABOUT v?
+  if. rebuild do.
+    uvalc=: v	
+    unitc=: z
+  end.
+end.
+v;z return.
+)
+
+qty4i=: (3 : 0)"0
+  NB. (valu;code) for index(es): y
+	y_uu_=: y
+if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
+]valu=.    y{uvalu
+]units_y=. y pick units  NB. nominal units of valu
+]unitv_y=. y pick unitv  NB. units definition
+  msg '=== qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)]'
+  NB. Recognise a basic unit and return its prime…
+if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+  NB. Recognise [/] and [*] and handle them
+if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
+if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
+  NB. if y{unitc already is an "OK" code, use it AS-IS…
+valc=. y{uvalc [code=. y{unitc
+msg '--- qty4i: code=(crex code) valc=(valc)'
+if. isOK code do.
+  val=. valu*valc
+  msg '--- qty4i: OK code: valu=(valu) valc=(valc) val=(val)'
+  val;code return.
+end.
+  NB. Else compute valc and its code
+'valc code'=. qty4anyunit unitv_y
+msg '--- qty4i: code=(crex code) valc=(valc) from: qty4anyunit[(unitv_y)]'
+if. isValid code do.
+  val=. valu*valc
+  msg '--- qty4i: VALID code=(crex code) valu=(valu) valc=(valc) val=(val)'
+  val;code
+else.
+  msg '--- qty4i: INVALID code=(crex code)'
+  0;BADCODE
+end.
+)
+
+0 :0
+qty4i 15
 VIEWTABLE=: 10  NB. number of lines in viewtable output
 smoutput viewtable 0 10 20
 smoutput viewtable 30	NB. the problem area!
@@ -154,6 +219,7 @@ canon expandcode 3r50
 canon expandcode 30625r12	NB. [F] 24
 xxu 18 19
 xxu 30 + i.10
+dip uvalx ~: uvalc
 )
 
 xxu=: (3 : 0)"0
@@ -164,116 +230,66 @@ if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
 )
 
-units4i=: (3 : 0)"0
-  NB. units for index(es): y
-y pick units
-)
-
-
-code4unit=: 3 : 0
-  NB. lookup the code for SINGLE NAMED unit: y
+qty4bareunit=: 3 : 0
+  NB. lookup the qty (value;code) for BARE NAMED unit: y
+  NB. may be basic or derived, BUT expect to find it in: units
 ]i=. units i. <,y
-try. i pickc unitc
-catch. BADCODE end.
-)
-
-pp4xunit=: 3 : 0
-  NB. pp (prime-powers) for CANONICAL EXPANSION (xunit): y
-  NB. accum in z the prime-power corresp to: unit
-for_t. utoks y [ z=.Nmks#0 do.
-  msg '--- pp4xunit: token=[(crex t)]'
-  'unit power'=. upp4utok t
-  index=. mks i. <unit
-  msg '--- pp4xunit: token=[(crex t)]--> unit=(unit) , power=(power)'
-  if. index<Nmks do. z=. power index}z end.  NB. insert one z-entry
+if. i<#UUC do. (i{uvalc);(i{unitc)
+else. 0;BADCODE
 end.
-z return.
 )
 
-code4xunit=: encoded&pp4xunit  NB. for CANONICAL EXPANSION only (no repeated units)
+NB. plusminus1=: 3 : '_1 + 2*y'
 
-stripscale=: 3 : 0
-  NB. strip off the scaling prefix from (bare) unit: y
-  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
-NB. if. ({.y) e. scalingPrefixes do. }.y else. y end.
-'^' -.~ 2 pick cnvj ,y
-)
-
-0 :0
-stripscale '/km^-3'
-stripscale '/km^_3'
-stripscale '/km^3'
-stripscale 'km^-3'
-stripscale 'km^_3'
-stripscale 'km^3'
-stripscale 'km'
-stripscale 'm'
-)
-
-c4a=: code4anyunit=: 3 : 0
+q4a=: qty4anyunit=: 3 : 0
   NB. code for ANY entry (y) in (units)
   NB. multiply the codes for each (powered)token
-  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
-if. 0=#y    do. TRIVIALCODE return. end.
-if. SL-: >y do. TRIVIALCODE return. end.
-if. ST-: >y do. KILLERCODE return. end.
-for_t. utoks y[z=.0$0x do.
-  'unit power'=. upp4utok t
-  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
-  if. -.isRegular code=.code4unit unit do.
-    code=. code4unit stripscale unit
+if. 0=#y    do. 1;TRIVIALCODE return. end.
+if. SL-: >y do. 1;TRIVIALCODE return. end.
+if. ST-: >y do. 1;KILLERCODE return. end.
+v=. z=. 0$0x
+for_t. utoks y do.
+  'invert scale unit power'=. cnvj ot=.>t
+  'valu code'=. qty4bareunit unit
+  sllog 'qty4anyunit__ ot invert scale unit power valu code'
+  if. invert do.
+    z=. z , %(code^power)
+    v=. v , scale%(valu^power)
+  else.
+    z=. z , code^power
+    v=. v , scale*(valu^power)
   end.
-  z=. z,code^power
-  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
 end.
+msg '--- qty4anyunit: v=(v) datatype_z=(datatype z) z=[(crex z)]'
 muz=. */z  NB. combine all the codes
-NB. msg '--- code4anyunit: muz=[(crex muz)] re-expanded=(expandcode muz)'
-msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
-muz return.
+muv=. */v  NB. combine all the valus
+msg '--- qty4anyunit: (muv) [(y)] --> (crex muz) --> [(canon expandcode muz)]'
+muv;muz return.
 )
 
 0 :0
-code4anyunit=: 3 : 0
-  NB. code for ANY entry (y) in (units)
-  NB. multiply the codes for each (powered)token
-  NB. NEED TO GENERALIZE THIS to handle conversion factors <<<<<<<<<<<<<<<<<<<<<<<
-  y_uu_=: y
-if. 0=#y    do. TRIVIALCODE return. end.
-if. SL-: >y do. TRIVIALCODE return. end.
-if. ST-: >y do. KILLERCODE return. end.
-for_t. utoks y[z=.0$0x do.
-  'unit power'=. upp4utok t
-  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
-  NB. IF code NO GOOD: might (unit) be a [scaled] basic unit?
-  if. -.isRegular ]code=.code4unit unit do.
-    code=. code4unit stripscale unit
-  end.
-NB. ---------------------------------------------------------
-NB. THE [acre] SECTION ---
-NB.   NB. IF code STILL NO GOOD: might (unit) be a DERIVED unit, e.g. 'acre'?
-NB.   if. -.isRegular code do.
-NB.     code=. code4anyunit unitv4unit unit
-NB.     NB. <<<<<<<<<<<<<<<<<< COMPUTE A BETTER (code) HERE
-NB.   end.
-NB. ---------------------------------------------------------
-  NB. IF code STILL NO GOOD: give up…
-  if. -.isRegular code do. OUTSIDECODE return. end.
-  NB. At this juncture we have a regular code to use…
-  z=. z,code^power
-  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
-end.
-muz=. */z  NB. combine all the codes
-NB. msg '--- code4anyunit: muz=[(crex muz)] re-expanded=(expandcode muz)'
-msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
-muz return.
+trace 1
+qty4bareunit 'acre'
+qty4anyunit 'acre'
+qty4anyunit 'rd'
+qty4anyunit 'gbp/m^3'
+qty4anyunit 'kWh'
 )
 
-0 :0
-code4unit 'acre'
-code4xunit 'acre'
-code4anyunit 'acre'
-code4anyunit 'rd'
+NB. These are only used by test2 ...............
+NB. >>>>>>>>>> ELIMINATE...
+toks4expandcode=: 1&expandcode
+
+NB. >>>>>>>>>> ELIMINATE...
+upp4utok=: 3 : 0
+  NB. (unit;power) for utok: y
+]z=. sp1 >y
+]sign=. <: 2* SL~:{.z
+]unit=. PW taketo }.z
+]power=. sign * {. 1,~ ". PW takeafter z
+unit;power return.
 )
+
 
 0 :0
 make_unitc''  NB. build the working cache: (unitc) -to match: (units)

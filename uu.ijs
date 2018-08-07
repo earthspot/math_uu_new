@@ -1,5 +1,5 @@
 0 :0
-2018-06-20  01:41:46
+2018-08-07  03:38:06
 -
 UU: scientific units conversion package
 )
@@ -159,7 +159,7 @@ vt=: viewtable=: (a:&$: : (4 : 0))"0
 
 
 
-if. a: -:x do. x=. <'units unitv uvalu unitx uvalx unitc i' end.
+if. a: -:x do. x=. <'units unitv unitx uvalu uvalx uvalc unitc i' end.
 st =. (":&.>)"0
 cst=. ([: st [) ,. [: st ]
 ]h=. ;: cols=. >x
@@ -1004,11 +1004,11 @@ validunits=: 3 : 'units e.~ <,y'
 
 cocurrent 'uu'
 
-UNSETCODE=:   _1x
-BADCODE=:     _17389x
-TRIVIALCODE=:  1x
-KILLERCODE=:   0x
-OUTSIDECODE=: _99991x
+UNSETCODE=:   131x
+BADCODE=:     99991x
+TRIVIALCODE=: 1x
+KILLERCODE=:  0x
+
 
 PWM=: '^-'
 PW=: '^'
@@ -1020,9 +1020,26 @@ Nmks=: #mks
 Pmks=: x:p:i.#mks
 
 scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'
-irregulars=: 3 : 0
-smoutput llog 'TRIVIALCODE KILLERCODE'
-smoutput llog 'OUTSIDECODE UNSETCODE BADCODE'
+VALIDATE_unitc=: 3 : 0
+
+notmatches=. [: -. -:
+trace 0
+bads=. i.0
+for_i. i.#units [n=.0 do. unit=. i pick units
+  iux=. i pick unitx
+  iuc=. i pick unitc
+  ixc=. canon expandcode iuc
+  if. iux notmatches ixc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad: [(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
+    n=.n+1
+  end.
+end.
+ssw '+++ VALIDATE_unitc: mismatches=(n)'
+smoutput '... bads…'
+smoutput bads
+smoutput '... bads+30…'
+smoutput bads+30
 )
 
 dip=: 3 : 0
@@ -1066,78 +1083,127 @@ end.
 if. asTokens do. z else. dlb z end.
 )
 
-toks4expandcode=: 1&expandcode
-
-upp4utok=: 3 : 0
-
-]z=. sp1 >y
-]sign=. <: 2* SL~:{.z
-]unit=. PW taketo }.z
-]power=. sign * {. 1,~ ". PW takeafter z
-unit;power return.
+isNotOK=: -.&isOK=: (3 : 0)"0
+(isRegular y),(isNonTrivial y),(isNotKiller y)
 )
 
-isValid=: 3 : 0
--. y e. UNSETCODE,BADCODE
+isValid=: -.&isInvalid=: (3 : 0)"0
+y e. UNSETCODE,BADCODE
 )
 
-0 :0
-isNontrivial=: 3 : 0
--. y e. TRIVIALCODE,KILLERCODE
+isNonTrivial=: -.&isTrivial=: (3 : 0)"0
+y=TRIVIALCODE
 )
 
-isRegular=: (3 : 0)"0
-IRREGULARS=. KILLERCODE,UNSETCODE,BADCODE,OUTSIDECODE
+isNotKiller=: -.&isKiller=: (3 : 0)"0
+y=KILLERCODE
+)
+
+isIrregular=: -.&isRegular=: (3 : 0)"0
+IRREGULARS=. UNSETCODE,BADCODE
 if. y e. IRREGULARS do. 0 return. end.
+if. y = KILLERCODE do. 1 return. end.
 if. y = TRIVIALCODE do. 1 return. end.
 ]z=. 1 -.~ 2 x: |y
 ]z=. ; q:each z
 -. any z e. | IRREGULARS
 )
 
+make_unitc=: 1 ddefine
+
+pass=. x
+rebuild=. pass<:1
+ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)(LF)'
+if. rebuild do.
+  ssw=. empty
+  uvalc=:(#UUC)$0
+  unitc=:(#UUC)$UNSETCODE
+end.
+for_i. i.#UUC [n=.0 do.
+  val=. i{uvalc [code=. i{unitc
+  if. (isIrregular code) or (0=val) do.
+    ssw '--- i=(i) val=(val) code=(code) [(i pick units)]'
+    'val code'=. qty4i i
+    ssw '+++ i=(i) val=(val) code=(code)(LF)'
+    uvalc=: val  i}uvalc
+    unitc=: code i}unitc
+    n=. n+1
+    assert 64 128 e.~ 3!:0 unitc
+  end.
+end.
+n return.
+)
+
+0 :0
+make_unitc''
+VALIDATE_unitc''
+dip isInvalid unitc
+dip isIrregular unitc
+dip 0=uvalc
+dip (0=uvalc) or isIrregular unitc
+2 make_unitc''
+3 make_unitc''
+4 make_unitc''
+)
+
+0 :0
 make_unitc=: 0 ddefine
 
 
 
 
 rebuild=. x-:0
-z=. 0$0x
+v=. z=. 0$0x
 for_i. i.#UUC do.
-  codex=. i pickc unitc
-  code=. (code4i :: BADCODE) i
-  msg '--- make_unitc: i=(i) rebuild?:(rebuild) codex=(codex) code=(code)'
+  'val code'=. qty4i i
+  msg '--- make_unitc: i=(i) rebuild?:(rebuild) code=(code)'
+  v=. v,val
   z=. z,code
   assert 64 128 e.~ 3!:0 z
-  if. rebuild do. unitc=: z end.
+  if. rebuild do.
+    uvalc=: v	
+    unitc=: z
+  end.
 end.
-z return.
+v;z return.
 )
 
-pickc=: pick :: OUTSIDECODE
-
-code4i=: (3 : 0)"0
+qty4i=: (3 : 0)"0
 
 	y_uu_=: y
-if. (y<0) or (y>:#UUC) do. BADCODE return. end.
+if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
+]valu=.    y{uvalu
 ]units_y=. y pick units
 ]unitv_y=. y pick unitv
-  msg '=== code4i[(y)]: units_y=(units_y) unitv_y=(unitv_y)'
+  msg '=== qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)]'
 
-if. Nmks > i=. mks i. <,units_y do. i{Pmks return. end.
-if. unitv_y -: ,SL do. TRIVIALCODE return. end.
-if. unitv_y -: ,ST do. KILLERCODE return. end.
+if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
 
-]code=. y pickc unitc
-  msg '--- code4i: code=(crex code)'
-if. isRegular code do. code return. end.
-]code=. code4anyunit unitv_y
-if. isValid code do. code return. end.
-  msg '--- code4i: no more code4* verbs to try'
-BADCODE return.
+if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
+if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
+
+valc=. y{uvalc [code=. y{unitc
+msg '--- qty4i: code=(crex code) valc=(valc)'
+if. isOK code do.
+  val=. valu*valc
+  msg '--- qty4i: OK code: valu=(valu) valc=(valc) val=(val)'
+  val;code return.
+end.
+
+'valc code'=. qty4anyunit unitv_y
+msg '--- qty4i: code=(crex code) valc=(valc) from: qty4anyunit[(unitv_y)]'
+if. isValid code do.
+  val=. valu*valc
+  msg '--- qty4i: VALID code=(crex code) valu=(valu) valc=(valc) val=(val)'
+  val;code
+else.
+  msg '--- qty4i: INVALID code=(crex code)'
+  0;BADCODE
+end.
 )
 
 0 :0
-code4i 15
+qty4i 15
 VIEWTABLE=: 10
 smoutput viewtable 0 10 20
 smoutput viewtable 30
@@ -1146,6 +1212,7 @@ canon expandcode 3r50
 canon expandcode 30625r12
 xxu 18 19
 xxu 30 + i.10
+dip uvalx ~: uvalc
 )
 
 xxu=: (3 : 0)"0
@@ -1156,105 +1223,58 @@ if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
 )
 
-units4i=: (3 : 0)"0
+qty4bareunit=: 3 : 0
 
-y pick units
-)
-
-
-code4unit=: 3 : 0
 
 ]i=. units i. <,y
-try. i pickc unitc
-catch. BADCODE end.
-)
-
-pp4xunit=: 3 : 0
-
-
-for_t. utoks y [ z=.Nmks#0 do.
-  msg '--- pp4xunit: token=[(crex t)]'
-  'unit power'=. upp4utok t
-  index=. mks i. <unit
-  msg '--- pp4xunit: token=[(crex t)]--> unit=(unit) , power=(power)'
-  if. index<Nmks do. z=. power index}z end.
+if. i<#UUC do. (i{uvalc);(i{unitc)
+else. 0;BADCODE
 end.
-z return.
 )
-
-code4xunit=: encoded&pp4xunit
-
-stripscale=: 3 : 0
+q4a=: qty4anyunit=: 3 : 0
 
 
-'^' -.~ 2 pick cnvj ,y
-)
-
-0 :0
-stripscale '/km^-3'
-stripscale '/km^_3'
-stripscale '/km^3'
-stripscale 'km^-3'
-stripscale 'km^_3'
-stripscale 'km^3'
-stripscale 'km'
-stripscale 'm'
-)
-
-c4a=: code4anyunit=: 3 : 0
-
-
-
-if. 0=#y    do. TRIVIALCODE return. end.
-if. SL-: >y do. TRIVIALCODE return. end.
-if. ST-: >y do. KILLERCODE return. end.
-for_t. utoks y[z=.0$0x do.
-  'unit power'=. upp4utok t
-  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
-  if. -.isRegular code=.code4unit unit do.
-    code=. code4unit stripscale unit
+if. 0=#y    do. 1;TRIVIALCODE return. end.
+if. SL-: >y do. 1;TRIVIALCODE return. end.
+if. ST-: >y do. 1;KILLERCODE return. end.
+v=. z=. 0$0x
+for_t. utoks y do.
+  'invert scale unit power'=. cnvj ot=.>t
+  'valu code'=. qty4bareunit unit
+  sllog 'qty4anyunit__ ot invert scale unit power valu code'
+  if. invert do.
+    z=. z , %(code^power)
+    v=. v , scale%(valu^power)
+  else.
+    z=. z , code^power
+    v=. v , scale*(valu^power)
   end.
-  z=. z,code^power
-  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
 end.
+msg '--- qty4anyunit: v=(v) datatype_z=(datatype z) z=[(crex z)]'
 muz=. */z
-msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
-muz return.
+muv=. */v
+msg '--- qty4anyunit: (muv) [(y)] --> (crex muz) --> [(canon expandcode muz)]'
+muv;muz return.
 )
 
 0 :0
-code4anyunit=: 3 : 0
+trace 1
+qty4bareunit 'acre'
+qty4anyunit 'acre'
+qty4anyunit 'rd'
+qty4anyunit 'gbp/m^3'
+qty4anyunit 'kWh'
+)
+toks4expandcode=: 1&expandcode
+upp4utok=: 3 : 0
 
-
-
-  y_uu_=: y
-if. 0=#y    do. TRIVIALCODE return. end.
-if. SL-: >y do. TRIVIALCODE return. end.
-if. ST-: >y do. KILLERCODE return. end.
-for_t. utoks y[z=.0$0x do.
-  'unit power'=. upp4utok t
-  msg '--- code4anyunit: token=[(crex t)]--> unit=(crex unit) , power=(power)'
-
-  if. -.isRegular ]code=.code4unit unit do.
-    code=. code4unit stripscale unit
-  end.
-
-  if. -.isRegular code do. OUTSIDECODE return. end.
-
-  z=. z,code^power
-  msg '--- code4anyunit: code=[(crex code)] datatype_z=(datatype z) z=[(crex z)]'
-end.
-muz=. */z
-msg '--- code4anyunit: [(y)] --> (crex muz) --> [(expandcode muz)]'
-muz return.
+]z=. sp1 >y
+]sign=. <: 2* SL~:{.z
+]unit=. PW taketo }.z
+]power=. sign * {. 1,~ ". PW takeafter z
+unit;power return.
 )
 
-0 :0
-code4unit 'acre'
-code4xunit 'acre'
-code4anyunit 'acre'
-code4anyunit 'rd'
-)
 
 0 :0
 make_unitc''
@@ -1326,7 +1346,7 @@ uu_z_=: uu_uu_
 '==================== [z] paths.ijs ===================='
 
 cocurrent 'z'
-]TPATH_UU=: jpath'~addons/math/uu'
+]TPATH_UU=: jpath'~Gituu'
 ]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
 ]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
 ]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
@@ -1356,11 +1376,10 @@ badversion=. 'v.v.v'"_
 load :: 0: TPATH_UUC
 load :: 0: TPATH_UUF
 load :: 0: TPATH_UUM
+
 make_units''
 
 make_unitc''
-unitc=: 1 make_unitc''
-unitc=: 1 make_unitc''
 report_complex_nouns''
 
 STARTED=: 1

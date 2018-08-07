@@ -27,7 +27,7 @@ NB.	absolute temperature of their zero-points.
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Sunday 10 June 2018  17:40:05
+1 /	[saved]	Tuesday 7 August 2018  03:38:00
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -39,33 +39,50 @@ UUC=: cmx 0 : 0
 1 eur	[eur]	fundamental unit - euro (currency)
 1 /	[/]	fundamental unit - (dimensionless)
 1 *	[*]	fundamental unit - (matches any units)
+1000 m	[km] kilometre
+0.01 m	[cm] centimetre
+0.001 m	[mm] millimetre
+0.0254 m	[in]	inch
+12 in	[ft]	feet
+36 in	[yd]	yard
+22 yd	[ch]	chain
+220 yd	[fu]	furlong
+1760 yd	[mi]	mile
 0.001 kg	[g]	gram (based on kg)
-0.01 /	[%]	Percentage
+1 s		[sec]	second (time)
+60 s	[min]	minute
+60 min	[h]		hour
+24 h	[d]		day
+30.4375 d		[mo]	average month
+0.01 /	[%]	Percent
 1 *	[!]	YES-NO
-1 /s	[Hz]	Frequency; hertz
+1 /s	[Hz]	Frequency; Hertz
 1 Hz	[midi]	"midi" number
 1 Hz	[note]	Musical note
-1 kg m/s/s	[N]	Force; newtons
-1 N/m/m	[Pa]	Pressure; pascals
-1 N m	[J]	Energy; joules
-1 J/s	[W]	Power; watts
-1 A s	[C]	Charge; coulombs
-1 J/C	[V]	Potential; volts
-1 C/V	[F]	Capacitance; farads
-1 V/A	[Ohm]	Resistance; Ohms
-1 /Ohm	[S]	Conductance; Siemens
-1 V s	[Wb]	Flux; Webers
-1 Wb/m/m	[T]	Flux density; Teslas
-1 Wb/A	[H]	Inductance; Henrys
-1 cd m s	[lm]	Luminous flux; lumens
+1 kg m/s/s	[N]	Force; Newton
+1 N/m/m	[Pa]	Pressure; Pascal
+1 N m	[J]	Energy; Joule
+1 J/s	[W]	Power; Watt
+1000 W	[kW] Power; kilowatt
+1 kW h	[kWh] Energy; kilowatt-hour
+1 A s	[C]	Charge; Coulomb
+1 J/C	[V]	Potential; Volt
+1 C/V	[F]	Capacitance; Farad
+1 V/A	[Ohm]	Resistance; Ohm
+1 /Ohm	[S]	Conductance; Siemen
+1 V s	[Wb]	Flux; Weber
+1 Wb/m/m	[T]	Flux density; Tesla
+1 Wb/A	[H]	Inductance; Henry
+1 cd m s	[lm]	Luminous flux; lumen
 1 lm/m/m	[lx]	Illumination; lux
 1e_6 m	[mu]	micron; micrometre
 1e_10 m	[Ang]	Angstrom-unit
 1e3 kg	[t]	tonne; metric
-1e4 m^2	[ha]	hectares
-4840 yd^2	[acre]	acres
-0.25 acre	[rd]	roods
+1e4 m^2	[ha]	hectare
+4840 yd^2	[acre]	acre
+0.25 acre	[rd]	rood
 1e_3 m^3	[l]	litre
+1e_3 l	[ml]	millilitre
 1 m/s	[v.si]	unit velocity
 1 m/s^2	[ac.si]	unit acceleration; SI
 9.812865328 m/s^2	[grav]	acceleration; gravity
@@ -110,23 +127,22 @@ UUC=: cmx 0 : 0
 0.04214 J	[ft.pdl]	foot-poundal
 1.356 J	[ft.lbf]	foot-pound
 4.184 J	[cal]	gram-calorie
-1 kcal	[Cal]	Calorie; diet
 4.1855 J	[cal.15]	calories at 15degC
 4.1868 J	[cal.IT]	calories I.T
+1000 cal	[kcal]	kilogram-calorie
+1 kcal	[Cal]	Calorie; diet
 1.055e3 J	[Btu]	British thermal units
 1e5 Btu	[therm]	therms
 4184 J	[g.TNT]	TNT explosive power (metric)
 4.184e9 J	[t.TNT]	TNT explosive power (metric)
-1 t.TNT ton/t	[ton.TNT]	TNT explosive power (avdp)
+1.01605 t.TNT		[ton.TNT]	TNT explosive power (avdp)
 1/2240 ton.TNT	[lb.TNT]	TNT explosive power (avdp)
 6e13 J	[Hiroshima]	Hiroshima bomb
 1e_7 J	[erg]	erg
-3.6 kJ	[Wh]	watt-hour
 1.602176565e_19 J	[eV]	electron-volt
-1 J/s	[W]	watt
 745.7 W	[hp]	horsepower
-30 MJ/kg	[ener.alc]	energy density by mass of ethanol
-35.2e6 J/l	[J/l]	energy density by volume of gasoline
+3e7 J/kg	[ener.alc]	energy density by mass of ethanol
+35.2e6 J/l	[ener.gas]	energy density by volume of gasoline
 9.0 kcal/g	[ener.fat]	energy content of fat
 0.3 J/cm^2	[av.sunl]	energy; avg sunlight
 1e7 kcal	[toe]	energy; tonne of oil equiv
@@ -147,21 +163,14 @@ UUC=: cmx 0 : 0
 1 K	[Celsius]	temperature
 1 K	[Centigrade]	temperature
 1 kcal/kg/K [sht.w]	Specific heat of water
-0.0254 m	[in]	inch
-12 in	[ft]	feet
-36 in	[yd]	yard
-22 yd	[ch]	chain
-220 yd	[fu]	furlong
-1760 yd	[mi]	mile
 1852 m	[naut]	nautical mile
 9.454e15 m	[li.yr]	light year
 3.26 li.yr	[parsec]	parsec
 149.6e6 km	[au]	astronomical unit
-0.0002778 m/s	[m/h]	metre-per-hour
-0.4470 m/s	[mi/h]	mile/hour
-0.4470 m/s	[mph]	mile per hour
-0.3048 m/s	[ft/sec]	feet/sec
+0.4470 m/s	[mph]	miles per hour
+1 mph	[m.p.h]	mile per hour
 0.3048 m/s	[fps]	feet per sec
+1 fps	[f.p.s]	feet per second
 0.5148 m/s	[knot]	knot
 28.3495 g	[oz]	ounce; avdp
 31.1035 g	[oz.troy]	ounce; troy
@@ -170,7 +179,6 @@ UUC=: cmx 0 : 0
 14 lb	[st]	stone; avdp
 112 lb	[cwt]	hundredweight; avdp
 2240 lb	[ton]	ton; avdp
-1.01605e3 kg [ton]	ton; avdp
 14.5939 kg	[slug]	slug
 1 t	[dwt]	deadweight-ton
 1 ton	[t.long]	long-tonne
@@ -191,11 +199,6 @@ UUC=: cmx 0 : 0
 1e_6 /	[ppm]	part per million
 1e_9 /	[ppb]	part per billion; USA
 1e3 /	[thou]	thousand
-1 s	[sec]	second
-60 s	[min]	minute
-3600 s	[h]	hour
-24*3600 s	[d]	day
-30.4375 d	[mo]	average month
 28 d	[lun.mo]	lunar month
 29.5 d	[lun]	lunation
 28 d	[mo.feb]	28-day month

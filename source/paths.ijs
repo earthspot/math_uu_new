@@ -5,7 +5,8 @@ cocurrent 'z'
 
 NB. UU definitive paths - kept in _z_
 
-]TPATH_UU=: jpath'~addons/math/uu'
+NB. ]TPATH_UU=: jpath'~addons/math/uu'	NB. >>>>> NO! UNDER DEVELOPMENT USE:
+]TPATH_UU=: jpath'~Gituu'
 ]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'	NB. constants
 ]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'	NB. functions
 ]TPATH_UUM=: TPATH_UU sl 'uum.ijs'	NB. conversns
