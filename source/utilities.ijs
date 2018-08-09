@@ -13,30 +13,44 @@ ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-NB. ADJUST for trace output…
-trace_z_=: 3 : 'TRACE_z_=: | * y'
-NB. trace 0
-trace 1
+NB. NB. ADJUST for trace output…
+NB. trace_z_=: 3 : 'TRACE_z_=: | * y'
+NB. NB. trace 0
+NB. trace 1
 
-make_msg=: 3 : 0
-  NB. USED: start
+NB. as currently set by: make_msg
+NB. sessuu0=: 3 : 'if. zeroifabsent''TRACE'' do. smoutput y else. i.0 0 end.'
+
+NB. active sessuu …
+sessuu1=: 3 : 0
+if. ME e. a: default 'TRACEVERBS' do.
+  smoutput y
+else. i.0 0  NB. same as returned by smoutput
+end.
+)
+
+make_msg=: 1 ddefine
+  NB. USED BY: start -and diagnostics for given IDs
   NB. These diagnostics get switched off/on by: start
+ME=: a:	NB. init ME (in all modes)
+talks=. x	NB. Boolean: x==1 -- output to sess
 if. y do.
-  sessuu=: 3 : 'if. zeroifabsent''TRACE'' do. smoutput y else. i.0 0 end.'
-  msg=: sessuu&sw	NB. for alert signal: governed by TRACE
+  sessuu=: sessuu1
+  msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS
   sllog=: sessuu&llog
-  msg '+++ make_msg: msg is ACTIVE'  NB. self-confirmation
+  if. talks do.
+    smoutput '+++ make_msg: msg is ACTIVE',LF
+  end.
 else.
   sessuu=: empty
   msg=: empty
   sllog=: empty
-  smoutput '--- make_msg: msg is empty'
+  if. talks do.
+    smoutput '--- make_msg: msg is empty',LF
+  end.
 end.
 y return.
 )
-
-make_msg 1	NB. ENABLE diagnostics
-
 
 all=: *./
 and=: *.
@@ -86,14 +100,38 @@ z=. sp1 y	NB. ensure leading sign-byte: SP|SL
 z=. (z e. SP,SL) <;.1 z
 )
 
+vt=: viewtable=: '' ddefine
+  NB. y == index into list: units -OR…
+  NB.   y == nominal units, e.g. 'G'
+  NB.   y == open list of nominal units, e.g. 'G N'
+  NB. x == OPEN list of names of nouns (usually the table's columns)
+  NB. x == '' (defaulted) - use the default list
+  NB. VIEWTABLE (if defined) alters the default number of displayed lines (10)
+faux=. 'units unitv unitx uvalu uvalx uvalc unitc i'	NB. x-default value
+if. '' -:x do. x=. faux end.
+if. isNo y do.
+  y=. y+i.10 default 'VIEWTABLE'
+end.
+if. isLit y do.
+  y=. units i. ;:y
+end.
+st =. (":&.>)"0	NB. utility verb: numlist-->string
+cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
+]h=. ,: ;: cols=. x
+]i=. i.#UUC
+]t=. ". cols rplc SP;' cst '
+h,y{t
+)
+
+0 :0	NB. SUPERSEDED
 vt=: viewtable=: (a:&$: : (4 : 0))"0
   NB. y == index into list: units
-  NB. x == BOXED list of names of nouns (the table's columns)
-  NB. x MUST BE scalar, to allow ("0) to apply to y (…also x)
+  NB. x == BOXED list of names of nouns (usually the table's columns)
+  NB. x MUST BE scalar, to allow ("0) to apply to y (…therefore x too)
   NB. x == a: (defaulted) - use the default list
 if. a: -:x do. x=. <'units unitv unitx uvalu uvalx uvalc unitc i' end.
-st =. (":&.>)"0	NB. string version of numlist
-cst=. ([: st [) ,. [: st ]  NB. combine st-ed lists
+st =. (":&.>)"0	NB. utility verb: numlist-->string
+cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
 ]h=. ;: cols=. >x
 ]i=. i.#UUC
 ]t=. ". cols rplc SP;' cst '

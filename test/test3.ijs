@@ -8,7 +8,7 @@ uunicode setting & their effect NEED FIXING
 -
 Sample statements to test verb: uu
 )
-smoutput '=== test3.ijs - entered'
+smoutput '+++ test3.ijs - entered'
 
 cocurrent 'uu'
 
@@ -57,4 +57,4 @@ assert z -:	 	'ft/s^2' uu '1 Å/h^2'
 assert z -:	 	'ft/s^2' uu '1 Å/h/h'
 assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
 
-smoutput '=== test3.ijs - completed'
+smoutput '--- test3.ijs - completed'

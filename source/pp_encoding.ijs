@@ -1,6 +1,6 @@
 	NB. uu - pp_encoding.ijs
 '==================== [uu] pp_encoding.ijs ===================='
-	NB. The notes which were here have been moved to temp 181 --which refers to temp 179
+	NB. The notes here have been moved to temp 181 /179
 cocurrent 'uu'
 
 UNSETCODE=:   131x    NB. must be prime
@@ -23,27 +23,30 @@ Pmks=: x:p:i.#mks	NB. the first (#mks) primes
 scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'  NB. now handled by: cnvj
 
 NB. ---------------------------------------------------------
-
 VALIDATE_unitc=: 3 : 0
   NB. verify (expanded) unitc matches unitx
 notmatches=. [: -. -:
-trace 0
 bads=. i.0
-for_i. i.#units [n=.0 do. unit=. i pick units
+for_i. i.#units do. unit=. i pick units
   iux=. i pick unitx	NB. fully resolved units
   iuc=. i pick unitc	NB. pp-code
   ixc=. canon expandcode iuc	NB. resolved units from pp-code
+  ivx=. i pick uvalx	NB. conversion factor to go with unitx
+  ivc=. i pick uvalc	NB. conversion factor to go with unitc
   if. iux notmatches ixc do.
     bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad: [(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
-    n=.n+1
+    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
+  elseif. ivx ~: ivc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
   end.
 end.
-ssw '+++ VALIDATE_unitc: mismatches=(n)'
-smoutput '... bads…'
-smoutput bads
-smoutput '... bads+30…'
-smoutput bads+30
+ssw '--- VALIDATE_unitc: mismatches=(#bads)'
+if. 0<#bads do.
+  smoutput viewtable bads
+  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
+  smoutput bads+30
+end.
 )
 
 dip=: 3 : 0
@@ -89,9 +92,9 @@ end.
 if. asTokens do. z else. dlb z end.
 )
 
-isNotOK=: -.&isOK=: (3 : 0)"0
-(isRegular y),(isNonTrivial y),(isNotKiller y)
-)
+NB. isNotOK=: -.&isOK=: (3 : 0)"0
+NB. (isRegular y),(isNonTrivial y),(isNotKiller y) NONSENSE??
+NB. )
 
 isValid=: -.&isInvalid=: (3 : 0)"0
 y e. UNSETCODE,BADCODE
@@ -117,9 +120,10 @@ if. y = TRIVIALCODE do. 1 return. end.
 
 make_unitc=: 1 ddefine
   NB. x=pass# (1,2,3…)
+  NB. does NOT use: msg or sllog
 pass=. x
 rebuild=. pass<:1
-ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)(LF)'
+ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)'
 if. rebuild do.
   ssw=. empty
   uvalc=:(#UUC)$0
@@ -128,9 +132,11 @@ end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
   if. (isIrregular code) or (0=val) do.
-    ssw '--- i=(i) val=(val) code=(code) [(i pick units)]'
+    ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
+    NB. …use of crex prints 4x instead of 4 (say)
+    NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qty4i for these ids
     'val code'=. qty4i i
-    ssw '+++ i=(i) val=(val) code=(code)(LF)'
+    ssw '--- id=(i) val=(val) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
     unitc=: code i}unitc
     n=. n+1
@@ -153,55 +159,43 @@ dip (0=uvalc) or isIrregular unitc
 )
 
 0 :0
-make_unitc=: 0 ddefine
-  NB. x=0 for 1st pass: build unitc from scratch
-  NB. x=1 for 2nd pass: resolve forward refs	---> USE: }
-  NB. returns new candidate unitc and uvalc
-  NB. BUT ALSO incrementally builds GLOBAL unitc if x-:0
-rebuild=. x-:0
-v=. z=. 0$0x  NB. candidate uvalc and unitc
-for_i. i.#UUC do.
-  'val code'=. qty4i i
-  msg '--- make_unitc: i=(i) rebuild?:(rebuild) code=(code)'
-  v=. v,val
-  z=. z,code
-  assert 64 128 e.~ 3!:0 z  NB. z must remain extended|rational
-NB. >>>>>> WHAT ABOUT v?
-  if. rebuild do.
-    uvalc=: v	
-    unitc=: z
-  end.
-end.
-v;z return.
+	units	nominal units in UUC, e.g. [Ohm]
+	unitv	units on which UUC defn is based
+	unitx	unitv expanded into fundamental units
+	uvalu	conversion factor explicit in UUC
+	uvalx	conversion factor to go with unitx
+	uvalc	conversion factor to go with unitc
+	unitc	pp-coded units, expandcode must match unitx
 )
 
 qty4i=: (3 : 0)"0
-  NB. (valu;code) for index(es): y
-	y_uu_=: y
+ME=: <'qty4i'
+  NB. returns (valu;code) for index: y
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
 ]units_y=. y pick units  NB. nominal units of valu
-]unitv_y=. y pick unitv  NB. units definition
-  msg '=== qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)]'
-  NB. Recognise a basic unit and return its prime…
-if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+]unitv_y=. y pick unitv  NB. units definition as per UUC
   NB. Recognise [/] and [*] and handle them
 if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
 if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
-  NB. if y{unitc already is an "OK" code, use it AS-IS…
-valc=. y{uvalc [code=. y{unitc
-msg '--- qty4i: code=(crex code) valc=(valc)'
-if. isOK code do.
+  NB. Recognise a basic unit and return its prime with "valc"==1 …
+if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+code=. y{unitc
+msg '(LF)+++ qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
+  NB. …use of crex prints 4x instead of 4 (say)
+  NB. if code is valid, assume y{uvalc is valid too
+if. isValid code do.
+  valc=. y{uvalc
   val=. valu*valc
-  msg '--- qty4i: OK code: valu=(valu) valc=(valc) val=(val)'
+  msg '--- qty4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code return.
 end.
-  NB. Else compute valc and its code
+  NB. Else compute qty==(valc;code) from specd units: unitv_y
 'valc code'=. qty4anyunit unitv_y
-msg '--- qty4i: code=(crex code) valc=(valc) from: qty4anyunit[(unitv_y)]'
+msg '... qty4i: valc=(valc) code=(crex code) from: qty4anyunit ''(unitv_y)'''
 if. isValid code do.
   val=. valu*valc
-  msg '--- qty4i: VALID code=(crex code) valu=(valu) valc=(valc) val=(val)'
+  msg '--- qty4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
 else.
   msg '--- qty4i: INVALID code=(crex code)'
@@ -210,13 +204,9 @@ end.
 )
 
 0 :0
-qty4i 15
+qty4i 59
 VIEWTABLE=: 10  NB. number of lines in viewtable output
-smoutput viewtable 0 10 20
-smoutput viewtable 30	NB. the problem area!
-smoutput viewtable 40
-canon expandcode 3r50
-canon expandcode 30625r12	NB. [F] 24
+smoutput vt 59
 xxu 18 19
 xxu 30 + i.10
 dip uvalx ~: uvalc
@@ -231,27 +221,32 @@ else. UNC ; UNX end.
 )
 
 qty4bareunit=: 3 : 0
+ME=: <'qty4bareunit'
   NB. lookup the qty (value;code) for BARE NAMED unit: y
   NB. may be basic or derived, BUT expect to find it in: units
-]i=. units i. <,y
-if. i<#UUC do. (i{uvalc);(i{unitc)
-else. 0;BADCODE
-end.
+i=. units i. <,y
+msg '+++ qty4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
+if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
+valc=. i{uvalc
+code=. i{unitc
+msg '--- qty4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+valc;code
 )
 
-NB. plusminus1=: 3 : '_1 + 2*y'
-
 q4a=: qty4anyunit=: 3 : 0
-  NB. code for ANY entry (y) in (units)
+ME=: <'qty4anyunit'
+  NB. RECALCULATES code for ANY entry (y) in (units)
+  NB. …ignores existing code in unitc if product of codes
   NB. multiply the codes for each (powered)token
+msg '+++ qty4anyunit: y=[(y)]'
 if. 0=#y    do. 1;TRIVIALCODE return. end.
 if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
-  'invert scale unit power'=. cnvj ot=.>t
+  'invert scale unit power'=. cnvj opentok=.>t
   'valu code'=. qty4bareunit unit
-  sllog 'qty4anyunit__ ot invert scale unit power valu code'
+  sllog 'opentok invert scale unit power valu code'
   if. invert do.
     z=. z , %(code^power)
     v=. v , scale%(valu^power)
@@ -260,17 +255,20 @@ for_t. utoks y do.
     v=. v , scale*(valu^power)
   end.
 end.
-msg '--- qty4anyunit: v=(v) datatype_z=(datatype z) z=[(crex z)]'
-muz=. */z  NB. combine all the codes
 muv=. */v  NB. combine all the valus
-msg '--- qty4anyunit: (muv) [(y)] --> (crex muz) --> [(canon expandcode muz)]'
+muz=. */z  NB. combine all the codes
+msg '--- qty4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+NB. msg '--- qty4anyunit: (muv) [(y)] --> [(muz)] --> [(canon expandcode muz)]'
 muv;muz return.
 )
 
 0 :0
-trace 1
+TRACEVERBS=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
+TRACEVERBS=: ;:'qty4i qty4anyunit qty4bareunit'
 qty4bareunit 'acre'
 qty4anyunit 'acre'
+qty4anyunit 'kg'
+qty4anyunit '/kg'
 qty4anyunit 'rd'
 qty4anyunit 'gbp/m^3'
 qty4anyunit 'kWh'

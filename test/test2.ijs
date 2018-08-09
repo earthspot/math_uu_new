@@ -4,7 +4,7 @@ Friday 15 June 2018  11:11:07
 -
 Sample statements to test verbs: expandcode upp4utok pp4xunit code4xunit encoded decoded
 )
-smoutput '=== test2.ijs - entered'
+smoutput '+++ test2.ijs - entered'
 
 cocurrent 'base'  NB. TO ENSURE ALL TEST VARS GET CREATED IN _z_
 
@@ -115,4 +115,4 @@ smoutput noun_table'z'
 smoutput noun_table'o'
 )
 
-smoutput '=== test2.ijs - completed'
+smoutput '--- test2.ijs - completed'

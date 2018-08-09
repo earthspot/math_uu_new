@@ -4,6 +4,7 @@
 cocurrent 'uu'
 
 adj=: 4 : 0
+ME=: <'adj'
 msg '+++ adj: ENTERED: x=(x) y=(y)'
   NB. Adjusts quantity: y for units: x
   NB. Used by: format and: uu
@@ -84,11 +85,13 @@ end.
 )
 
 canon=: 3 : 0
+ME=: <'canon'
 	NB. Sort units (str y) into canonical order
 	NB. y must be fully-resolved units, ie all from boxed list: mks
 	NB. Sort tokens EACH REVERSED. This brings num+denom terms together
+msg '+++ canon: ENTERED'
 z=. ; |. each sort |. each utoks y
-	msg '+++ canon: ENTERED: z=(z)'
+	msg '... canon: z=(z)'
 	NB. Cancel-out/collect each unit from global boxed list: mks in turn...
 for_w. mks do. m=. ,>w		NB. m== next unit from list: mks
   if. any m E. z do.		NB. only if m is present in z
@@ -102,6 +105,7 @@ z [ msg '--- canon: EXITS: z=(z)'
 )
 
 cnvf=: 3 : 0
+ME=: <'cnvf'
 	NB. expand y using units->unitv, also return the conversion factor f
 z=. (f=. INVALID) ; '' ; NOTFOUND	NB. "not-found" returned value
 t=. utoks cnvv y			NB. y is a bare (units), no SP|SL
@@ -126,7 +130,7 @@ zz return.
 )
 
 cnvj=: 3 : 0
-msg '+++ cnvj: ENTERED'
+ME=: <'cnvj'
 	NB. cut prefs/suffs from a cunit (eg: '/kg^3')
 k=. p=. 1 [ z=. y
 if. (SL~:{.z) and (any PWM E. z) do. NB. elim -ve power
@@ -137,9 +141,10 @@ if. j=.(SL={. sp1 z) do. z=. }.z end.	NB. bool:j remembers dropped prefix: SP|SL
 if. PW e. z do.			NB. recognise a power...
   'p z'=. (".{:z) ; (}:}:z)		NB. drop/remember suffixed power (as integer)
 end.
+msg '+++ cnvj: y=(y) j=(j) z=(z) p=(p)'
 	NB. Identify scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
 	NB. ONLY IF z is not itself in: units, eg 'knot' ...
-if. (iskg z) or (not validunits z) do.
+if. (-.iskg z) and (not validunits z) do.
 	NB. Identify a 2-CHAR ASCII scaling prefix ...
   if.     'da'-:2{.z do.	k=. 1e1  [z=.2}.z	NB. deka-
   elseif. z begins 'µ' do.	k=. 1e_6 [z=.z-.'µ'	NB. micro-
@@ -184,6 +189,7 @@ j ; k ; z ; p return.	NB. here z has NO prefixed SP (or SL)
   NB.	------------------------------------------------------------------------------
 
 cnvnon=: 3 : 0
+ME=: <'cnvnon'
 	NB. extract 1st non-mks token
 i=. (y e. mkss)i. 0	NB. index of 1st token not in mkss
 if. i<#y do.
@@ -210,6 +216,7 @@ LK=: {.LKS=: z
 cnvx=: 3 : 'unitx cnvv y'
 
 coll=: 4 : 0
+ME=: <'coll'
 	NB. collects-terms (no cancel-out)
 	NB. serves: canon
 	NB. eg: ' m kg kg/kg/kg s/s' coll 'kg'
@@ -226,9 +233,10 @@ z
 )
 
 compatible=: 4 : 0
-msg 'compatible: ENTERED'
+ME=: <'compatible'
 	NB. =1 iff units x,y compatible
 	NB. '*' is compatible with everything...
+msg 'compatible: ENTERED'
 if. ('*'= {.>x) or ('*'= {.>y) do. 1 return. end.
 ux=. compat cnvv >x [ uy=. compat cnvv >y
 	msg '... compatible: ux=(ux) uy=(uy)'
@@ -238,16 +246,16 @@ a-:b	NB. match their canonical units
 )
 
 compatlist=: 3 : 0
-msg 'compatlist: ENTERED'
+ME=: <'compatlist'
   NB. return extract of (units) compatible with units: y
-z=. ''
+msg 'compatlist: ENTERED'
   NB. if there's a compat-code (uy), get its mates
   NB. else lookup its cfm in: unitx
 if. 0<#uy=. compat cnvv >y do.
-z=. (I. uy=compat){units
+  z=. (I. uy=compat){units
 else.
-cn=. {.convert y
-z=. (I. cn=unitx){units
+  cn=. {.convert y
+  z=. (I. cn=unitx){units
 end.
   NB. If [m] present include [mm] [cm] [km] too
 if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
@@ -255,39 +263,53 @@ if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
 z=. ~. (<,y),z,{.convert y
 )
 
-  NB. convert
-  NB. Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
-  NB. Needed to compare two arbitrary units to see if compatible / inter-convertible.
-  NB. Simplifies the result of a division of 2 physical quantities.
-  NB. Returns 3-element: z
-  NB.  (>{.z) is the canonical units (cu)
-  NB.  (>{:z) is conversion factor (cf)
-  NB.  (>1{z) is diagnostic only: the number of lookup-cycles.
-  NB. Returns a canonical form (defined by: canon) to allow comparison using (-:).
-  NB.  DEFN cunit: a canonical element, having prefix, scale and power, eg '/s^2'
-  NB. Has a set of service-fns all with names cnv* ...
-  NB.  cnvnon z  extract 1st non-mks cunit(, returns: cunit;residue
-  NB.  cnvj t  cut t into: (1_if_prefixed_SL ; 10^n_scale ; unit ; ^n_repetition)
-  NB.  cnvf t  lookup t in: units-->unitv, returns (factor ; units)
-  NB.     -if not found, factor is _. -test using: isNaN f
-  NB.  cnvv t  called by: cnvf
-  NB.  j cnvi t  converts all SP<-->SL in cunits-str: t iff j=1
-  NB.     - (j=1 iff the cunit of which t is the expansion had prefix SL
-  NB. Uses: cnvnon to find first non-mks unit, t, 0=$t if no more units remaining.
-  NB. A units str consists of a series of tokens called "cunits", order immaterial.
-  NB. A cunit may be prefixed by SL (/) denoting denominator or by SP denoting numerator.
-  NB. Fn: utoks tokenises a units str. ensures 1st cunit has a leading SP
-  NB.  provided a leading SL is not already present. Uses sp1 to achieve this.
-  NB. Since SP is a meaningful cunit prefix, use of: deb will expunge not only SP,SP
-  NB.  but also any leading SP. But there must be a leading SP|SL.
-  NB. Uses: cnvf to lookup (bare) unit in: units-->unitv
-  NB. The expanded units tokens are then SUFFIXED to the unprocessed residue: rx
-  NB. -we can do that since order of cunits is immaterial.
-  NB. Fn: cnvf also returns conversion factor (f)
-  NB. Finally when no more units to expand (max cycles=30 as failsafe)
-  NB. the result is converted to canonical form using: canon.
-  NB.
+0 :0
+VERB: convert
+-
+Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
+Needed to compare two arbitrary units to see if compatible / inter-convertible.
+Simplifies the result of a division of 2 physical quantities.
+-
+Returns 3-element: z
+ (>{.z) is the canonical units (cu)
+ (>{:z) is conversion factor (cf)
+ (>1{z) is diagnostic only: the number of lookup-cycles.
+
+Returns a canonical form (defined by: canon) to allow comparison using (-:).
+ DEFN cunit: a canonical element, having prefix, scale and power, eg '/s^2'
+
+Has a set of service-fns all with names cnv* ...
+ cnvnon z  extract 1st non-mks cunit(, returns: cunit;residue
+ cnvj t  cut t into: (1_if_prefixed_SL ; 10^n_scale ; unit ; ^n_repetition)
+ cnvf t  lookup t in: units-->unitv, returns (factor ; units)
+    -if not found, factor is _. -test using: isNaN f
+ cnvv t  called by: cnvf
+ j cnvi t  converts all SP<-->SL in cunits-str: t iff j=1
+    - (j=1 iff the cunit of which t is the expansion had prefix SL
+
+Uses: cnvnon to find first non-mks unit, t, 0=$t if no more units remaining.
+
+A units str consists of a series of tokens called "cunits", order immaterial.
+A cunit may be prefixed by SL (/) denoting denominator or by SP denoting numerator.
+
+Fn: utoks tokenises a units str. ensures 1st cunit has a leading SP
+ provided a leading SL is not already present. Uses sp1 to achieve this.
+
+Since SP is a meaningful cunit prefix, use of: deb will expunge not only SP,SP
+ but also any leading SP. But there must be a leading SP|SL.
+
+Uses: cnvf to lookup (bare) unit in: units-->unitv
+The expanded units tokens are then SUFFIXED to the unprocessed residue: rx
+-we can do that since order of cunits is immaterial.
+
+Fn: cnvf also returns conversion factor (f)
+
+Finally when no more units to expand (max cycles=30 as failsafe)
+ the result is converted to canonical form using: canon.
+)
+
 convert=: 1&$: : (4 : 0)"1
+ME=: <'convert'
   NB. y (units) --> cu ; loop_count ; cf
 yb=. bris y  NB. extend the range of acceptible units formats
 	msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
@@ -333,6 +355,7 @@ end.
 )
 
 deslash=: 1&$: : (4 : 0)
+ME=: <'deslash'
   NB. deslash
   NB. x=1 --converts cunits with '/' into '^_n' form
   NB. x=0 --converts '^_n' cunits back into '/'
@@ -377,7 +400,8 @@ exrate=: exrate_exch_
 unhms=: 3600 %~ _ 60 60 #. 3 {. ]
 
 format_hms=: 3 : 0
-msg 'format: ENTERED'
+ME=: <'format_hms'
+msg 'format_hms: ENTERED'
   NB. output y as: 'hh:mm:ss.sss'
 if. y-:'' do. y=. unhms 23 59 59.567 end.  NB. TEST <<<<<
 neg=. (y<0)#'-'
@@ -496,6 +520,7 @@ np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
 
 scino=: 3 : 0
+ME=: <'scino'
 msg '+++ scino: y=(y)'
   NB. Scientific notation for number: y
   NB. but returns ordinary integer for integer (y)
@@ -506,6 +531,7 @@ z [ msg '--- scino: z=(z)'
 )
 
 selfcanc=: 3 : 0
+ME=: <'selfcanc'
 msg '+++ selfcanc: ENTERED'
   NB. Self-cancel unitstr (y) without reducing to mks
   NB. Sort tokens EACH REVERSED -collects num+denom terms
@@ -596,6 +622,7 @@ end.
 )
 
 ucase=: 3 : 0
+ME=: <'ucase'
 msg 'ucase: ENTERED'
 if. 0=#y do. UCASE
 else. UCASE=: {.y
@@ -644,6 +671,7 @@ z [ 'cspel csymb'=: SAV
 )
 
 udat=: 4 : 0
+ME=: <'udat'
 msg 'udat: ENTERED'
 	NB. raw boxed data from y=. seltext''
   NB. x=0 -const
@@ -667,6 +695,7 @@ end.
   NB. For use by (eg): combine in: cal
 
 udiv=: 4 : 0
+ME=: <'udiv'
 msg 'udiv: ENTERED'
 if. (1=#y) and (y=SL) do. x return. end.
 z=. cnvi utoks y    NB. invert token-list y
@@ -675,6 +704,7 @@ z=. z rplc '/^2';'/'
 )
 
 udumb=: 3 : 0
+ME=: <'udumb'
 msg 'udumb: ENTERED'
 'zdesc znits znitv zvalu'=. y
 zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
@@ -754,6 +784,7 @@ NB.    cutuuc '-1.5 my-u [my-new] test'
 NB. ============================================
 
 uniform=: _&$: : (4 : 0)"1
+ME=: <'uniform'
 	msg '+++ uniform: ENTERED: x=(x) y=(y)'
   NB. change units (y) to acceptable format for (UNICODE)
 y=. utf8 deb y  NB. convert from possible datatype=='unicode'
@@ -816,6 +847,7 @@ end.
 )
 
 uu=: '' ddefine
+ME=: <'uu'
   NB. transform y (value;units) to: x (ux)
   NB. x is target units: ux
   NB. y is 2boxed expression, e.g. 9.5 ; 'kg'
@@ -829,8 +861,8 @@ z [ msg LF,LF,LF
 )
 
 uustring=: 4 : 0
+ME=: <'uustring'
   NB. transform a string expression, e.g. '9.5 kg'
-me=. 'uustring'
 val=. eval SP taketo y
 uns=. SP takeafter y
 'va un'=. x uuboxed val ; uns
@@ -839,6 +871,7 @@ NB. (":va),SP,un
 )
 
 uuboxed=: '' ddefine
+ME=: <'uuboxed'
   NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
 	x_uu_=: x [ y_uu_=: y
 msg '+++ uuboxed: ENTERED'

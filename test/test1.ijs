@@ -6,12 +6,11 @@ Sample statements to test verb: uu
 >>> AT PRESENT DOES NOTHING !!!
 >>> TURN THESE STATEMENTS INTO asserts by usng: Run > All Lines  ⇧⌘E
 )
-smoutput '=== test1.ijs - entered'
+smoutput '+++ test1.ijs - entered'
 
 cocurrent 'uu'
 
-
-0 :0   
+0 :0
    uunicode''	NB. query setting
 2
    uunicode 0	NB. no unicode
@@ -100,7 +99,7 @@ G note
 A note
 )
 
-smoutput '=== test1.ijs - completed'
+smoutput '--- test1.ijs - completed'
 
 NB. ---------------------------------------------------------
 
