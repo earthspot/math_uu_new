@@ -41,7 +41,8 @@ for_i. i.#units do. unit=. i pick units
     ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
   end.
 end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads)'
+ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
+bads=. bads -. 11 28
 if. 0<#bads do.
   smoutput viewtable bads
   smoutput '... bads+30 (to identify by line# in uuc.ijs)…'

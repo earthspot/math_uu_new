@@ -1,6 +1,6 @@
 NB. UU: scientific units conversion package - test3
 0 :0
-Friday 15 June 2018  11:22:33
+Sunday 12 August 2018  02:42:14
 -
 >>>>>>>>>>> WARNING !!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 uunicode setting & their effect NEED FIXING
@@ -39,13 +39,6 @@ assert z -:	  	'ft/s^2' uu '1 Å h⁻²'
 assert z -:	 	'ft/s^2' uu '1 Å/h^2'
 assert z -:	 	'ft/s^2' uu '1 Å/h/h'
 assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
-NB. assert 'xx' -:	  uu '15 Ang/s/s'
-NB. assert 'xx' -:	  'Ang' uu '1 mm'
-NB. assert 'xx' -:	  'Ang/s^2' uu '0.0001 ft/s/s'
-NB. assert 'xx' -:	  'ft/s^2' uu '1 Å h⁻²'
-NB. assert 'xx' -:	  'ft/s^2' uu '1 Å/h^2'
-NB. assert 'xx' -:	  'ft/s^2' uu '1 Å/h/h'
-NB. assert 'xx' -:	  'ft/s^2' uu '1 Ang/h/h'
 
 uunicode 2	NB. unicoded with negative powers
 assert '1.500E-9 m s⁻²' -:	  uu '15 Ang/s/s'

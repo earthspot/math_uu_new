@@ -1,14 +1,16 @@
 NB. UU test suite
 0 :0
-Friday 15 June 2018  11:07:57
+Sunday 12 August 2018  02:39:35
 )
 smoutput '+++ test.ijs - entered'
 
-load '~Gituu/test/test1.ijs'
+VALIDATE_unitc_uu_''
+
 load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
+load '~Gituu/test/test1.ijs'
 
-VALIDATE_unitc_uu_''
+TRACEVERBS_uu_=: ''
 
 smoutput '--- test.ijs - completed'
 

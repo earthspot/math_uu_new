@@ -857,7 +857,8 @@ ME=: <'uu'
 if. isBoxed y do. z=. x uuboxed y
 else. z=. x uustring y
 end.
-z [ msg LF,LF,LF
+msg LF,LF,LF	NB. output spacer in term window
+z
 )
 
 uustring=: 4 : 0
@@ -866,8 +867,8 @@ ME=: <'uustring'
 val=. eval SP taketo y
 uns=. SP takeafter y
 'va un'=. x uuboxed val ; uns
-NB. (":va),SP,un
-(ucode 8 u: un format va),SP,(ucode un)
+NB. (":va),SP,un  NB. crude formatting
+(ucode 8 u: un format va),SP,(ucode un)  NB. nuanced formatting
 )
 
 uuboxed=: '' ddefine

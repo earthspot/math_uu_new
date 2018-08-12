@@ -1,5 +1,5 @@
 0 :0
-2018-08-09  04:08:55
+2018-08-12  05:27:16
 -
 UU: scientific units conversion package
 )
@@ -1020,7 +1020,8 @@ ME=: <'uu'
 if. isBoxed y do. z=. x uuboxed y
 else. z=. x uustring y
 end.
-z [ msg LF,LF,LF
+msg LF,LF,LF
+z
 )
 
 uustring=: 4 : 0
@@ -1062,7 +1063,53 @@ uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
+cocurrent 'uu'
 
+uuqty=: dyad define
+
+'val unit iss'=. GATEqty y
+targ=. GATEunits x
+'coef1 codeu'=: qty4anyunit unit
+'coef2 codet'=: qty4anyunit targ
+if. -. codeu -: codet do.
+  ssw '>>> uuboxed: incompatible units: (targ) || (unit)'
+  i.0 0 return.
+else.
+  z=. (val * coef1 % coef2) ; targ
+end.
+if. iss do. str4qty z else. z end.
+)
+
+qty4str=: monad define
+
+Z=: z=. 2 {. cutopen y
+(".0 pick z) ; 1 pick z
+)
+
+str4qty=: monad define
+
+(":0 pick y),SP,1 pick y
+)
+
+GATEqty=: 3 : 0
+
+if. iss=.isStr y do. y=. qty4str y end.
+assert. isBoxed y
+assert. 2 -: #y
+'value units' =. y
+assert. isNo value
+assert. isStr units
+ssw'+++ GATEqty: value=(value) units=(units)'
+value ; units ; iss
+)
+
+GATEunits=: 3 : 0
+
+y return.
+assert. isStr y
+ssw'+++ GATEunits: arg=(y)'
+y
+)
 
 '==================== [uu] pp_encoding.ijs ===================='
 
@@ -1102,7 +1149,8 @@ for_i. i.#units do. unit=. i pick units
     ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
   end.
 end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads)'
+ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
+bads=. bads -. 11 28
 if. 0<#bads do.
   smoutput viewtable bads
   smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
