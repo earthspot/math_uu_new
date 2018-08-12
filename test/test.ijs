@@ -1,8 +1,11 @@
 NB. UU test suite
 0 :0
-Sunday 12 August 2018  02:39:35
+Sunday 12 August 2018  12:22:19
 )
 smoutput '+++ test.ijs - entered'
+
+NB. TRACEVERBS_uu_=: ;:'start qty4i qty4anyunit qty4bareunit'
+TRACEVERBS_uu_=: ''
 
 VALIDATE_unitc_uu_''
 

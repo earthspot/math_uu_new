@@ -1,5 +1,5 @@
 0 :0
-2018-08-12  05:27:16
+2018-08-12  17:45:58
 -
 UU: scientific units conversion package
 )
@@ -1009,7 +1009,7 @@ for_i. y do.
 end.
 )
 
-uu=: '' ddefine
+uuold=: '' ddefine
 ME=: <'uu'
 
 
@@ -1036,7 +1036,6 @@ uns=. SP takeafter y
 uuboxed=: '' ddefine
 ME=: <'uuboxed'
 
-	x_uu_=: x [ y_uu_=: y
 msg '+++ uuboxed: ENTERED'
 'val uns'=. y
 	sllog 'x uuboxed__ val uns'
@@ -1065,25 +1064,46 @@ uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
 cocurrent 'uu'
 
+QS=: '?'
+
+uunew=: 3 : 0
+uustr y
+:
+x uuqty y
+)
+
+uustr=: monad define
+
+y_uu_=: y
+'val unit'=. 2{. 'uustr'GATEqty y
+'coeff code'=: qty4anyunit unit
+va=. val * coeff
+un=. canon expandcode code
+(ucode 8 u: un format va),SP,(ucode un)
+)
+
 uuqty=: dyad define
 
-'val unit iss'=. GATEqty y
-targ=. GATEunits x
+'val unit iss'=. 'uuqty1'GATEqty y
+targ=. 'uuqty2'GATEunits x
 'coef1 codeu'=: qty4anyunit unit
 'coef2 codet'=: qty4anyunit targ
-if. -. codeu -: codet do.
-  ssw '>>> uuboxed: incompatible units: (targ) || (unit)'
-  i.0 0 return.
+va=. val * coef1 % coef2
+if. codeu -: codet do.
+  z=. (ucode 8 u: targ format va) ; ucode targ
 else.
-  z=. (val * coef1 % coef2) ; targ
+  emsg '>>> uuboxed: incompatible units: (targ) || (unit)'
+  i.0 0 return.
 end.
 if. iss do. str4qty z else. z end.
 )
 
 qty4str=: monad define
 
-Z=: z=. 2 {. cutopen y
-(".0 pick z) ; 1 pick z
+y_uu_=: y
+value=. ". SP taketo y
+units=. SP takeafter y
+value ; units
 )
 
 str4qty=: monad define
@@ -1091,23 +1111,22 @@ str4qty=: monad define
 (":0 pick y),SP,1 pick y
 )
 
-GATEqty=: 3 : 0
+GATEqty=: QS ddefine
 
-if. iss=.isStr y do. y=. qty4str y end.
+if. iss=.isStr ,y do. y=. qty4str y end.
 assert. isBoxed y
 assert. 2 -: #y
 'value units' =. y
 assert. isNo value
-assert. isStr units
-ssw'+++ GATEqty: value=(value) units=(units)'
+assert. isStr ,units
+msg'+++ GATEqty[x]: value=(value) units=(units)'
 value ; units ; iss
 )
-
-GATEunits=: 3 : 0
+GATEunits=: QS ddefine
 
 y return.
 assert. isStr y
-ssw'+++ GATEunits: arg=(y)'
+msg'+++ GATEunits[x]: arg=(y)'
 y
 )
 
@@ -1474,7 +1493,9 @@ ME=: <'start'
 
 
 
-TRACEVERBS=: ;:'start qty4i qty4anyunit qty4bareunit'
+uu=: uuold
+uu=: uunew
+TRACEVERBS=: ''
 make_msg 1
 wd'msgs' [ msg '+++ start: ENTERED'
 0 make_msg 0

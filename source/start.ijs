@@ -10,7 +10,10 @@ ME=: <'start'
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
-TRACEVERBS=: ;:'start qty4i qty4anyunit qty4bareunit'
+uu=: uuold
+uu=: uunew
+TRACEVERBS=: ''
+NB. TRACEVERBS=: ;:'start qty4i qty4anyunit qty4bareunit'
 make_msg 1	NB. enable diagnostics
 wd'msgs' [ msg '+++ start: ENTERED'
 0 make_msg 0	NB. disable diagnostics while caches are being built

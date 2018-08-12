@@ -846,7 +846,7 @@ for_i. y do.
 end.
 )
 
-uu=: '' ddefine
+uuold=: '' ddefine
 ME=: <'uu'
   NB. transform y (value;units) to: x (ux)
   NB. x is target units: ux
@@ -874,7 +874,6 @@ NB. (":va),SP,un  NB. crude formatting
 uuboxed=: '' ddefine
 ME=: <'uuboxed'
   NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
-	x_uu_=: x [ y_uu_=: y
 msg '+++ uuboxed: ENTERED'
 'val uns'=. y
 	sllog 'x uuboxed__ val uns'
@@ -901,4 +900,3 @@ uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
-
