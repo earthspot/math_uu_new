@@ -8,8 +8,18 @@ smoutput '+++ test2.ijs - entered'
 
 cocurrent 'base'  NB. TO ENSURE ALL TEST VARS GET CREATED IN _z_
 
-noun_table_z_=: 3 :'n ,. (datatype each z) ,. (z=. ".each n=. y nl 0)'
+noun_table=: 3 :'n ,. (datatype each z) ,. (z=. ".each n=. y nl 0)'
 
+toks4expandcode=: 1&expandcode_uu_
+
+upp4utok=: 3 : 0
+  NB. (unit;power) for utok: y
+]z=. sp1_uu_ >y
+]sign=. <: 2* '/'~:{.z
+]unit=. '^' taketo }.z
+]power=. sign * {. 1,~ ". '^' takeafter z
+unit;power return.
+)
 
 3 :0''	NB. test immediately
 assert ''		-: expandcode_uu_ 1
@@ -22,14 +32,13 @@ assert 'm^3/kg^2 s K^2 mol^2 eur^2'                -:   expandcode_uu_ 739944040
 assert (<;._1 '| m^3|/kg^2| s| K^2| mol^2| eur^2') -: 1&expandcode_uu_ 739944040r9
 )
 
-
 3 :0''	NB. test immediately
-assert ('kg';1)	-: upp4utok_uu_ 'kg'
-assert ('kg';_1)	-: upp4utok_uu_ '/kg'
-assert ('kg';_2)	-: upp4utok_uu_ '/kg^2'
-assert ('kg';_2)	-: upp4utok_uu_ 'kg^-2'
-assert ('kg';2)	-: upp4utok_uu_ 'kg^2'
-assert ('kg';2)	-: upp4utok_uu_ '/kg^-2'  NB. double-negation--never (or rare?) in practice
+assert ('kg';1)	-: upp4utok 'kg'
+assert ('kg';_1)	-: upp4utok '/kg'
+assert ('kg';_2)	-: upp4utok '/kg^2'
+assert ('kg';_2)	-: upp4utok 'kg^-2'
+assert ('kg';2)	-: upp4utok 'kg^2'
+assert ('kg';2)	-: upp4utok '/kg^-2'  NB. double-negation--never (or rare?) in practice
 )
 
 0 :0	NB. WITHDRAWN - pp4xunit_uu_ under development
@@ -85,7 +94,7 @@ NB. uc1=: expandcode_uu_ z1  …etc.
 3 :0''	NB. test immediately
 for_r. '012nmkgs' do.
 do sw'uc(r)=: expandcode_uu_ z(r)'
-do sw'tc(r)=: toks4expandcode_uu_ z(r)'
+do sw'tc(r)=: toks4expandcode z(r)'
 do sw'oK(r)=: tc(r) -: utoks_uu_ uc(r)'
 end.
 )
@@ -114,5 +123,15 @@ smoutput noun_table'u'
 smoutput noun_table'z'
 smoutput noun_table'o'
 )
+
+NB. clear up _base_
+erase 'ok' names 0
+erase 'oK' names 0
+erase 'dz' names 0
+erase 'pp' names 0
+erase 'tc' names 0
+erase 'uc' names 0
+erase 'z' names 0
+erase 'noun_table toks4expandcode upp4utok'
 
 smoutput '--- test2.ijs - completed'

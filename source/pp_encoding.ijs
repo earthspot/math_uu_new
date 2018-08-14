@@ -3,11 +3,14 @@
 	NB. The notes here have been moved to temp 181 /179
 cocurrent 'uu'
 
-UNSETCODE=:   131x    NB. must be prime
-BADCODE=:     99991x  NB. must be prime
+0 :0
+Tuesday 14 August 2018  15:46:11
+abolish existing *CODEs in favour of ZEROCODE, isGoodCode
+(checkpointed in temp 8)
+)
+
+UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
-KILLERCODE=:  0x
-  NB. other big primes to use: 17383x 17389x
 
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PW=: '^'		NB. power
@@ -48,6 +51,7 @@ if. 0<#bads do.
   smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
   smoutput bads+30
 end.
+bads return.
 )
 
 dip=: 3 : 0
@@ -93,15 +97,8 @@ end.
 if. asTokens do. z else. dlb z end.
 )
 
-isRegular=: 3 : 0
-IRREGULARS=. UNSETCODE,BADCODE
-if. y e. IRREGULARS do. 0 return. end.
-if. y = KILLERCODE do. 1 return. end.
-if. y = TRIVIALCODE do. 1 return. end.
-]z=. 1 -.~ 2 x: |y
-]z=. ; q:each z
--. any z e. | IRREGULARS
-)
+NB. isGoodCode=: 13 : '-. y e. ZEROCODE,%ZEROCODE' "0
+isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 
 make_unitc=: 1 ddefine
   NB. x=pass# (1,2,3…)
@@ -116,7 +113,7 @@ if. rebuild do.
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (-. isRegular code) or (0=val) do.
+  if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
     NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qtcode4i for these ids
@@ -194,14 +191,6 @@ xxu 30 + i.10
 dip uvalx ~: uvalc
 )
 
-xxu=: (3 : 0)"0
-  NB. cross-check unitc against unitx for index: y
-UNC=: canon expandcode y{unitc
-UNX=: >y{unitx
-if. UNC -: UNX do. smoutput 'hooray!'
-else. UNC ; UNX end.
-)
-
 qtcode4bareunit=: 3 : 0
 ME=: <'qtcode4bareunit'
   NB. lookup the qty (value;code) for BARE NAMED unit: y
@@ -256,16 +245,57 @@ qtcode4anyunit 'gbp/m^3'
 qtcode4anyunit 'kWh'
 )
 
-NB. These are only used by test2 ...............
-NB. >>>>>>>>>> ELIMINATE...
-toks4expandcode=: 1&expandcode
+0 :0
+uunew=: 3 : 0
+  NB. MONAD: convert str: y (e.g. '212 degF') to mks units
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+'coeff code'=. qtcode4anyunit unit
+targ=. canon expandcode code  NB. infer target units from: code
+NB. va=. targ adj  coeff * ('_',unit) adj val
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewMONAD__ val unit targ coeff code va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
+:
+  NB. DYAD: convert str: y (e.g. '212 degF') to target units (x)
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+targ=. bris x  NB. ensure x is kosher format: 'm/s^2' NOT 'm s⁻²'
+'coeft codet'=. qtcode4anyunit targ
+'coefu codeu'=. qtcode4anyunit unit
+coeff=. coefu % coeft
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
+if. codeu -: codet do.
+  (ucode 8 u: targ format va),SP,(ucode uniform targ)
+else.
+  emsg '>>> uunew: incompatible units: (x) || (unit)'
+  '' return.
+end.
+)
 
-NB. >>>>>>>>>> ELIMINATE...
-upp4utok=: 3 : 0
-  NB. (unit;power) for utok: y
-]z=. sp1 >y
-]sign=. <: 2* SL~:{.z
-]unit=. PW taketo }.z
-]power=. sign * {. 1,~ ". PW takeafter z
-unit;power return.
+uunew=: '' ddefine
+  NB. convert str: y (e.g. '212 degF') to target units (x)
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+if. 0<#x do.  NB. use non-empty (x) as targ...
+  targ=. bris x  NB. (x) in kosher format: 'm/s^2' NOT 'm s⁻²'
+  'coeft codet'=. qtcode4anyunit targ
+  'coefu codeu'=. qtcode4anyunit unit
+  if. codet ~: codeu do.
+    emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    '' return.
+  end.
+  coeff=. coefu % coeft
+else.  NB. (x) is empty or monadic
+  'coeff code'=. qtcode4anyunit unit
+  codet=. codeu=. code
+  targ=. canon expandcode code  NB. infer target units from: code
+end.
+va=. coeff * ('_',unit) adj val
+sllog 'uunew__ val unit targ coefu codeu coeft codet va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
 )

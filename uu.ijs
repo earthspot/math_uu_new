@@ -1,5 +1,5 @@
 0 :0
-2018-08-14  14:26:51
+2018-08-14  17:30:42
 -
 UU: scientific units conversion package
 )
@@ -196,22 +196,25 @@ cst=. ([: st [) ,. [: st ]
 h,y{t
 )
 
-0 :0
-vt=: viewtable=: (a:&$: : (4 : 0))"0
+test_z_=: 3 : 0
 
-
-
-
-if. a: -:x do. x=. <'units unitv unitx uvalu uvalx uvalc unitc i' end.
-st =. (":&.>)"0
-cst=. ([: st [) ,. [: st ]
-]h=. ;: cols=. >x
-]i=. i.#UUC
-]t=. ". cols rplc SP;' cst '
-]z=. t{~ y + i.10 ifabsent 'VIEWTABLE'
-h,z,h
+smclear''
+sm        uu '100 degC'
+sm        uu '212 degF'
+sm        uu '373.15 K'
+sm 'degF' uu '100 degC'
+sm 'degC' uu '212 degF'
+sm 'degF' uu '212 degF'
+sm 'degC' uu '100 degC'
 )
 
+xxu=: (3 : 0)"0
+
+UNC=: canon expandcode y{unitc
+UNX=: >y{unitx
+if. UNC -: UNX do. smoutput 'hooray!'
+else. UNC ; UNX end.
+)
 
 '==================== [uu] main ===================='
 
@@ -1055,59 +1058,18 @@ uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
 
-'==================== [uu] uuqty.ijs.ijs ===================='
-cocurrent 'uu'
-test=: 3 : 0
-smclear''
-sm        uu '100 degC'
-sm        uu '212 degF'
-sm        uu '373.15 K'
-sm 'degF' uu '100 degC'
-sm 'degC' uu '212 degF'
-sm 'degF' uu '212 degF'
-sm 'degC' uu '100 degC'
-)
-
-uunew=: 3 : 0
-
-ME=: <'uunew'
-y_uu_=: y
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-'coeff code'=. qtcode4anyunit unit
-targ=. canon expandcode code
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewMONAD__ val unit targ coeff code va'
-(ucode 8 u: targ format va),SP,(ucode uniform targ)
-:
-
-ME=: <'uunew'
-x_uu_=: x [y_uu_=: y
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-targ=. bris x
-'coeft codet'=. qtcode4anyunit targ
-'coefu codeu'=. qtcode4anyunit unit
-coeff=. coefu % coeft
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
-if. codeu -: codet do.
-  (ucode 8 u: targ format va),SP,(ucode uniform targ)
-else.
-  emsg '>>> uunew: incompatible units: (x) || (unit)'
-  '' return.
-end.
-)
-
 '==================== [uu] pp_encoding.ijs ===================='
 
 cocurrent 'uu'
 
-UNSETCODE=:   131x
-BADCODE=:     99991x
-TRIVIALCODE=: 1x
-KILLERCODE=:  0x
+0 :0
+Tuesday 14 August 2018  15:46:11
+abolish existing *CODEs in favour of ZEROCODE, isGoodCode
+(checkpointed in temp 8)
+)
 
+UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
+TRIVIALCODE=: 1x
 
 PWM=: '^-'
 PW=: '^'
@@ -1144,6 +1106,7 @@ if. 0<#bads do.
   smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
   smoutput bads+30
 end.
+bads return.
 )
 
 dip=: 3 : 0
@@ -1186,16 +1149,7 @@ for_p. decoded y[z=.'' do.
 end.
 if. asTokens do. z else. dlb z end.
 )
-
-isRegular=: 3 : 0
-IRREGULARS=. UNSETCODE,BADCODE
-if. y e. IRREGULARS do. 0 return. end.
-if. y = KILLERCODE do. 1 return. end.
-if. y = TRIVIALCODE do. 1 return. end.
-]z=. 1 -.~ 2 x: |y
-]z=. ; q:each z
--. any z e. | IRREGULARS
-)
+isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 
 make_unitc=: 1 ddefine
 
@@ -1210,7 +1164,7 @@ if. rebuild do.
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (-. isRegular code) or (0=val) do.
+  if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
 
 
@@ -1288,14 +1242,6 @@ xxu 30 + i.10
 dip uvalx ~: uvalc
 )
 
-xxu=: (3 : 0)"0
-
-UNC=: canon expandcode y{unitc
-UNX=: >y{unitx
-if. UNC -: UNX do. smoutput 'hooray!'
-else. UNC ; UNX end.
-)
-
 qtcode4bareunit=: 3 : 0
 ME=: <'qtcode4bareunit'
 
@@ -1348,14 +1294,59 @@ qtcode4anyunit 'rd'
 qtcode4anyunit 'gbp/m^3'
 qtcode4anyunit 'kWh'
 )
-toks4expandcode=: 1&expandcode
-upp4utok=: 3 : 0
 
-]z=. sp1 >y
-]sign=. <: 2* SL~:{.z
-]unit=. PW taketo }.z
-]power=. sign * {. 1,~ ". PW takeafter z
-unit;power return.
+0 :0
+uunew=: 3 : 0
+
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+'coeff code'=. qtcode4anyunit unit
+targ=. canon expandcode code
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewMONAD__ val unit targ coeff code va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
+:
+
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+targ=. bris x
+'coeft codet'=. qtcode4anyunit targ
+'coefu codeu'=. qtcode4anyunit unit
+coeff=. coefu % coeft
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
+if. codeu -: codet do.
+  (ucode 8 u: targ format va),SP,(ucode uniform targ)
+else.
+  emsg '>>> uunew: incompatible units: (x) || (unit)'
+  '' return.
+end.
+)
+
+uunew=: '' ddefine
+
+ME=: <'uunew'
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+if. 0<#x do.
+  targ=. bris x
+  'coeft codet'=. qtcode4anyunit targ
+  'coefu codeu'=. qtcode4anyunit unit
+  if. codet ~: codeu do.
+    emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    '' return.
+  end.
+  coeff=. coefu % coeft
+else.
+  'coeff code'=. qtcode4anyunit unit
+  codet=. codeu=. code
+  targ=. canon expandcode code
+end.
+va=. coeff * ('_',unit) adj val
+sllog 'uunew__ val unit targ coefu codeu coeft codet va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
 )
 
 '==================== [uu] format.ijs =================='

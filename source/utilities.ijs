@@ -135,19 +135,22 @@ cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
 h,y{t
 )
 
-0 :0	NB. SUPERSEDED
-vt=: viewtable=: (a:&$: : (4 : 0))"0
-  NB. y == index into list: units
-  NB. x == BOXED list of names of nouns (usually the table's columns)
-  NB. x MUST BE scalar, to allow ("0) to apply to y (…therefore x too)
-  NB. x == a: (defaulted) - use the default list
-if. a: -:x do. x=. <'units unitv unitx uvalu uvalx uvalc unitc i' end.
-st =. (":&.>)"0	NB. utility verb: numlist-->string
-cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
-]h=. ;: cols=. >x
-]i=. i.#UUC
-]t=. ". cols rplc SP;' cst '
-]z=. t{~ y + i.10 ifabsent 'VIEWTABLE'  NB. #lines of output
-h,z,h
+test_z_=: 3 : 0
+  NB. handles F5 for quick testing
+smclear''
+sm        uu '100 degC'
+sm        uu '212 degF'
+sm        uu '373.15 K'
+sm 'degF' uu '100 degC'
+sm 'degC' uu '212 degF'
+sm 'degF' uu '212 degF'
+sm 'degC' uu '100 degC'
 )
 
+xxu=: (3 : 0)"0
+  NB. check unitc against unitx for ID: y
+UNC=: canon expandcode y{unitc
+UNX=: >y{unitx
+if. UNC -: UNX do. smoutput 'hooray!'
+else. UNC ; UNX end.
+)

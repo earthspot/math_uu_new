@@ -6,13 +6,13 @@ smoutput '+++ test.ijs - entered'
 
 NB. tv 'start qty4i qty4anyunit qty4bareunit'
 
-VALIDATE_unitc_uu_''
+assert 0 = #VALIDATE_unitc_uu_''
 
 load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
 load '~Gituu/test/test1.ijs'
 
-tv 0  NB. turn trace off
+NB. tv 0  NB. turn trace off
 
 smoutput '--- test.ijs - completed'
 
