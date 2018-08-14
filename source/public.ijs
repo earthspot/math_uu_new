@@ -8,7 +8,7 @@ public=: 3 : 0
   NB. In any locale: run this verb with y==locale name
 cocurrent y
 adj=: adj_uu_
-compat=: compatible_uu_
+compatible=: compatible_uu_
 compatlist=: compatlist_uu_
 convert=: convert_uu_
 cnvj=: cnvj_uu_

@@ -1,79 +1,93 @@
-NB. uuqty to replace uu
-
+NB. uuqty to replace uu   [snapshotted in temp 6, Monday 13 August 2018  22:57:34]
+	NB. uu - uuqty.ijs
+'==================== [uu] uuqty.ijs.ijs ===================='
 cocurrent 'uu'
 
-QS=: '?'
+NB. 'unsc c fy'=. convert uns
+NB. fx=. > {: convert ux
+NB. qty=. (fy%fx) * ('_',uns) adj val
+NB. uno=. uniform x
+NB. 	sllog 'uuboxed__ fy fx uno ux'
+NB. z=. (ux adj qty) ; uno
+
+test=: 3 : 0
+smclear''
+sm        uu '100 degC'
+sm        uu '212 degF'
+sm        uu '373.15 K'
+sm 'degF' uu '100 degC'
+sm 'degC' uu '212 degF'
+sm 'degF' uu '212 degF'
+sm 'degC' uu '100 degC'
+)
 
 uunew=: 3 : 0
-uustr y
+  NB. MONAD: convert str: y (e.g. '212 degF') to mks units
+ME=: <'uunew'
+y_uu_=: y
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+'coeff code'=. qtcode4anyunit unit
+targ=. canon expandcode code  NB. infer target units from: code
+NB. va=. targ adj  coeff * ('_',unit) adj val
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewMONAD__ val unit targ coeff code va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
 :
-x uuqty y
-)
-
-uustr=: monad define
-  NB. convert str: y to mks units
-y_uu_=: y
-'val unit'=. 2{. 'uustr'GATEqty y
-'coeff code'=: qty4anyunit unit
-NB.   z=. (val * coef1 % coef2) ; targ
-NB. (": val * coeff) , SP , canon expandcode code
-va=. val * coeff
-un=. canon expandcode code
-(ucode 8 u: un format va),SP,(ucode un)  NB. nuanced formatting
-)
-
-uuqty=: dyad define
-  NB. convert qty: y to target units: x
-'val unit iss'=. 'uuqty1'GATEqty y
-targ=. 'uuqty2'GATEunits x
-'coef1 codeu'=: qty4anyunit unit
-'coef2 codet'=: qty4anyunit targ
-va=. val * coef1 % coef2
-NB. (ucode 8 u: un format va),SP,(ucode un)  NB. nuanced formatting
+  NB. DYAD: convert str: y (e.g. '212 degF') to target units (x)
+ME=: <'uunew'
+x_uu_=: x [y_uu_=: y
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+targ=. bris x  NB. ensure x is kosher format: 'm/s^2' NOT 'm s⁻²'
+'coeft codet'=. qtcode4anyunit targ
+'coefu codeu'=. qtcode4anyunit unit
+coeff=. coefu % coeft
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
 if. codeu -: codet do.
-  z=. (ucode 8 u: targ format va) ; ucode targ
+  (ucode 8 u: targ format va),SP,(ucode uniform targ)
 else.
-  emsg '>>> uuboxed: incompatible units: (targ) || (unit)'
-  i.0 0 return.
+  emsg '>>> uunew: incompatible units: (x) || (unit)'
+  '' return.
 end.
-if. iss do. str4qty z else. z end.
 )
 
-qty4str=: monad define
-  NB. return qty defined by (str) y
-y_uu_=: y
-value=. ". SP taketo y
-units=. SP takeafter y
-value ; units
-)
+NB. qty4str=: monad define
+NB.   NB. return qty defined by (str) y
+NB. y_uu_=: y
+NB. value=. ". SP taketo y
+NB. units=. SP takeafter y
+NB. value ; units
+NB. )
+NB.
+NB. str4qty=: monad define
+NB.   NB. return str defined by (qty) y
+NB. (":0 pick y),SP,1 pick y
+NB. NB. >>>>> or use nb ?
+NB. )
 
-str4qty=: monad define
-  NB. return str defined by (qty) y
-(":0 pick y),SP,1 pick y
-NB. >>>>> or use nb ?
-)
+NB. GATEqty=: '' ddefine
+NB.   NB. GATEkeeper: validate y as qty
+NB. if. iss=.isStr ,y do. y=. qty4str y end.
+NB. assert. isBoxed y
+NB. assert. 2 -: #y
+NB. 'value units' =. y
+NB. assert. isNo value
+NB. assert. isStr ,units
+NB. msg'+++ GATEqty[x]: value=(value) units=(units)'	NB. GATEqty: arg=(y)'
+NB. value ; units ; iss
+NB. )
 
-GATEqty=: QS ddefine
-  NB. GATEkeeper: validate y as qty
-if. iss=.isStr ,y do. y=. qty4str y end.
-assert. isBoxed y
-assert. 2 -: #y
-'value units' =. y
-assert. isNo value
-assert. isStr ,units
-msg'+++ GATEqty[x]: value=(value) units=(units)'	NB. GATEqty: arg=(y)'
-value ; units ; iss
-)
-
-NB. GATEstr=: QS ddefine
+NB. GATEstr=: '' ddefine
 NB.   NB. GATEkeeper: validate y as str
 NB. 2{. x GATEqty qty4str y
 NB. )
 
-GATEunits=: QS ddefine
-  NB. GATEkeeper: validate y as bona-fide units
-y return.
-assert. isStr y
-msg'+++ GATEunits[x]: arg=(y)'
-y
-)
+NB. GATEunits=: '' ddefine
+NB.   NB. GATEkeeper: validate y as bona-fide units
+NB. y return.
+NB. assert. isStr y
+NB. msg'+++ GATEunits[x]: arg=(y)'
+NB. y
+NB. )

@@ -591,26 +591,26 @@ ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
 
-test=: 3 : 0
-	NB. inspect result of: make_units
-if. y=_ do. 0 test _	NB. to output the whole table
-else. y test y		NB. just a single line
-end.
-:
-	NB. test of UUC against make_units globals
-	NB. Eg:	  test _	NB. whole table
-	NB.	5 test 7	NB. lines 5-7 
-smoutput 'i compat units uvalu  unitv uvalx unitx (>>) \\ i{UUC'
-for_i. x to (y <. <:#UUC) do.
-if. i=i{compat do.
-  z=. ''			NB. warning flag (=ok)
-else.
-  v=. (i{compat) {uvalu		NB. the senior's ratio
-  if. v=1 do. z=. '' else. z=. '>>',": v end.
-end.
-smoutput nb i; (i{compat); (brack >i{units); (i{uvalu); (>i{unitv); (>i{uvalx); (>i{unitx); z ; '\\' ; (i{UUC)
-end.
-)
+NB. test=: 3 : 0
+NB. 	NB. inspect result of: make_units
+NB. if. y=_ do. 0 test _	NB. to output the whole table
+NB. else. y test y		NB. just a single line
+NB. end.
+NB. :
+NB. 	NB. test of UUC against make_units globals
+NB. 	NB. Eg:	  test _	NB. whole table
+NB. 	NB.	5 test 7	NB. lines 5-7 
+NB. smoutput 'i compat units uvalu  unitv uvalx unitx (>>) \\ i{UUC'
+NB. for_i. x to (y <. <:#UUC) do.
+NB. if. i=i{compat do.
+NB.   z=. ''			NB. warning flag (=ok)
+NB. else.
+NB.   v=. (i{compat) {uvalu		NB. the senior's ratio
+NB.   if. v=1 do. z=. '' else. z=. '>>',": v end.
+NB. end.
+NB. smoutput nb i; (i{compat); (brack >i{units); (i{uvalu); (>i{unitv); (>i{uvalx); (>i{unitx); z ; '\\' ; (i{UUC)
+NB. end.
+NB. )
 
 testf=: 3 : 0
 	NB. test: format (and friends)
@@ -787,7 +787,8 @@ uniform=: _&$: : (4 : 0)"1
 ME=: <'uniform'
 	msg '+++ uniform: ENTERED: x=(x) y=(y)'
   NB. change units (y) to acceptable format for (UNICODE)
-y=. utf8 deb y  NB. convert from possible datatype=='unicode'
+  NB. x==(_) (default value) x gets current value of (UNICODE)
+y=. utf8 deb y  NB. convert (y) from possible datatype=='unicode'
 if. x=_ do. x=. UNICODE end.
 select. x
 case. 0 do.  NB. ASCII only

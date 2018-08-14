@@ -1,5 +1,5 @@
 0 :0
-2018-08-12  17:45:58
+2018-08-14  03:05:38
 -
 UU: scientific units conversion package
 )
@@ -153,6 +153,18 @@ if. -. 128!:5 y do. 0 return. end.
 quoted=: 3 : 0
 
 (<toupper y) e. {."1 CUTAB
+)
+
+tv=: 3 : 0
+
+select. y
+case.'' do. z=. TRACEVERBS_uu_  
+case. 0 do. z=. TRACEVERBS_uu_=: ;:''
+case. 1 do. z=. TRACEVERBS_uu_=: ;:'qty4i qty4anyunit qty4bareunit'
+case. 2 do. z=. TRACEVERBS_uu_=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
+case.   do. z=. TRACEVERBS_uu_=: ;:y
+end.
+ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
 )
 
 utoks=: 3 : 0
@@ -769,28 +781,6 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
-
-test=: 3 : 0
-
-if. y=_ do. 0 test _
-else. y test y
-end.
-:
-
-
-
-smoutput 'i compat units uvalu  unitv uvalx unitx (>>) \\ i{UUC'
-for_i. x to (y <. <:#UUC) do.
-if. i=i{compat do.
-  z=. ''
-else.
-  v=. (i{compat) {uvalu
-  if. v=1 do. z=. '' else. z=. '>>',": v end.
-end.
-smoutput nb i; (i{compat); (brack >i{units); (i{uvalu); (>i{unitv); (>i{uvalx); (>i{unitx); z ; '\\' ; (i{UUC)
-end.
-)
-
 testf=: 3 : 0
 
 if. 0=#y do. y=. 123.4567 end.
@@ -950,6 +940,7 @@ uniform=: _&$: : (4 : 0)"1
 ME=: <'uniform'
 	msg '+++ uniform: ENTERED: x=(x) y=(y)'
 
+
 y=. utf8 deb y
 if. x=_ do. x=. UNICODE end.
 select. x
@@ -1062,72 +1053,49 @@ uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
-cocurrent 'uu'
 
-QS=: '?'
+'==================== [uu] uuqty.ijs.ijs ===================='
+cocurrent 'uu'
+test=: 3 : 0
+smclear''
+sm        uu '100 degC'
+sm        uu '212 degF'
+sm        uu '373.15 K'
+sm 'degF' uu '100 degC'
+sm 'degC' uu '212 degF'
+sm 'degF' uu '212 degF'
+sm 'degC' uu '100 degC'
+)
 
 uunew=: 3 : 0
-uustr y
+
+ME=: <'uunew'
+y_uu_=: y
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+'coeff code'=. qtcode4anyunit unit
+targ=. canon expandcode code
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewMONAD__ val unit targ coeff code va'
+(ucode 8 u: targ format va),SP,(ucode uniform targ)
 :
-x uuqty y
-)
 
-uustr=: monad define
-
-y_uu_=: y
-'val unit'=. 2{. 'uustr'GATEqty y
-'coeff code'=: qty4anyunit unit
-va=. val * coeff
-un=. canon expandcode code
-(ucode 8 u: un format va),SP,(ucode un)
-)
-
-uuqty=: dyad define
-
-'val unit iss'=. 'uuqty1'GATEqty y
-targ=. 'uuqty2'GATEunits x
-'coef1 codeu'=: qty4anyunit unit
-'coef2 codet'=: qty4anyunit targ
-va=. val * coef1 % coef2
+ME=: <'uunew'
+x_uu_=: x [y_uu_=: y
+val=. ". SP taketo y -. '°'
+unit=. SP takeafter y
+targ=. bris x
+'coeft codet'=. qtcode4anyunit targ
+'coefu codeu'=. qtcode4anyunit unit
+coeff=. coefu % coeft
+va=. coeff * ('_',unit) adj val
+   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
 if. codeu -: codet do.
-  z=. (ucode 8 u: targ format va) ; ucode targ
+  (ucode 8 u: targ format va),SP,(ucode uniform targ)
 else.
-  emsg '>>> uuboxed: incompatible units: (targ) || (unit)'
-  i.0 0 return.
+  emsg '>>> uunew: incompatible units: (x) || (unit)'
+  '' return.
 end.
-if. iss do. str4qty z else. z end.
-)
-
-qty4str=: monad define
-
-y_uu_=: y
-value=. ". SP taketo y
-units=. SP takeafter y
-value ; units
-)
-
-str4qty=: monad define
-
-(":0 pick y),SP,1 pick y
-)
-
-GATEqty=: QS ddefine
-
-if. iss=.isStr ,y do. y=. qty4str y end.
-assert. isBoxed y
-assert. 2 -: #y
-'value units' =. y
-assert. isNo value
-assert. isStr ,units
-msg'+++ GATEqty[x]: value=(value) units=(units)'
-value ; units ; iss
-)
-GATEunits=: QS ddefine
-
-y return.
-assert. isStr y
-msg'+++ GATEunits[x]: arg=(y)'
-y
 )
 
 '==================== [uu] pp_encoding.ijs ===================='
@@ -1256,7 +1224,7 @@ for_i. i.#UUC [n=.0 do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
 
 
-    'val code'=. qty4i i
+    'val code'=. qtcode4i i
     ssw '--- id=(i) val=(val) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
     unitc=: code i}unitc
@@ -1289,8 +1257,8 @@ dip (0=uvalc) or isIrregular unitc
 	unitc	pp-coded units, expandcode must match unitx
 )
 
-qty4i=: (3 : 0)"0
-ME=: <'qty4i'
+qtcode4i=: (3 : 0)"0
+ME=: <'qtcode4i'
 
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
@@ -1302,30 +1270,30 @@ if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
 
 if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
 code=. y{unitc
-msg '(LF)+++ qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
+msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
 
 
 if. isValid code do.
   valc=. y{uvalc
   val=. valu*valc
-  msg '--- qty4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
+  msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code return.
 end.
 
-'valc code'=. qty4anyunit unitv_y
-msg '... qty4i: valc=(valc) code=(crex code) from: qty4anyunit ''(unitv_y)'''
+'valc code'=. qtcode4anyunit unitv_y
+msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
 if. isValid code do.
   val=. valu*valc
-  msg '--- qty4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
+  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
 else.
-  msg '--- qty4i: INVALID code=(crex code)'
+  msg '--- qtcode4i: INVALID code=(crex code)'
   0;BADCODE
 end.
 )
 
 0 :0
-qty4i 59
+qtcode4i 59
 VIEWTABLE=: 10
 smoutput vt 59
 xxu 18 19
@@ -1341,32 +1309,32 @@ if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
 )
 
-qty4bareunit=: 3 : 0
-ME=: <'qty4bareunit'
+qtcode4bareunit=: 3 : 0
+ME=: <'qtcode4bareunit'
 
 
 i=. units i. <,y
-msg '+++ qty4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
+msg '+++ qtcode4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
 if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
 valc=. i{uvalc
 code=. i{unitc
-msg '--- qty4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
 valc;code
 )
 
-q4a=: qty4anyunit=: 3 : 0
-ME=: <'qty4anyunit'
+q4a=: qtcode4anyunit=: 3 : 0
+ME=: <'qtcode4anyunit'
 
 
 
-msg '+++ qty4anyunit: y=[(y)]'
+msg '+++ qtcode4anyunit: y=[(y)]'
 if. 0=#y    do. 1;TRIVIALCODE return. end.
 if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale unit power'=. cnvj opentok=.>t
-  'valu code'=. qty4bareunit unit
+  'valu code'=. qtcode4bareunit unit
   sllog 'opentok invert scale unit power valu code'
   if. invert do.
     z=. z , %(code^power)
@@ -1378,20 +1346,20 @@ for_t. utoks y do.
 end.
 muv=. */v
 muz=. */z
-msg '--- qty4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
 muv;muz return.
 )
 
 0 :0
-TRACEVERBS=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
-TRACEVERBS=: ;:'qty4i qty4anyunit qty4bareunit'
-qty4bareunit 'acre'
-qty4anyunit 'acre'
-qty4anyunit 'kg'
-qty4anyunit '/kg'
-qty4anyunit 'rd'
-qty4anyunit 'gbp/m^3'
-qty4anyunit 'kWh'
+tv 1
+tv 2
+qtcode4bareunit 'acre'
+qtcode4anyunit 'acre'
+qtcode4anyunit 'kg'
+qtcode4anyunit '/kg'
+qtcode4anyunit 'rd'
+qtcode4anyunit 'gbp/m^3'
+qtcode4anyunit 'kWh'
 )
 toks4expandcode=: 1&expandcode
 upp4utok=: 3 : 0
@@ -1401,12 +1369,6 @@ upp4utok=: 3 : 0
 ]unit=. PW taketo }.z
 ]power=. sign * {. 1,~ ". PW takeafter z
 unit;power return.
-)
-
-
-0 :0
-make_unitc''
-…now called within: start'' (defined in start.ijs)
 )
 
 '==================== [uu] format.ijs =================='
@@ -1445,7 +1407,7 @@ public=: 3 : 0
 
 cocurrent y
 adj=: adj_uu_
-compat=: compatible_uu_
+compatible=: compatible_uu_
 compatlist=: compatlist_uu_
 convert=: convert_uu_
 cnvj=: cnvj_uu_

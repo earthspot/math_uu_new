@@ -135,8 +135,8 @@ for_i. i.#UUC [n=.0 do.
   if. (isIrregular code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
-    NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qty4i for these ids
-    'val code'=. qty4i i
+    NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qtcode4i for these ids
+    'val code'=. qtcode4i i
     ssw '--- id=(i) val=(val) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
     unitc=: code i}unitc
@@ -169,8 +169,8 @@ dip (0=uvalc) or isIrregular unitc
 	unitc	pp-coded units, expandcode must match unitx
 )
 
-qty4i=: (3 : 0)"0
-ME=: <'qty4i'
+qtcode4i=: (3 : 0)"0
+ME=: <'qtcode4i'
   NB. returns (valu;code) for index: y
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
@@ -182,30 +182,30 @@ if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
   NB. Recognise a basic unit and return its prime with "valc"==1 …
 if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
 code=. y{unitc
-msg '(LF)+++ qty4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
+msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
   NB. …use of crex prints 4x instead of 4 (say)
   NB. if code is valid, assume y{uvalc is valid too
 if. isValid code do.
   valc=. y{uvalc
   val=. valu*valc
-  msg '--- qty4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
+  msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code return.
 end.
   NB. Else compute qty==(valc;code) from specd units: unitv_y
-'valc code'=. qty4anyunit unitv_y
-msg '... qty4i: valc=(valc) code=(crex code) from: qty4anyunit ''(unitv_y)'''
+'valc code'=. qtcode4anyunit unitv_y
+msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
 if. isValid code do.
   val=. valu*valc
-  msg '--- qty4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
+  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
 else.
-  msg '--- qty4i: INVALID code=(crex code)'
+  msg '--- qtcode4i: INVALID code=(crex code)'
   0;BADCODE
 end.
 )
 
 0 :0
-qty4i 59
+qtcode4i 59
 VIEWTABLE=: 10  NB. number of lines in viewtable output
 smoutput vt 59
 xxu 18 19
@@ -221,32 +221,32 @@ if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
 )
 
-qty4bareunit=: 3 : 0
-ME=: <'qty4bareunit'
+qtcode4bareunit=: 3 : 0
+ME=: <'qtcode4bareunit'
   NB. lookup the qty (value;code) for BARE NAMED unit: y
   NB. may be basic or derived, BUT expect to find it in: units
 i=. units i. <,y
-msg '+++ qty4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
+msg '+++ qtcode4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
 if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
 valc=. i{uvalc
 code=. i{unitc
-msg '--- qty4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
 valc;code
 )
 
-q4a=: qty4anyunit=: 3 : 0
-ME=: <'qty4anyunit'
+q4a=: qtcode4anyunit=: 3 : 0
+ME=: <'qtcode4anyunit'
   NB. RECALCULATES code for ANY entry (y) in (units)
   NB. …ignores existing code in unitc if product of codes
   NB. multiply the codes for each (powered)token
-msg '+++ qty4anyunit: y=[(y)]'
+msg '+++ qtcode4anyunit: y=[(y)]'
 if. 0=#y    do. 1;TRIVIALCODE return. end.
 if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale unit power'=. cnvj opentok=.>t
-  'valu code'=. qty4bareunit unit
+  'valu code'=. qtcode4bareunit unit
   sllog 'opentok invert scale unit power valu code'
   if. invert do.
     z=. z , %(code^power)
@@ -258,21 +258,21 @@ for_t. utoks y do.
 end.
 muv=. */v  NB. combine all the valus
 muz=. */z  NB. combine all the codes
-msg '--- qty4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
-NB. msg '--- qty4anyunit: (muv) [(y)] --> [(muz)] --> [(canon expandcode muz)]'
+msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+NB. msg '--- qtcode4anyunit: (muv) [(y)] --> [(muz)] --> [(canon expandcode muz)]'
 muv;muz return.
 )
 
 0 :0
-TRACEVERBS=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
-TRACEVERBS=: ;:'qty4i qty4anyunit qty4bareunit'
-qty4bareunit 'acre'
-qty4anyunit 'acre'
-qty4anyunit 'kg'
-qty4anyunit '/kg'
-qty4anyunit 'rd'
-qty4anyunit 'gbp/m^3'
-qty4anyunit 'kWh'
+tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit
+tv 2  NB. trace cnvj qtcode4i qtcode4anyunit qtcode4bareunit
+qtcode4bareunit 'acre'
+qtcode4anyunit 'acre'
+qtcode4anyunit 'kg'
+qtcode4anyunit '/kg'
+qtcode4anyunit 'rd'
+qtcode4anyunit 'gbp/m^3'
+qtcode4anyunit 'kWh'
 )
 
 NB. These are only used by test2 ...............
@@ -287,10 +287,4 @@ upp4utok=: 3 : 0
 ]unit=. PW taketo }.z
 ]power=. sign * {. 1,~ ". PW takeafter z
 unit;power return.
-)
-
-
-0 :0
-make_unitc''  NB. build the working cache: (unitc) -to match: (units)
-…now called within: start'' (defined in start.ijs)
 )

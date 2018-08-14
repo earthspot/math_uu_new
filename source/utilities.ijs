@@ -94,6 +94,18 @@ quoted=: 3 : 0
 (<toupper y) e. {."1 CUTAB
 )
 
+tv=: 3 : 0
+  NB. sets/resets TRACEVERBS
+select. y
+case.'' do. z=. TRACEVERBS_uu_  
+case. 0 do. z=. TRACEVERBS_uu_=: ;:''
+case. 1 do. z=. TRACEVERBS_uu_=: ;:'qty4i qty4anyunit qty4bareunit'
+case. 2 do. z=. TRACEVERBS_uu_=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
+case.   do. z=. TRACEVERBS_uu_=: ;:y  NB. dflt: (y) is openlist of verbs
+end.
+ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
+)
+
 utoks=: 3 : 0
   NB. tokenize y, ensuring leading SP|SL
 z=. sp1 y	NB. ensure leading sign-byte: SP|SL

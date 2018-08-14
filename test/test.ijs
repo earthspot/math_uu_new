@@ -4,8 +4,8 @@ Sunday 12 August 2018  12:22:19
 )
 smoutput '+++ test.ijs - entered'
 
-NB. TRACEVERBS_uu_=: ;:'start qty4i qty4anyunit qty4bareunit'
-TRACEVERBS_uu_=: ''
+tv 'start qty4i qty4anyunit qty4bareunit'
+tv 0  NB. turn trace off
 
 VALIDATE_unitc_uu_''
 
@@ -13,7 +13,7 @@ load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
 load '~Gituu/test/test1.ijs'
 
-TRACEVERBS_uu_=: ''
+tv 0  NB. turn trace off
 
 smoutput '--- test.ijs - completed'
 

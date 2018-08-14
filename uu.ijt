@@ -1,6 +1,10 @@
 LABTITLE=: 'Scientific Units'
 LABDEPENDS=: 'math/uu'
 
+NB. Monday 13 August 2018  19:00:00
+NB. This version assumes "qty" format not supported anymore.
+NB. Also: _base_ assumed, so _uu_ can be dropped.
+
 NB. =========================================================
 Lab Section INTRO
 UU is an addon to convert quantities between different
@@ -35,7 +39,7 @@ uu will convert to those units instead...
 'km' uu '56789 m'
 
 NB. =========================================================
-Lab Section COMPATIBLE
+Lab Section COMPATIBLE1
 ...But of course only if the units are compatible.
 )
 
@@ -63,57 +67,47 @@ uu '1 kW'  NB. No: kilowatt is a unit of power, not energy
 
 NB. =========================================================
 Lab Section COMPATIBLE3
-But locale _uu_ has a verb to help you: compatible_uu_
+But UU has a verb to help you: compatible''
 )
 
-'cal' compatible_uu_ 'J'
-'J' compatible_uu_ 'cal'
-'J' compatible_uu_ 'kW'	NB. Kilowatt is a unit of power, not energy
-'J' compatible_uu_ 'kWh'
+public_uu_ 'base'
+NB. >>> Introduce public'base'
+cocurrent 'base'
+
+'cal' compatible 'J'
+'J' compatible 'cal'
+'J' compatible 'kW'	NB. Kilowatt is a unit of power, not energy
+'J' compatible 'kWh'
 
 NB. =========================================================
-Lab Section COMPATLIST
-You can even ask _uu_ to tell you all the units it knows
+Lab Section COMPATLIST1
+You can even ask UU to tell you all the units it knows
 which are compatible with [J]...
 )
 
-compatlist_uu_ 'J'
+compatlist 'J'
 
 NB. =========================================================
-Lab Section COMPATLIST
-But if _uu_ doesn't know the units you give it
+Lab Section COMPATLIST2
+But if UU doesn't know the units you give it
 (or you've misspelt them) then it will reply with 0...
 )
 
-'J' compatible_uu_ 'oodles'
+public_uu_ 'base'
+cocurrent 'base'
 
-   NB. NOTE the behavior for: unknown units...
-uu '1 oodles'
-
-uu 1 ; 'oodles'
+'J' compatible 'oodles'
 
 NB. =========================================================
-Lab Section ARITHMETIC
-Giving uu a literal right-argument is just a convenience
-for use in "calculator mode".
-
-When you use uu in a program, you will call it with
-a right argument of the form:
-
-	number ; units
-
---where: (units) -is a single char, or a string.
-
-uu responds in the same format...
+Lab Section COMPATLIST3
+NOTE the behavior for: unknown units...
 )
 
-uu 1 ; 'r.p.m'
-
-'mi/h' uu  88 ; 'ft/sec'
+uu '1 oodles'
 
 NB. =========================================================
 Lab Section SLASH1
-'/' is the _uu_ convention for DIMENSIONLESS UNITS.
+'/' is the UU convention for DIMENSIONLESS UNITS.
 
 This prevents the units string vanishing when you divide
 compatible units by each other.)
@@ -127,7 +121,7 @@ uu '1 km/mi'		NB. conversion factor: km --> miles
 
 NB. =========================================================
 Lab Section SLASH2
-To "divide" two arbitrary units strings, use: udiv_uu_
+To "divide" two arbitrary units strings, use: udiv
 
 (Don't just put '/' between them, unless you know for certain
 that the denominator doesn't contain slash).
@@ -137,8 +131,8 @@ Then use: uu -to cancel-out...
 
 u1=: 'kg m^2/A^2/s^3'		NB. energy
 u2=: 'kg m^2/A^2/s^2'		NB. power
-u1 udiv_uu_ u2
-uu  1 ; u1 udiv_uu_ u2
+u1 udiv u2
+uu  '1 ', u1 udiv u2
 
 NB. =========================================================
 Lab Section SI_LOOK1
@@ -211,13 +205,13 @@ uu '1 g'	NB. -for comparison.
    NB. ...SI takes [kg] not [g] as the basic unit of mass.
 
 NB. =========================================================
-Lab Section MICRON
+Lab Section ZEPTO2
 The term "micron" and the symbol µ, representing the
 micrometre, were officially accepted between 1879 and 1967,
 but officially revoked by the ISI in 1967.
    http://en.wikipedia.org/wiki/Micron
 
-However _uu_ accepts [µ] by itself to mean "micron".
+However UU accepts [µ] by itself to mean "micron".
 
 WARNING: not every unicode variant of µ will work!
 
@@ -233,7 +227,7 @@ uu '100 µ'
 'µ' uu '1 Å'
 
 NB. =========================================================
-Lab Section ZEPTO2
+Lab Section ZEPTO3
 uu accepts scaling prefixes on some non-SI units too.
 
 Why?
@@ -241,15 +235,17 @@ Why?
 Because it's too much trouble to forbid them.
 )
 
+cocurrent 'base'
+
 uu '1 zft'	NB. zepto-feet -need very small shoes.
    NB. Earth mass, in zetta-elephants...
 'Zelephant' uu '1 ea.mass'
    NB. Earth mass, in yotta-elephants...
-SCI_uu_=: 10	NB. force exponential numerals above 10
-SIG_uu_=: 5	NB. decimal places to show
+sci 10  NB. force exponential numerals above 10
+sig 5   NB. decimal places to show
 'Yelephant' uu '1 ea.mass'
    NB. Restore recommended settings...
-SCI_uu_=: 1e5 [ SIG_uu_=: 3
+sci 1e5 [ sig 3
 
 NB. =========================================================
 Lab Section MISC

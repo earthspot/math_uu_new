@@ -15,8 +15,9 @@ TESTFILE_z_=: '~Gituu/test/test.ijs'
 
 NB. ---------------------------------------------------------
 
+clear 'uu'
 load BUILTFILE	
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
 load TESTFILE
-smoutput '--- run.ijs: TESTFILE loaded: ',TESTFILE
+smoutput '--- run.ijs: TESTFILE completed without errors: ',TESTFILE
