@@ -591,27 +591,6 @@ ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
 
-NB. test=: 3 : 0
-NB. 	NB. inspect result of: make_units
-NB. if. y=_ do. 0 test _	NB. to output the whole table
-NB. else. y test y		NB. just a single line
-NB. end.
-NB. :
-NB. 	NB. test of UUC against make_units globals
-NB. 	NB. Eg:	  test _	NB. whole table
-NB. 	NB.	5 test 7	NB. lines 5-7 
-NB. smoutput 'i compat units uvalu  unitv uvalx unitx (>>) \\ i{UUC'
-NB. for_i. x to (y <. <:#UUC) do.
-NB. if. i=i{compat do.
-NB.   z=. ''			NB. warning flag (=ok)
-NB. else.
-NB.   v=. (i{compat) {uvalu		NB. the senior's ratio
-NB.   if. v=1 do. z=. '' else. z=. '>>',": v end.
-NB. end.
-NB. smoutput nb i; (i{compat); (brack >i{units); (i{uvalu); (>i{unitv); (>i{uvalx); (>i{unitx); z ; '\\' ; (i{UUC)
-NB. end.
-NB. )
-
 testf=: 3 : 0
 	NB. test: format (and friends)
 if. 0=#y do. y=. 123.4567 end.

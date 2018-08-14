@@ -1,5 +1,5 @@
 0 :0
-2018-08-14  03:05:38
+2018-08-14  14:26:51
 -
 UU: scientific units conversion package
 )
@@ -781,6 +781,7 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
+
 testf=: 3 : 0
 
 if. 0=#y do. y=. 123.4567 end.
@@ -1185,19 +1186,8 @@ for_p. decoded y[z=.'' do.
 end.
 if. asTokens do. z else. dlb z end.
 )
-isValid=: -.&isInvalid=: (3 : 0)"0
-y e. UNSETCODE,BADCODE
-)
 
-isNonTrivial=: -.&isTrivial=: (3 : 0)"0
-y=TRIVIALCODE
-)
-
-isNotKiller=: -.&isKiller=: (3 : 0)"0
-y=KILLERCODE
-)
-
-isIrregular=: -.&isRegular=: (3 : 0)"0
+isRegular=: 3 : 0
 IRREGULARS=. UNSETCODE,BADCODE
 if. y e. IRREGULARS do. 0 return. end.
 if. y = KILLERCODE do. 1 return. end.
@@ -1220,7 +1210,7 @@ if. rebuild do.
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (isIrregular code) or (0=val) do.
+  if. (-. isRegular code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
 
 
@@ -1238,10 +1228,7 @@ n return.
 0 :0
 make_unitc''
 VALIDATE_unitc''
-dip isInvalid unitc
-dip isIrregular unitc
 dip 0=uvalc
-dip (0=uvalc) or isIrregular unitc
 2 make_unitc''
 3 make_unitc''
 4 make_unitc''
@@ -1273,7 +1260,7 @@ code=. y{unitc
 msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
 
 
-if. isValid code do.
+if. -. code e. UNSETCODE,BADCODE do.
   valc=. y{uvalc
   val=. valu*valc
   msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
@@ -1282,7 +1269,7 @@ end.
 
 'valc code'=. qtcode4anyunit unitv_y
 msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
-if. isValid code do.
+if. -. code e. UNSETCODE,BADCODE do.
   val=. valu*valc
   msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
@@ -1322,7 +1309,7 @@ msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
 valc;code
 )
 
-q4a=: qtcode4anyunit=: 3 : 0
+qtcode4anyunit=: 3 : 0
 ME=: <'qtcode4anyunit'
 
 

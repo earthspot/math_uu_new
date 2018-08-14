@@ -93,23 +93,7 @@ end.
 if. asTokens do. z else. dlb z end.
 )
 
-NB. isNotOK=: -.&isOK=: (3 : 0)"0
-NB. (isRegular y),(isNonTrivial y),(isNotKiller y) NONSENSE??
-NB. )
-
-isValid=: -.&isInvalid=: (3 : 0)"0
-y e. UNSETCODE,BADCODE
-)
-
-isNonTrivial=: -.&isTrivial=: (3 : 0)"0
-y=TRIVIALCODE
-)
-
-isNotKiller=: -.&isKiller=: (3 : 0)"0
-y=KILLERCODE
-)
-
-isIrregular=: -.&isRegular=: (3 : 0)"0
+isRegular=: 3 : 0
 IRREGULARS=. UNSETCODE,BADCODE
 if. y e. IRREGULARS do. 0 return. end.
 if. y = KILLERCODE do. 1 return. end.
@@ -132,7 +116,7 @@ if. rebuild do.
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (isIrregular code) or (0=val) do.
+  if. (-. isRegular code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
     NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qtcode4i for these ids
@@ -150,10 +134,7 @@ n return.  NB. count of unitc entries reassigned
 0 :0
 make_unitc''		NB. 1st pass
 VALIDATE_unitc''
-dip isInvalid unitc			NB. should be 0
-dip isIrregular unitc
 dip 0=uvalc
-dip (0=uvalc) or isIrregular unitc
 2 make_unitc''	NB. 2nd pass
 3 make_unitc''	NB. 3rd pass
 4 make_unitc''	NB. 4th pass
@@ -185,7 +166,7 @@ code=. y{unitc
 msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
   NB. …use of crex prints 4x instead of 4 (say)
   NB. if code is valid, assume y{uvalc is valid too
-if. isValid code do.
+if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<<
   valc=. y{uvalc
   val=. valu*valc
   msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
@@ -194,7 +175,7 @@ end.
   NB. Else compute qty==(valc;code) from specd units: unitv_y
 'valc code'=. qtcode4anyunit unitv_y
 msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
-if. isValid code do.
+if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<<
   val=. valu*valc
   msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
@@ -234,7 +215,7 @@ msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
 valc;code
 )
 
-q4a=: qtcode4anyunit=: 3 : 0
+qtcode4anyunit=: 3 : 0
 ME=: <'qtcode4anyunit'
   NB. RECALCULATES code for ANY entry (y) in (units)
   NB. …ignores existing code in unitc if product of codes

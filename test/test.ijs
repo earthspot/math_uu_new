@@ -4,8 +4,7 @@ Sunday 12 August 2018  12:22:19
 )
 smoutput '+++ test.ijs - entered'
 
-tv 'start qty4i qty4anyunit qty4bareunit'
-tv 0  NB. turn trace off
+NB. tv 'start qty4i qty4anyunit qty4bareunit'
 
 VALIDATE_unitc_uu_''
 
