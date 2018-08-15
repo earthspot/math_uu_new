@@ -308,7 +308,7 @@ Finally when no more units to expand (max cycles=30 as failsafe)
  the result is converted to canonical form using: canon.
 )
 
-convert=: 1&$: : (4 : 0)"1
+convertOLD=: 1&$: : (4 : 0)"1
 ME=: <'convert'
   NB. y (units) --> cu ; loop_count ; cf
 yb=. bris y  NB. extend the range of acceptible units formats
@@ -342,6 +342,8 @@ if. loop=MAXLOOP do. loop=. 0 end. NB. signalling a suspicious result
 wd'msgs' [ msg '--- convert: EXITS'
 (canon ;z) ; loop ; fac return.
 )
+
+convert=: convertOLD
 
 curfig=: 3 : 'hy (0 j. 2)":y'
 debSL=: #~ (+. (1: |. (> </\)))@('/'&~:)
@@ -690,7 +692,7 @@ zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
 )
 
 NB. ============================================
-make_units=: 0 ddefine
+make_unitsOLD=: 0 ddefine
   NB. makes globals: cspel csymb mkss units unitv uvalu unitx uvalx compat
   NB. x=0: DONT adjust currency
   NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
@@ -729,6 +731,8 @@ if. any z do.
 end.
 i.0 0
 )
+
+make_units=: make_unitsOLD
 
 NB. ============================================
   NB. Make inputs mapping table mj
@@ -813,18 +817,6 @@ unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
 upref=: 4 : '(x#~*UNICODE),y'
-
-utab=: 3 : 0
-	NB. TEST diagnostics table of caches
-smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
-if. 0=#y do. y=. i.#units end.
-for_i. y do.
-  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
-  if.-. iu=ix do.
-    smoutput TAB,'>>> uvalu not equal to uvalx'
-  end.
-end.
-)
 
 uuold=: '' ddefine
 ME=: <'uu'

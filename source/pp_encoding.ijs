@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Tuesday 14 August 2018  15:46:11
+Wednesday 15 August 2018  03:51:45
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
@@ -24,51 +24,6 @@ Nmks=: #mks	NB. # of basic mks units = # of primes for pp-coding
 Pmks=: x:p:i.#mks	NB. the first (#mks) primes
 
 scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'  NB. now handled by: cnvj
-
-NB. ---------------------------------------------------------
-VALIDATE_unitc=: 3 : 0
-  NB. verify (expanded) unitc matches unitx
-notmatches=. [: -. -:
-bads=. i.0
-for_i. i.#units do. unit=. i pick units
-  iux=. i pick unitx	NB. fully resolved units
-  iuc=. i pick unitc	NB. pp-code
-  ixc=. canon expandcode iuc	NB. resolved units from pp-code
-  ivx=. i pick uvalx	NB. conversion factor to go with unitx
-  ivc=. i pick uvalc	NB. conversion factor to go with unitc
-  if. iux notmatches ixc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
-  elseif. ivx ~: ivc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
-  end.
-end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
-bads=. bads -. 11 28
-if. 0<#bads do.
-  smoutput viewtable bads
-  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
-  smoutput bads+30
-end.
-bads return.
-)
-
-dip=: 3 : 0
-  NB. y is bool e.g. u2~:unitc or: unitc=_
-assert (#y)=(#UUC)
-smoutput '+++ how many? - ',": (+/y)
-if. 0<+/y do.
-smoutput '+++ their IDs?'
-smoutput list I. y
-smoutput '+++ their names?'
-smoutput list units pick~ I. y
-smoutput '+++ their codes?'
-smoutput list unitc pick~ I. y
-end.
-smoutput 75#'-'
-)
-NB. ---------------------------------------------------------
 
 randompp=: 3 : '? Nmks#>:y'
 encoded=:  3 : '*/ Pmks ^ y'		NB. pp-> code

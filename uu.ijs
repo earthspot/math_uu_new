@@ -1,5 +1,5 @@
 0 :0
-2018-08-14  17:30:42
+2018-08-15  06:19:15
 -
 UU: scientific units conversion package
 )
@@ -84,6 +84,7 @@ emsg=: smoutput&sw
 ssw=: smoutput&sw
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
+
 sessuu1=: 3 : 0
 if. ME e. a: default 'TRACEVERBS' do.
   smoutput y
@@ -195,6 +196,20 @@ cst=. ([: st [) ,. [: st ]
 ]t=. ". cols rplc SP;' cst '
 h,y{t
 )
+dip=: 3 : 0
+
+assert (#y)=(#UUC)
+smoutput '+++ how many? - ',": (+/y)
+if. 0<+/y do.
+smoutput '+++ their IDs?'
+smoutput list I. y
+smoutput '+++ their names?'
+smoutput list units pick~ I. y
+smoutput '+++ their codes?'
+smoutput list unitc pick~ I. y
+end.
+smoutput 75#'-'
+)
 
 test_z_=: 3 : 0
 
@@ -208,12 +223,52 @@ sm 'degF' uu '212 degF'
 sm 'degC' uu '100 degC'
 )
 
+utab=: 3 : 0
+
+smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
+if. 0=#y do. y=. i.#units end.
+for_i. y do.
+  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
+  if.-. iu=ix do.
+    smoutput TAB,'>>> uvalu not equal to uvalx'
+  end.
+end.
+)
+
 xxu=: (3 : 0)"0
 
 UNC=: canon expandcode y{unitc
 UNX=: >y{unitx
 if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
+)
+
+VALIDATE_unitc=: 3 : 0
+
+notmatches=. [: -. -:
+bads=. i.0
+for_i. i.#units do. unit=. i pick units
+  iux=. i pick unitx
+  iuc=. i pick unitc
+  ixc=. canon expandcode iuc
+  ivx=. i pick uvalx
+  ivc=. i pick uvalc
+  if. iux notmatches ixc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
+  elseif. ivx ~: ivc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
+  end.
+end.
+ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
+bads=. bads -. 11 28
+if. 0<#bads do.
+  smoutput viewtable bads
+  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
+  smoutput bads+30
+end.
+bads return.
 )
 
 '==================== [uu] main ===================='
@@ -516,7 +571,7 @@ Finally when no more units to expand (max cycles=30 as failsafe)
  the result is converted to canonical form using: canon.
 )
 
-convert=: 1&$: : (4 : 0)"1
+convertOLD=: 1&$: : (4 : 0)"1
 ME=: <'convert'
 
 yb=. bris y
@@ -550,6 +605,8 @@ if. loop=MAXLOOP do. loop=. 0 end.
 wd'msgs' [ msg '--- convert: EXITS'
 (canon ;z) ; loop ; fac return.
 )
+
+convert=: convertOLD
 
 curfig=: 3 : 'hy (0 j. 2)":y'
 debSL=: #~ (+. (1: |. (> </\)))@('/'&~:)
@@ -878,7 +935,7 @@ msg 'udumb: ENTERED'
 'zdesc znits znitv zvalu'=. y
 zdesc; znits; 1
 )
-make_units=: 0 ddefine
+make_unitsOLD=: 0 ddefine
 
 
 
@@ -914,6 +971,8 @@ if. any z do.
 end.
 i.0 0
 )
+
+make_units=: make_unitsOLD
 
 mj=: 0 $~ 256
 mj=: 1 ch}mj [ ch=. a.i. SP,TAB
@@ -992,18 +1051,6 @@ unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
 upref=: 4 : '(x#~*UNICODE),y'
 
-utab=: 3 : 0
-
-smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
-if. 0=#y do. y=. i.#units end.
-for_i. y do.
-  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
-  if.-. iu=ix do.
-    smoutput TAB,'>>> uvalu not equal to uvalx'
-  end.
-end.
-)
-
 uuold=: '' ddefine
 ME=: <'uu'
 
@@ -1063,7 +1110,7 @@ validunits=: 3 : 'units e.~ <,y'
 cocurrent 'uu'
 
 0 :0
-Tuesday 14 August 2018  15:46:11
+Wednesday 15 August 2018  03:51:45
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
@@ -1081,48 +1128,7 @@ Nmks=: #mks
 Pmks=: x:p:i.#mks
 
 scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'
-VALIDATE_unitc=: 3 : 0
 
-notmatches=. [: -. -:
-bads=. i.0
-for_i. i.#units do. unit=. i pick units
-  iux=. i pick unitx
-  iuc=. i pick unitc
-  ixc=. canon expandcode iuc
-  ivx=. i pick uvalx
-  ivc=. i pick uvalc
-  if. iux notmatches ixc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
-  elseif. ivx ~: ivc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
-  end.
-end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
-bads=. bads -. 11 28
-if. 0<#bads do.
-  smoutput viewtable bads
-  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
-  smoutput bads+30
-end.
-bads return.
-)
-
-dip=: 3 : 0
-
-assert (#y)=(#UUC)
-smoutput '+++ how many? - ',": (+/y)
-if. 0<+/y do.
-smoutput '+++ their IDs?'
-smoutput list I. y
-smoutput '+++ their names?'
-smoutput list units pick~ I. y
-smoutput '+++ their codes?'
-smoutput list unitc pick~ I. y
-end.
-smoutput 75#'-'
-)
 randompp=: 3 : '? Nmks#>:y'
 encoded=:  3 : '*/ Pmks ^ y'
 decodedx=: 3 : 'x:^:_1 Nmks q: y'
@@ -1425,6 +1431,8 @@ uum=: 3 : 'open TPATH_UUM'
 '==================== [uu] start ===================='
 
 cocurrent 'uu'
+
+load temp 9
 
 start=: 3 : 0
 ME=: <'start'

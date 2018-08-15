@@ -13,15 +13,6 @@ ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-NB. NB. ADJUST for trace output…
-NB. trace_z_=: 3 : 'TRACE_z_=: | * y'
-NB. NB. trace 0
-NB. trace 1
-
-NB. as currently set by: make_msg
-NB. sessuu0=: 3 : 'if. zeroifabsent''TRACE'' do. smoutput y else. i.0 0 end.'
-
-NB. active sessuu …
 sessuu1=: 3 : 0
 if. ME e. a: default 'TRACEVERBS' do.
   smoutput y
@@ -135,6 +126,25 @@ cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
 h,y{t
 )
 
+NB. ======================================
+NB. TEST-ONLY utilities, some redundant...
+NB. ======================================
+
+dip=: 3 : 0
+  NB. y is bool e.g. u2~:unitc or: unitc=_
+assert (#y)=(#UUC)
+smoutput '+++ how many? - ',": (+/y)
+if. 0<+/y do.
+smoutput '+++ their IDs?'
+smoutput list I. y
+smoutput '+++ their names?'
+smoutput list units pick~ I. y
+smoutput '+++ their codes?'
+smoutput list unitc pick~ I. y
+end.
+smoutput 75#'-'
+)
+
 test_z_=: 3 : 0
   NB. handles F5 for quick testing
 smclear''
@@ -147,10 +157,50 @@ sm 'degF' uu '212 degF'
 sm 'degC' uu '100 degC'
 )
 
+utab=: 3 : 0
+	NB. TEST diagnostics table of caches
+smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
+if. 0=#y do. y=. i.#units end.
+for_i. y do.
+  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
+  if.-. iu=ix do.
+    smoutput TAB,'>>> uvalu not equal to uvalx'
+  end.
+end.
+)
+
 xxu=: (3 : 0)"0
   NB. check unitc against unitx for ID: y
 UNC=: canon expandcode y{unitc
 UNX=: >y{unitx
 if. UNC -: UNX do. smoutput 'hooray!'
 else. UNC ; UNX end.
+)
+
+VALIDATE_unitc=: 3 : 0
+  NB. verify (expanded) unitc matches unitx
+notmatches=. [: -. -:
+bads=. i.0
+for_i. i.#units do. unit=. i pick units
+  iux=. i pick unitx	NB. fully resolved units
+  iuc=. i pick unitc	NB. pp-code
+  ixc=. canon expandcode iuc	NB. resolved units from pp-code
+  ivx=. i pick uvalx	NB. conversion factor to go with unitx
+  ivc=. i pick uvalc	NB. conversion factor to go with unitc
+  if. iux notmatches ixc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
+  elseif. ivx ~: ivc do.
+    bads=. bads,i
+    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
+  end.
+end.
+ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
+bads=. bads -. 11 28
+if. 0<#bads do.
+  smoutput viewtable bads
+  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
+  smoutput bads+30
+end.
+bads return.
 )

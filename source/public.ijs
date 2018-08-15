@@ -4,8 +4,8 @@
 cocurrent 'uu'
 
 public=: 3 : 0
-  NB. Makes aliases to UU public verbs in locale (y)
-  NB. In any locale: run this verb with y==locale name
+  NB. Makes aliases to UU public verbs in CLIENT locale (y)
+  NB. cocurrent CLIENT locale: run this verb with (locale) y
 cocurrent y
 adj=: adj_uu_
 compatible=: compatible_uu_

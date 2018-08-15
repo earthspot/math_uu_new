@@ -3,6 +3,8 @@
 
 cocurrent 'uu'
 
+load temp 9	NB. PATCH of replacements
+
 start=: 3 : 0
 ME=: <'start'
   NB. start the locale: _uu_
@@ -27,6 +29,9 @@ badversion=. 'v.v.v'"_
 load :: 0: TPATH_UUC
 load :: 0: TPATH_UUF
 load :: 0: TPATH_UUM
+NB. ====================================
+NB. load temp 9	NB. PATCH of replacements
+NB. ====================================
   NB. Make the NOMINAL UNITS table: units
 make_units''
   NB. Make (NEW): unitc based on pp_encoding
