@@ -12,6 +12,8 @@ load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
 load '~Gituu/test/test1.ijs'
 
+redux 14  NB. test flag: UNICODE with a sufficiently complex definition
+ 
 NB. tv 0  NB. turn trace off
 
 smoutput '--- test.ijs - completed'

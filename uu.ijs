@@ -1,5 +1,5 @@
 0 :0
-2018-08-15  06:19:15
+2018-08-15  17:49:52
 -
 UU: scientific units conversion package
 )
@@ -118,6 +118,7 @@ y return.
 all=: *./
 and=: *.
 any=: +./
+begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":
 cmx=: [: > <;._2
 nb=: [: ([: }. [: ; ' ' ,&.> ]) ":&.>
@@ -158,13 +159,17 @@ quoted=: 3 : 0
 
 tv=: 3 : 0
 
-select. y
+PLUS=. '+'
+verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+if. PLUS={.y do. z=. TRACEVERBS_uu_ ,SP, y-.PLUS
+else. select. y
 case.'' do. z=. TRACEVERBS_uu_  
-case. 0 do. z=. TRACEVERBS_uu_=: ;:''
-case. 1 do. z=. TRACEVERBS_uu_=: ;:'qty4i qty4anyunit qty4bareunit'
-case. 2 do. z=. TRACEVERBS_uu_=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
-case.   do. z=. TRACEVERBS_uu_=: ;:y
-end.
+case. 0 do. z=. TRACEVERBS_uu_=: ;: ''
+case. 1 do. z=. TRACEVERBS_uu_=: ;: verbs1
+case. 2 do. z=. TRACEVERBS_uu_=: ;: verbs2
+case.   do. z=. TRACEVERBS_uu_=: ;: y
+end. end.
 ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
 )
 
@@ -211,9 +216,15 @@ end.
 smoutput 75#'-'
 )
 
+ID=: 3 : 0
+
+
+
+units i. ;:y
+)
+
 test_z_=: 3 : 0
 
-smclear''
 sm        uu '100 degC'
 sm        uu '212 degF'
 sm        uu '373.15 K'
@@ -1069,8 +1080,8 @@ z
 uustring=: 4 : 0
 ME=: <'uustring'
 
-val=. eval SP taketo y
-uns=. SP takeafter y
+]val=. eval SP taketo y
+]uns=. SP takeafter y
 'va un'=. x uuboxed val ; uns
 (ucode 8 u: un format va),SP,(ucode un)
 )
@@ -1110,7 +1121,7 @@ validunits=: 3 : 'units e.~ <,y'
 cocurrent 'uu'
 
 0 :0
-Wednesday 15 August 2018  03:51:45
+Wednesday 15 August 2018  14:46:03
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
@@ -1119,15 +1130,14 @@ UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
 
 PWM=: '^-'
+PWU=: '^_'
 PW=: '^'
 MI=: '-'
 
 
 Nmks=: #mks
 
-Pmks=: x:p:i.#mks
-
-scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'
+Pmks=: x:p:i.Nmks
 
 randompp=: 3 : '? Nmks#>:y'
 encoded=:  3 : '*/ Pmks ^ y'
@@ -1262,6 +1272,7 @@ valc;code
 )
 
 qtcode4anyunit=: 3 : 0
+	y_uu_=:y
 ME=: <'qtcode4anyunit'
 
 
@@ -1272,15 +1283,16 @@ if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
-  'invert scale unit power'=. cnvj opentok=.>t
-  'valu code'=. qtcode4bareunit unit
-  sllog 'opentok invert scale unit power valu code'
+  'invert scale bareunit power'=. cnv2bare cunit=.>t
+  'valu code'=. qtcode4bareunit bareunit
+ME=: <'qtcode4anyunit'
+sllog 'cunit invert scale bareunit power valu code'
   if. invert do.
-    z=. z , %(code^power)
-    v=. v , scale%(valu^power)
+    z=. z , % (code^power)
+    v=. v , scale % (valu^power)
   else.
     z=. z , code^power
-    v=. v , scale*(valu^power)
+    v=. v , scale * (valu^power)
   end.
 end.
 muv=. */v
@@ -1289,46 +1301,107 @@ msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
 muv;muz return.
 )
 
-0 :0
-tv 1
-tv 2
-qtcode4bareunit 'acre'
-qtcode4anyunit 'acre'
-qtcode4anyunit 'kg'
-qtcode4anyunit '/kg'
-qtcode4anyunit 'rd'
-qtcode4anyunit 'gbp/m^3'
-qtcode4anyunit 'kWh'
+cnv2bare=: 3 : 0
+ME=: <'cnv2bare'
+
+
+y_uu_=: y
+z=. dltb y
+k=. p=. 1
+
+if. (SL~:{.z) and ((any PWM E. z) or (any PWU E. z)) do.
+  z=. SL,z rplc PWM ; PW ; PWU ; PW
+end.
+
+if. j=.(SL={. sp1 z) do. z=. }.z end.
+if. PW e. z do.
+
+  'p z'=. (".{:z) ; (}:}:z)
+end.
+msg '+++ cnv2bare: y=(y) z=(z) j=(j) p=(p)'
+
+
+if. (-.iskg z) and (not validunits z) do.
+  'k z'=. scale4bareunit z
+end.
+msg '--- cnv2bare: j=(j) k=(k) z=(z) p=(p)'
+j ; k ; z ; p return.
+)
+
+scale4bareunit=: 3 : 0
+
+
+
+z=. ,y
+k=. 1
+
+dalen=. #da=. 'da'
+mulen=. #mu=. 'µ'
+if.     z beginsWith da do.	k=. 1e1  [ z=. dalen}.z
+elseif. z beginsWith mu do.	k=. 1e_6 [ z=. mulen}.z
+elseif. do.
+
+  select. {.z
+  case. 'h' do. k=. 1e2	[ z=.}.z
+  case. 'k' do. k=. 1e3	[ z=.}.z
+  case. 'M' do. k=. 1e6	[ z=.}.z
+  case. 'G' do. k=. 1e9	[ z=.}.z
+  case. 'T' do. k=. 1e12	[ z=.}.z
+  case. 'P' do. k=. 1e15	[ z=.}.z
+  case. 'E' do. k=. 1e18	[ z=.}.z
+  case. 'Z' do. k=. 1e21	[ z=.}.z
+  case. 'Y' do. k=. 1e24	[ z=.}.z
+  case. 'd' do. k=. 1e_1	[ z=.}.z
+  case. 'c' do. k=. 1e_2	[ z=.}.z
+  case. 'm' do. k=. 1e_3	[ z=.}.z
+  case. 'u' do. k=. 1e_6	[ z=.}.z
+  case. 'n' do. k=. 1e_9	[ z=.}.z
+  case. 'p' do. k=. 1e_12	[ z=.}.z
+  case. 'f' do. k=. 1e_15	[ z=.}.z
+  case. 'a' do. k=. 1e_18	[ z=.}.z
+  case. 'z' do. k=. 1e_21	[ z=.}.z
+  case. 'y' do. k=. 1e_24	[ z=.}.z
+  end.
+end.
+z=. deb z
+k ; z
 )
 
 0 :0
-uunew=: 3 : 0
-
-ME=: <'uunew'
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-'coeff code'=. qtcode4anyunit unit
-targ=. canon expandcode code
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewMONAD__ val unit targ coeff code va'
-(ucode 8 u: targ format va),SP,(ucode uniform targ)
-:
-
-ME=: <'uunew'
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-targ=. bris x
-'coeft codet'=. qtcode4anyunit targ
-'coefu codeu'=. qtcode4anyunit unit
-coeff=. coefu % coeft
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
-if. codeu -: codet do.
-  (ucode 8 u: targ format va),SP,(ucode uniform targ)
-else.
-  emsg '>>> uunew: incompatible units: (x) || (unit)'
-  '' return.
-end.
+tv 1
+tv '+cnv2bare'
+-
+qtcode4bareunit 'acre'
+-
+cocurrent 'uu'
+erase 'foo_uu_ foo_z_ foo__'
+foo_z_=: scale4bareunit_uu_
+foo_z_=: cnvj_uu_
+foo_z_=: cnv2bare_uu_
+foo_z_=: qtcode4bareunit_uu_
+foo_z_=: qtcode4anyunit_uu_
+redux 10
+redux 11
+redux 12
+redux 13
+-
+foo
+foo 'acre'
+foo 'm'
+foo ,'m'
+foo 'km'
+foo 'm^3'
+foo '/m^3'
+foo 'rd'
+foo 'kWh'
+foo 'Hz'
+foo 'GHz'
+foo '/GHz^2'
+foo 'GHz^-2'
+foo 'GHz^_2'
+foo 'kg'
+foo '/kg'
+foo 'gbp/m^3'
 )
 
 uunew=: '' ddefine

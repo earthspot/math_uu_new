@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Wednesday 15 August 2018  03:51:45
+Wednesday 15 August 2018  14:46:03
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
@@ -13,17 +13,16 @@ UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
 
 PWM=: '^-'	NB. power,minus (precedes a negative power)
+PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
 MI=: '-'		NB. minus (==HY)
 
-NB. mks=: ;:'m kg s A K cd mol rad eur'
-	NB. <<< mks IS ALREADY ASSIGNED IN: constants.ijs
-	NB. It is only here for reference.
-Nmks=: #mks	NB. # of basic mks units = # of primes for pp-coding
+NB. mks=: ;:'m kg s A K cd mol rad eur' ---BUT CHECK!!!
+	NB. <<< mks HAS ALREADY BEEN ASSIGNED BY NOW (in: constants.ijs)
+	NB. …only here for reference.
+Nmks=: #mks	NB. # of basic mks-units == # of primes for pp-coding
   NB. …Nmks used in tacit verbs. Otherwise scarcely faster than #mks
-Pmks=: x:p:i.#mks	NB. the first (#mks) primes
-
-scalingPrefixes=: 'hkMGTPEZYdcmunpfazy'  NB. now handled by: cnvj
+Pmks=: x:p:i.Nmks	NB. the first (#mks) primes
 
 randompp=: 3 : '? Nmks#>:y'
 encoded=:  3 : '*/ Pmks ^ y'		NB. pp-> code
@@ -160,6 +159,7 @@ valc;code
 )
 
 qtcode4anyunit=: 3 : 0
+	y_uu_=:y
 ME=: <'qtcode4anyunit'
   NB. RECALCULATES code for ANY entry (y) in (units)
   NB. …ignores existing code in unitc if product of codes
@@ -170,65 +170,107 @@ if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
-  'invert scale unit power'=. cnvj opentok=.>t
-  'valu code'=. qtcode4bareunit unit
-  sllog 'opentok invert scale unit power valu code'
+  'invert scale bareunit power'=. cnv2bare cunit=.>t
+  'valu code'=. qtcode4bareunit bareunit
+ME=: <'qtcode4anyunit'  NB. restore after qtcode4bareunit
+sllog 'cunit invert scale bareunit power valu code'
   if. invert do.
-    z=. z , %(code^power)
-    v=. v , scale%(valu^power)
+    z=. z , % (code^power)
+    v=. v , scale % (valu^power)
   else.
     z=. z , code^power
-    v=. v , scale*(valu^power)
+    v=. v , scale * (valu^power)
   end.
 end.
 muv=. */v  NB. combine all the valus
 muz=. */z  NB. combine all the codes
 msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
-NB. msg '--- qtcode4anyunit: (muv) [(y)] --> [(muz)] --> [(canon expandcode muz)]'
 muv;muz return.
 )
 
-0 :0
-tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit
-tv 2  NB. trace cnvj qtcode4i qtcode4anyunit qtcode4bareunit
-qtcode4bareunit 'acre'
-qtcode4anyunit 'acre'
-qtcode4anyunit 'kg'
-qtcode4anyunit '/kg'
-qtcode4anyunit 'rd'
-qtcode4anyunit 'gbp/m^3'
-qtcode4anyunit 'kWh'
+cnv2bare=: 3 : 0
+ME=: <'cnv2bare'
+  NB. cut prefs/suffs from a cunit (eg: '/kg^3')
+  NB. replaces cnvj in NEW code
+y_uu_=: y
+z=. dltb y  NB. (,'m') for y=='m' or y==' m'
+k=. p=. 1   NB. to be overridden below
+   NB. elim a NEGATIVE power in all forms
+if. (SL~:{.z) and ((any PWM E. z) or (any PWU E. z)) do.
+  z=. SL,z rplc PWM ; PW ; PWU ; PW  NB. replace by leading SL
+end.
+  NB. drop prefix: SP|SL from z -but remember it as (bool) j
+if. j=.(SL={. sp1 z) do. z=. }.z end.
+if. PW e. z do.  NB. recognise a power-suffix
+  NB. drop power-suffix from z -but remember it as (int) p
+  'p z'=. (".{:z) ; (}:}:z)
+end.
+msg '+++ cnv2bare: y=(y) z=(z) j=(j) p=(p)'
+  NB. Identify scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
+  NB. ONLY IF z is not itself in: units, eg 'knot' ...
+if. (-.iskg z) and (not validunits z) do.
+  'k z'=. scale4bareunit z
+end.
+msg '--- cnv2bare: j=(j) k=(k) z=(z) p=(p)'
+j ; k ; z ; p return.
+)
+
+scale4bareunit=: 3 : 0
+  NB. returns e.g. (1e9 ; 'Hz') for y=='GHz'
+  NB. ALSO returns (1e3 ; ,'m') for y=='km'
+  NB. ...AVOID CALLING WITH y if y is listed in (units) !!!
+z=. ,y  NB. (,'m') for y=='m'
+k=. 1   NB. to be overridden below
+  NB. Identify a MULTI-CHAR ASCII OR UNICODE scaling prefix
+dalen=. #da=. 'da'  NB. deka-
+mulen=. #mu=. 'µ'   NB. micro-
+if.     z beginsWith da do.	k=. 1e1  [ z=. dalen}.z
+elseif. z beginsWith mu do.	k=. 1e_6 [ z=. mulen}.z
+elseif. do.
+  NB. Identify a SINGLE-CHAR ASCII scaling prefix (i.e. NOT µ)
+  select. {.z
+  case. 'h' do. k=. 1e2	[ z=.}.z	NB. hecto-
+  case. 'k' do. k=. 1e3	[ z=.}.z	NB. kilo-
+  case. 'M' do. k=. 1e6	[ z=.}.z	NB. mega-
+  case. 'G' do. k=. 1e9	[ z=.}.z	NB. giga-
+  case. 'T' do. k=. 1e12	[ z=.}.z	NB. tera-
+  case. 'P' do. k=. 1e15	[ z=.}.z	NB. peta-
+  case. 'E' do. k=. 1e18	[ z=.}.z	NB. exa-
+  case. 'Z' do. k=. 1e21	[ z=.}.z	NB. zetta-
+  case. 'Y' do. k=. 1e24	[ z=.}.z	NB. yotta-
+  case. 'd' do. k=. 1e_1	[ z=.}.z	NB. deci-
+  case. 'c' do. k=. 1e_2	[ z=.}.z	NB. centi-
+  case. 'm' do. k=. 1e_3	[ z=.}.z	NB. milli-
+  case. 'u' do. k=. 1e_6	[ z=.}.z	NB. micro- (µ handled separately)
+  case. 'n' do. k=. 1e_9	[ z=.}.z	NB. nano-
+  case. 'p' do. k=. 1e_12	[ z=.}.z	NB. pico-
+  case. 'f' do. k=. 1e_15	[ z=.}.z	NB. femto-
+  case. 'a' do. k=. 1e_18	[ z=.}.z	NB. atto-
+  case. 'z' do. k=. 1e_21	[ z=.}.z	NB. zepto-
+  case. 'y' do. k=. 1e_24	[ z=.}.z	NB. yocto-
+  end.
+end.
+z=. deb z  NB. guarantee z has NO prefixed SP (or SL)
+k ; z
 )
 
 0 :0
-uunew=: 3 : 0
-  NB. MONAD: convert str: y (e.g. '212 degF') to mks units
-ME=: <'uunew'
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-'coeff code'=. qtcode4anyunit unit
-targ=. canon expandcode code  NB. infer target units from: code
-NB. va=. targ adj  coeff * ('_',unit) adj val
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewMONAD__ val unit targ coeff code va'
-(ucode 8 u: targ format va),SP,(ucode uniform targ)
-:
-  NB. DYAD: convert str: y (e.g. '212 degF') to target units (x)
-ME=: <'uunew'
-val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
-targ=. bris x  NB. ensure x is kosher format: 'm/s^2' NOT 'm s⁻²'
-'coeft codet'=. qtcode4anyunit targ
-'coefu codeu'=. qtcode4anyunit unit
-coeff=. coefu % coeft
-va=. coeff * ('_',unit) adj val
-   sllog 'uunewDYAD__ val unit targ coefu codeu coeft codet va'
-if. codeu -: codet do.
-  (ucode 8 u: targ format va),SP,(ucode uniform targ)
-else.
-  emsg '>>> uunew: incompatible units: (x) || (unit)'
-  '' return.
-end.
+tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit
+tv '+cnv2bare'
+-
+qtcode4bareunit 'acre'    NB. │4046.86│4│
+-
+cocurrent 'uu'
+erase 'foo_uu_ foo_z_ foo__'
+foo_z_=: scale4bareunit_uu_
+foo_z_=: cnvj_uu_
+foo_z_=: qtcode4bareunit_uu_
+redux 10  NB. foo_z_=: cnv2bare_uu_
+redux 11  NB. foo_z_=: qtcode4anyunit_uu_
+redux 12  NB. foo_z_=: [: uuold '1 ' , ]
+redux 13  NB. foo_z_=: convert_uu_
+redux 14  NB. (test of UNICODE levels)
+redux 15  NB. foo_z_=: [: uunew '1 ' , ]
 )
 
 uunew=: '' ddefine

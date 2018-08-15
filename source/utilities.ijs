@@ -46,6 +46,7 @@ y return.
 all=: *./
 and=: *.
 any=: +./
+begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":  NB. layout tool for message string ->'[y]'
 cmx=: [: > <;._2	NB. expects trailing LF
 nb=: [: ([: }. [: ; ' ' ,&.> ]) ":&.>	 NB. embed nums in string
@@ -87,13 +88,17 @@ quoted=: 3 : 0
 
 tv=: 3 : 0
   NB. sets/resets TRACEVERBS
-select. y
+PLUS=. '+'
+verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+if. PLUS={.y do. z=. TRACEVERBS_uu_ ,SP, y-.PLUS
+else. select. y
 case.'' do. z=. TRACEVERBS_uu_  
-case. 0 do. z=. TRACEVERBS_uu_=: ;:''
-case. 1 do. z=. TRACEVERBS_uu_=: ;:'qty4i qty4anyunit qty4bareunit'
-case. 2 do. z=. TRACEVERBS_uu_=: ;:'cnvj qty4i qty4anyunit qty4bareunit'
-case.   do. z=. TRACEVERBS_uu_=: ;:y  NB. dflt: (y) is openlist of verbs
-end.
+case. 0 do. z=. TRACEVERBS_uu_=: ;: ''
+case. 1 do. z=. TRACEVERBS_uu_=: ;: verbs1
+case. 2 do. z=. TRACEVERBS_uu_=: ;: verbs2
+case.   do. z=. TRACEVERBS_uu_=: ;: y  NB. dflt: y==openlist of verbs
+end. end.
 ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
 )
 
@@ -145,9 +150,16 @@ end.
 smoutput 75#'-'
 )
 
+ID=: 3 : 0
+  NB. lookup y in (units) -- return IDs
+  NB. e.g.  ID 'm kWh gbp' --> 1 37 73
+  NB. vt ID 'm kWh gbp'
+units i. ;:y
+)
+
 test_z_=: 3 : 0
   NB. handles F5 for quick testing
-smclear''
+NB. smclear''
 sm        uu '100 degC'
 sm        uu '212 degF'
 sm        uu '373.15 K'

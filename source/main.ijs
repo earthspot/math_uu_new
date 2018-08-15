@@ -836,8 +836,8 @@ z
 uustring=: 4 : 0
 ME=: <'uustring'
   NB. transform a string expression, e.g. '9.5 kg'
-val=. eval SP taketo y
-uns=. SP takeafter y
+]val=. eval SP taketo y
+]uns=. SP takeafter y
 'va un'=. x uuboxed val ; uns
 NB. (":va),SP,un  NB. crude formatting
 (ucode 8 u: un format va),SP,(ucode un)  NB. nuanced formatting

@@ -20,4 +20,4 @@ load BUILTFILE
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
 load TESTFILE
-smoutput '--- run.ijs: TESTFILE completed without errors: ',TESTFILE
+smoutput '--- run.ijs: TESTFILE completed without discrepancies: ',TESTFILE
