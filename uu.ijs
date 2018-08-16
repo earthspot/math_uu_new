@@ -1,5 +1,5 @@
 0 :0
-2018-08-16  02:33:41
+2018-08-16  02:42:20
 -
 UU: scientific units conversion package
 )
@@ -24,9 +24,11 @@ CUTAB=: CUTAB0
 
 HD=: '·'
 INVALID=: _.j_.
+MI=: '-'
 NOTFOUND=: _1
 NUN=: '??'
 PWM=: '^-'
+PWU=: '^_'
 PW=: '^'
 SL=: '/'
 SP=: ' '
@@ -1252,18 +1254,13 @@ validunits=: 3 : 'units e.~ <,y'
 cocurrent 'uu'
 
 0 :0
-Wednesday 15 August 2018  14:46:03
+Thursday 16 August 2018  02:42:07
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
 
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
-
-PWM=: '^-'
-PWU=: '^_'
-PW=: '^'
-MI=: '-'
 
 
 Nmks=: #mks

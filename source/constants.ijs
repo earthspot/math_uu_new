@@ -16,9 +16,11 @@ CUTAB=: CUTAB0			NB. pre-start value
 
 HD=: '·'		NB. hi-dot, optional SI convention
 INVALID=: _.j_.
+MI=: '-'		NB. minus (==HY)
 NOTFOUND=: _1	NB. used by: cnvf cnvv
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PWM=: '^-'	NB. power,minus (precedes a negative power)
+PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
 SL=: '/'
 SP=: ' '

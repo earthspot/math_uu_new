@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Wednesday 15 August 2018  14:46:03
+Thursday 16 August 2018  02:42:07
 abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 (checkpointed in temp 8)
 )
@@ -12,10 +12,11 @@ abolish existing *CODEs in favour of ZEROCODE, isGoodCode
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
 
-PWM=: '^-'	NB. power,minus (precedes a negative power)
-PWU=: '^_'	NB. power,underscore (precedes a negative power)
-PW=: '^'		NB. power
-MI=: '-'		NB. minus (==HY)
+NB. assigned in: constants.ijs...
+NB. PWM=: '^-'	NB. power,minus (precedes a negative power)
+NB. PWU=: '^_'	NB. power,underscore (precedes a negative power)
+NB. PW=: '^'		NB. power
+NB. MI=: '-'		NB. minus (==HY)
 
 NB. mks=: ;:'m kg s A K cd mol rad eur' ---BUT CHECK!!!
 	NB. <<< mks HAS ALREADY BEEN ASSIGNED BY NOW (in: constants.ijs)
@@ -277,13 +278,14 @@ uunew=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uunew'
 val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
+unit=. bris SP takeafter y
 if. 0<#x do.  NB. use non-empty (x) as targ...
   targ=. bris x  NB. (x) in kosher format: 'm/s^2' NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
     emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     '' return.
   end.
   coeff=. coefu % coeft
@@ -295,4 +297,8 @@ end.
 va=. coeff * ('_',unit) adj val
 sllog 'uunew__ val unit targ coefu codeu coeft codet va'
 (ucode 8 u: targ format va),SP,(ucode uniform targ)
+)
+0 :0
+'ft/s^2' uu '1 Å h⁻²'
+x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
 )
