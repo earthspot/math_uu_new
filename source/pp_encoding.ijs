@@ -102,7 +102,7 @@ dip 0=uvalc
 )
 
 qtcode4i=: (3 : 0)"0
-ME=: <'qtcode4i'
+pushme 'qtcode4i'
   NB. returns (valu;code) for index: y
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
@@ -146,7 +146,7 @@ dip uvalx ~: uvalc
 )
 
 qtcode4bareunit=: 3 : 0
-ME=: <'qtcode4bareunit'
+pushme 'qtcode4bareunit'
   NB. lookup the qty (value;code) for BARE NAMED unit: y
   NB. may be basic or derived, BUT expect to find it in: units
 i=. units i. <,y
@@ -159,8 +159,7 @@ valc;code
 )
 
 qtcode4anyunit=: 3 : 0
-	y_uu_=:y
-ME=: <'qtcode4anyunit'
+pushme 'qtcode4anyunit'
   NB. RECALCULATES code for ANY entry (y) in (units)
   NB. …ignores existing code in unitc if product of codes
   NB. multiply the codes for each (powered)token
@@ -170,9 +169,9 @@ if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
-  'invert scale bareunit power'=. cnv2bare cunit=.>t
+  'invert scale bareunit power'=. cnvCunit cunit=.>t
   'valu code'=. qtcode4bareunit bareunit
-ME=: <'qtcode4anyunit'  NB. restore after qtcode4bareunit
+NB. pushme 'qtcode4anyunit'  NB. restore after qtcode4bareunit
 sllog 'cunit invert scale bareunit power valu code'
   if. invert do.
     z=. z , % (code^power)
@@ -188,8 +187,8 @@ msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
 muv;muz return.
 )
 
-cnv2bare=: 3 : 0
-ME=: <'cnv2bare'
+cnvCunit=: 3 : 0
+pushme 'cnvCunit'
   NB. cut prefs/suffs from a cunit (eg: '/kg^3')
   NB. replaces cnvj in NEW code
 y_uu_=: y
@@ -205,13 +204,14 @@ if. PW e. z do.  NB. recognise a power-suffix
   NB. drop power-suffix from z -but remember it as (int) p
   'p z'=. (".{:z) ; (}:}:z)
 end.
-msg '+++ cnv2bare: y=(y) z=(z) j=(j) p=(p)'
+msg '+++ cnvCunit: y=(y) z=(z) j=(j) p=(p)'
   NB. Identify scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
   NB. ONLY IF z is not itself in: units, eg 'knot' ...
 if. (-.iskg z) and (not validunits z) do.
   'k z'=. scale4bareunit z
 end.
-msg '--- cnv2bare: j=(j) k=(k) z=(z) p=(p)'
+msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
+popme 'cnvCunit'
 j ; k ; z ; p return.
 )
 
@@ -256,7 +256,7 @@ k ; z
 
 0 :0
 tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit
-tv '+cnv2bare'
+tv '+cnvCunit'
 -
 qtcode4bareunit 'acre'    NB. │4046.86│4│
 -
@@ -265,7 +265,7 @@ erase 'foo_uu_ foo_z_ foo__'
 foo_z_=: scale4bareunit_uu_
 foo_z_=: cnvj_uu_
 foo_z_=: qtcode4bareunit_uu_
-redux 10  NB. foo_z_=: cnv2bare_uu_
+redux 10  NB. foo_z_=: cnvCunit_uu_
 redux 11  NB. foo_z_=: qtcode4anyunit_uu_
 redux 12  NB. foo_z_=: [: uuold '1 ' , ]
 redux 13  NB. foo_z_=: convert_uu_
@@ -275,7 +275,7 @@ redux 15  NB. foo_z_=: [: uunew '1 ' , ]
 
 uunew=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
-ME=: <'uunew'
+pushme 'uunew'
 val=. ". SP taketo y -. '°'
 unit=. SP takeafter y
 if. 0<#x do.  NB. use non-empty (x) as targ...

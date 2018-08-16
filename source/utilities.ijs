@@ -13,32 +13,21 @@ ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-sessuu1=: 3 : 0
-if. ME e. a: default 'TRACEVERBS' do.
-  smoutput y
-else. i.0 0  NB. same as returned by smoutput
-end.
-)
-
 make_msg=: 1 ddefine
   NB. USED BY: start -and diagnostics for given IDs
   NB. These diagnostics get switched off/on by: start
-ME=: a:	NB. init ME (in all modes)
+clearme''	NB. cleardown ME (in all modes)
 talks=. x	NB. Boolean: x==1 -- output to sess
 if. y do.
   sessuu=: sessuu1
   msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS
   sllog=: sessuu&llog
-  if. talks do.
-    smoutput '+++ make_msg: msg is ACTIVE',LF
-  end.
+  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
 else.
   sessuu=: empty
   msg=: empty
   sllog=: empty
-  if. talks do.
-    smoutput '--- make_msg: msg is empty',LF
-  end.
+  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
 end.
 y return.
 )
@@ -84,22 +73,6 @@ if. -. 128!:5 y do. 0 return. end.
 quoted=: 3 : 0
   NB. =1 iff (y) is a quoted currency
 (<toupper y) e. {."1 CUTAB
-)
-
-tv=: 3 : 0
-  NB. sets/resets TRACEVERBS
-PLUS=. '+'
-verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs2=. verbs1 , ;: 'cnvj cnv2bare'
-if. PLUS={.y do. z=. TRACEVERBS_uu_ ,SP, y-.PLUS
-else. select. y
-case.'' do. z=. TRACEVERBS_uu_  
-case. 0 do. z=. TRACEVERBS_uu_=: ;: ''
-case. 1 do. z=. TRACEVERBS_uu_=: ;: verbs1
-case. 2 do. z=. TRACEVERBS_uu_=: ;: verbs2
-case.   do. z=. TRACEVERBS_uu_=: ;: y  NB. dflt: y==openlist of verbs
-end. end.
-ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
 )
 
 utoks=: 3 : 0
@@ -215,4 +188,55 @@ if. 0<#bads do.
   smoutput bads+30
 end.
 bads return.
+)
+
+tv=: 3 : 0
+  NB. sets/resets TRACEVERBS
+PLUS=. '+'
+MINUS=. '-'
+verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
+NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS_uu_ -. ;: y-.MINUS
+select. {.y
+case. ' '   do. z=. TRACEVERBS_uu_  
+case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
+case. 1     do. z=. TRACEVERBS_uu_=: verbs1
+case. 2     do. z=. TRACEVERBS_uu_=: verbs2
+case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
+case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
+case.       do. z=. TRACEVERBS_uu_=: ~. ;: y  NB. dflt: y==openlist of verbs
+end.
+ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
+)
+
+clearme=: 3 : 0
+  NB. clear the register of currently running verbs
+ME_uu_=: ''  NB. cleardown ME
+i.0 0
+)
+
+pushme=: 1 ddefine
+  NB. register (y) as the currently running verb
+ME_uu_=: ~. ME_uu_ ,~ ;:y
+if. x do. msg '+++ (y): ENTERED' end.
+i.0 0
+)
+
+popme=: 1 ddefine
+  NB. de-register (y) as the currently running verb
+if. x do. msg '--- (y): EXITS' end.
+ME_uu_=: ME_uu_ -. ;:y
+i.0 0
+)
+
+sessuu1=: 3 : 0
+if. traced ME do. smoutput y end.
+i.0 0
+)
+
+traced=: 3 : 0
+  NB. (bool) verb/s (y) is/are listed in TRACEVERBS
+z=. boxopen y
+any z e. a: default 'TRACEVERBS'
 )

@@ -3,21 +3,37 @@
 
 cocurrent 'uu'
 
-load temp 9	NB. PATCH of replacements
+setverbs=: 3 : 0
+  NB. y==1 -- set NEW versions of given verbs
+if. y do.
+  compatible=: compatibleNEW
+  compatlist=: compatlistNEW
+  convert=: convertNEW
+  make_units=: make_unitsNEW
+  uu=: uunew
+  VALIDATE_unitc=: empty
+else.
+  compatible=: compatibleOLD
+  compatlist=: compatlistOLD
+  convert=: convertOLD
+  make_units=: make_unitsOLD
+  uu=: uuold
+end.
+i.0 0
+)
 
 start=: 3 : 0
-ME=: <'start'
   NB. start the locale: _uu_
   NB. Not only intended to be called on loading,
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
-uu=: uuold
-uu=: uunew
-TRACEVERBS=: ''
-NB. TRACEVERBS=: ;:'start qty4i qty4anyunit qty4bareunit'
+setverbs 1
 make_msg 1	NB. enable diagnostics
-wd'msgs' [ msg '+++ start: ENTERED'
+tv 0
+tv '+start'
+pushme 'start'
+wd'msgs'
 0 make_msg 0	NB. disable diagnostics while caches are being built
 if. -.fexist TPATH_UUC do.
   smoutput z=.'>>> start: file not found: ',TPATH_UUC
@@ -29,22 +45,18 @@ badversion=. 'v.v.v'"_
 load :: 0: TPATH_UUC
 load :: 0: TPATH_UUF
 load :: 0: TPATH_UUM
-NB. ====================================
-NB. load temp 9	NB. PATCH of replacements
-NB. ====================================
   NB. Make the NOMINAL UNITS table: units
 make_units''
   NB. Make (NEW): unitc based on pp_encoding
 make_unitc''  NB. 1st pass -inits uvalc and unitc
-NB. 2 make_unitc''  NB. 2nd pass
-NB. 3 make_unitc''  NB. 3rd pass
 report_complex_nouns''  NB. NO NOUNS should be complex
   NB. Enable inline test-verbs (in main.ijs)…
 STARTED=: 1
   NB. …such verbs only act if the script is loaded
   NB. once verb: start has been run.
 make_msg 1	NB. enable diagnostics
-wd'msgs' [ msg '--- start: EXITS'
+wd'msgs'
+popme 'start'
 )
 
 start''

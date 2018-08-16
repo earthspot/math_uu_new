@@ -1,5 +1,5 @@
 0 :0
-2018-08-15  17:49:52
+2018-08-16  02:33:41
 -
 UU: scientific units conversion package
 )
@@ -44,6 +44,7 @@ UNDEFINED=: _.
 factory=: 3 : 0
 
 
+ME=: ''
 SIG_z_=: 3
 SCI_z_=: 5
 UNICODE=: 1
@@ -85,32 +86,21 @@ ssw=: smoutput&sw
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-sessuu1=: 3 : 0
-if. ME e. a: default 'TRACEVERBS' do.
-  smoutput y
-else. i.0 0
-end.
-)
-
 make_msg=: 1 ddefine
 
 
-ME=: a:
+clearme''
 talks=. x
 if. y do.
   sessuu=: sessuu1
   msg=: sessuu&sw
   sllog=: sessuu&llog
-  if. talks do.
-    smoutput '+++ make_msg: msg is ACTIVE',LF
-  end.
+  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
 else.
   sessuu=: empty
   msg=: empty
   sllog=: empty
-  if. talks do.
-    smoutput '--- make_msg: msg is empty',LF
-  end.
+  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
 end.
 y return.
 )
@@ -155,22 +145,6 @@ if. -. 128!:5 y do. 0 return. end.
 quoted=: 3 : 0
 
 (<toupper y) e. {."1 CUTAB
-)
-
-tv=: 3 : 0
-
-PLUS=. '+'
-verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs2=. verbs1 , ;: 'cnvj cnv2bare'
-if. PLUS={.y do. z=. TRACEVERBS_uu_ ,SP, y-.PLUS
-else. select. y
-case.'' do. z=. TRACEVERBS_uu_  
-case. 0 do. z=. TRACEVERBS_uu_=: ;: ''
-case. 1 do. z=. TRACEVERBS_uu_=: ;: verbs1
-case. 2 do. z=. TRACEVERBS_uu_=: ;: verbs2
-case.   do. z=. TRACEVERBS_uu_=: ;: y
-end. end.
-ssw '+++ tv: #:(#z) TRACEVERBS: (linz z)'
 )
 
 utoks=: 3 : 0
@@ -282,13 +256,62 @@ end.
 bads return.
 )
 
+tv=: 3 : 0
+
+PLUS=. '+'
+MINUS=. '-'
+verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+select. {.y
+case. ' '   do. z=. TRACEVERBS_uu_  
+case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
+case. 1     do. z=. TRACEVERBS_uu_=: verbs1
+case. 2     do. z=. TRACEVERBS_uu_=: verbs2
+case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
+case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
+case.       do. z=. TRACEVERBS_uu_=: ~. ;: y
+end.
+ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
+)
+
+clearme=: 3 : 0
+
+ME_uu_=: ''
+i.0 0
+)
+
+pushme=: 1 ddefine
+
+ME_uu_=: ~. ME_uu_ ,~ ;:y
+if. x do. msg '+++ (y): ENTERED' end.
+i.0 0
+)
+
+popme=: 1 ddefine
+
+if. x do. msg '--- (y): EXITS' end.
+ME_uu_=: ME_uu_ -. ;:y
+i.0 0
+)
+
+sessuu1=: 3 : 0
+if. traced ME do. smoutput y end.
+i.0 0
+)
+
+traced=: 3 : 0
+
+z=. boxopen y
+any z e. a: default 'TRACEVERBS'
+)
+
 '==================== [uu] main ===================='
 
 cocurrent 'uu'
 
 adj=: 4 : 0
-ME=: <'adj'
-msg '+++ adj: ENTERED: x=(x) y=(y)'
+pushme 'adj'
+msg '... adj: x=(x) y=(y)'
 
 
 
@@ -343,7 +366,9 @@ fcase. '_°Ré'	do.
  case. '_degRe'	do.	z=. y+218.52
  case.		do.	z=. y 
 end.
-z [msg '--- adj: EXITS: z=(z)'
+msg '--- adj: EXITS: z=(z)'
+0 popme 'adj'
+z return.
 )
 
 bris=: unucode@unslash1@undotted@deb"1
@@ -360,35 +385,40 @@ end.
 )
 
 canon=: 3 : 0
-ME=: <'canon'
+pushme 'canon'
 
 
 
-msg '+++ canon: ENTERED'
 z=. ; |. each sort |. each utoks y
 	msg '... canon: z=(z)'
 
 for_w. mks do. m=. ,>w
   if. any m E. z do.
     z=. (z canc m) coll m
-	msg '... canon:   [(m)] z=(z)'
+	msg '... canon: [(m)] z=(z)'
   end.
 end.
 z=. debnSL dlb ; sort utoks z
 if. 0=#z do. z=. ,SL end.
-z [ msg '--- canon: EXITS: z=(z)'
+msg '--- canon: EXITS: z=(z)'
+0 popme 'canon'
+z return.
 )
 
 cnvf=: 3 : 0
-ME=: <'cnvf'
+pushme 'cnvf'
 
 z=. (f=. INVALID) ; '' ; NOTFOUND
 t=. utoks cnvv y
-if. LK=NOTFOUND do. z return. end.
+if. LK=NOTFOUND do.
+  popme 'cnvf'
+  z return.
+end.
 try. z=. (f=.LK{uvalu); t; LK
 catch.
 end.
-	msg '... cnvf:   f=(f) (linz t)'
+msg '+++ cnvf: EXITS: y=(y) f=(f) t=(linz t)'
+0 popme 'cnvf'
 z return.
 )
 
@@ -405,7 +435,7 @@ zz return.
 )
 
 cnvj=: 3 : 0
-ME=: <'cnvj'
+pushme 'cnvj'
 
 k=. p=. 1 [ z=. y
 if. (SL~:{.z) and (any PWM E. z) do.
@@ -448,7 +478,8 @@ if. (-.iskg z) and (not validunits z) do.
   end.
 end.
 z=. deb z
-	msg '--- cnvj:   j=(j) scale:k=(k) units:z=(z) power:p=(p)'
+msg '--- cnvj: j=(j) scale:k=(k) units:z=(z) power:p=(p)'
+popme 'cnvj'
 j ; k ; z ; p return.
 )
 
@@ -463,7 +494,7 @@ j ; k ; z ; p return.
 
 
 cnvnon=: 3 : 0
-ME=: <'cnvnon'
+pushme 'cnvnon'
 
 i=. (y e. mkss)i. 0
 if. i<#y do.
@@ -472,7 +503,8 @@ if. i<#y do.
 else.
   t=. ''
 end.
-	msg '... cnvnon:   next non-mks token=[(t)] leaving: (linz y)'
+msg '+++ cnvnon: next non-mks token=[(t)] leaving: (linz y)'
+0 popme 'cnvnon'
 (deb t) ; <y
 )
 
@@ -490,7 +522,7 @@ LK=: {.LKS=: z
 cnvx=: 3 : 'unitx cnvv y'
 
 coll=: 4 : 0
-ME=: <'coll'
+pushme 'coll'
 
 
 
@@ -501,28 +533,59 @@ n=. SP,y
 d=. SL,y
 for_p. 4 3 2 do.
   z=. z rplc ((p*$n)$n);(n,P,":p) ; ((p*$d)$d);(d,P,":p)
-	msg '... coll:   z=(z) power:p=(p)'
+  msg '+++ coll:   z=(z) power:p=(p)'
 end.
-z
+0 popme 'coll'
+z return.
 )
 
-compatible=: 4 : 0
-ME=: <'compatible'
+compatibleOLD=: 4 : 0
+pushme 'compatibleOLD'
 
 
-msg 'compatible: ENTERED'
-if. ('*'= {.>x) or ('*'= {.>y) do. 1 return. end.
+if. ('*'= {.>x) or ('*'= {.>y) do.
+  popme 'compatibleOLD'
+  1 return.
+end.
 ux=. compat cnvv >x [ uy=. compat cnvv >y
-	msg '... compatible: ux=(ux) uy=(uy)'
-if. (0<#uy) and (uy-:ux) do. 1 return. end.
+msg '... compatibleOLD: ux=(ux) uy=(uy)'
+if. (0<#uy) and (uy-:ux) do.
+  popme 'compatibleOLD'
+  1 return.
+end.
 a=. {.convert >x [ b=. {.convert >y
+popme 'compatibleOLD'
 a-:b
 )
 
-compatlist=: 3 : 0
-ME=: <'compatlist'
+compatibleNEW=: 4 : 0
 
-msg 'compatlist: ENTERED'
+
+ident=. ([: , [) -: ([: , ])
+    if. ('*' ident x) or ('*' ident y) do. 1 return.
+elseif. ('!' ident x) or ('!' ident y) do. 1 return.
+end.
+xcode=. 1 pick qtcode4anyunit x
+ycode=. 1 pick qtcode4anyunit y
+xcode -: ycode
+)
+
+compatible_test=: 3 : 0
+
+assert '*' compatible ,'m'
+assert '*' compatible 'kg'
+assert '!' compatible ,'m'
+assert '!' compatible 'kg'
+assert (,'*') compatible ,'m'
+assert (,'*') compatible 'kg'
+assert (,'!') compatible ,'m'
+assert (,'!') compatible 'kg'
+assert (,'J') compatible 'cal'
+assert (,'J') compatible 'kcal'
+)
+
+compatlistOLD=: 3 : 0
+
 
 
 if. 0<#uy=. compat cnvv >y do.
@@ -535,6 +598,12 @@ end.
 if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
 
 z=. ~. (<,y),z,{.convert y
+)
+
+compatlistNEW=: 3 : 0
+
+]ycode=. 1 pick qtcode4anyunit y
+(ycode=unitc) # units
 )
 
 0 :0
@@ -583,17 +652,20 @@ Finally when no more units to expand (max cycles=30 as failsafe)
 )
 
 convertOLD=: 1&$: : (4 : 0)"1
-ME=: <'convert'
+pushme 'convertOLD'
 
 yb=. bris y
-	msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
+msg '... convertOLD: x=(x) y=(y) yb=(yb)'
 
 if. x do.
-  if. 0<#z=.cnvx yb do. (z ; 1 ; LK{uvalx) return. end.
+  if. 0<#z=.cnvx yb do.
+    popme 'convertOLD'
+    (z ; 1 ; LK{uvalx) return.
+  end.
 end.
 fac=. 1
 z=. utoks yb
-msg '... convert: utoks=(linz z)'
+msg '... convertOLD: utoks=(linz z)'
 
 
 
@@ -601,23 +673,55 @@ for_i. i.MAXLOOP do.
   loop=. i+1
   't rz'=. cnvnon z
   if. 0=#t do. break. end.
-  if. t-:,'*' do. ('*' ; loop ; 1) return. end.
+  if. t-:,'*' do.
+    popme 'convertOLD'
+    ('*' ; loop ; 1) return.
+  end.
   'j k tt p'=. cnvj t
   'f ttt lk'=. cnvf tt
-  if. (isNaN f) or (lk=_1) do. (NUN ; loop ; _) return. end.
+  if. (isNaN f)or(lk=_1) do.
+    popme 'convertOLD'
+    (NUN ; loop ; _) return.
+  end.
   subfac=. (f*k)^p
 
   fac=. fac * subfac^(np j)
   z=. rz,p#(j cnvi ttt)
-	msg '... convert: [(loop)] z=(linz z) fac=(fac) j=(j) subfac=(subfac)'
+  msg '... convertOLD: [(loop)] z=(linz z) fac=(fac) j=(j) subfac=(subfac)'
 end.
 
 if. loop=MAXLOOP do. loop=. 0 end.
-wd'msgs' [ msg '--- convert: EXITS'
+wd'msgs'
+popme 'convertOLD'
 (canon ;z) ; loop ; fac return.
 )
 
+convertNEW=: 1&$: : (4 : 0)"1
+ME=: <'convert'
+
+yb=. bris y
+msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
+
+'fac code'=. qtcode4anyunit yb
+z=. expandcode code
+loop=. _
+(canon ;z) ; loop ; fac return.
+)
+
+0 :0
+convert
+convert=: convertNEW
 convert=: convertOLD
+-
+convert 'yd'
+convert 'yd/s'
+convert 'yd/h'
+convert 'Hz'
+convert 'GHz'
+-
+make_units=: make_unitsNEW
+make_units=: make_unitsOLD
+)
 
 curfig=: 3 : 'hy (0 j. 2)":y'
 debSL=: #~ (+. (1: |. (> </\)))@('/'&~:)
@@ -631,7 +735,7 @@ end.
 )
 
 deslash=: 1&$: : (4 : 0)
-ME=: <'deslash'
+pushme 'deslash'
 
 
 
@@ -648,8 +752,14 @@ for_cu. utoks y do. cunit=. >cu
   end.
   r=. r,cunit
 end.
-dlb r
+popme 'deslash'
+dlb r return.
 )
+
+0 :0
+deslash'ft/s^2'
+)
+
 dotted=: 1&$: : (4 : 0)
 
 
@@ -674,8 +784,6 @@ exrate=: exrate_exch_
 unhms=: 3600 %~ _ 60 60 #. 3 {. ]
 
 format_hms=: 3 : 0
-ME=: <'format_hms'
-msg 'format_hms: ENTERED'
 
 if. y-:'' do. y=. unhms 23 59 59.567 end.
 neg=. (y<0)#'-'
@@ -749,10 +857,9 @@ catch. end.
 hy=: '_-' charsub ]
 isNaN=: 128!:5
 
-
-
-
 iskg=: 3 : 0
+
+
 if. y-:'kg' do. 1 return. end.
 if. not 'kg' -: 2{.y do. 0 return. end.
 
@@ -782,18 +889,15 @@ np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
 
 scino=: 3 : 0
-ME=: <'scino'
-msg '+++ scino: y=(y)'
 
 
 
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
 if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ": y end.
-z [ msg '--- scino: z=(z)'
 )
 
 selfcanc=: 3 : 0
-ME=: <'selfcanc'
+pushme 'selfcanc'
 msg '+++ selfcanc: ENTERED'
 
 
@@ -805,7 +909,9 @@ for_cb. ~.t do.
 end.
 z=. dlb canon z
 z=. z rplc '/^2';'/';'/^3';'/';'/^4';'/';'/^5';'/';'/^6';'/';'/^7';'/';'/^8';'/';'/^9';'/'
-z [ msg '--- selfcanc: EXITS: z=(z)'
+msg '--- selfcanc: EXITS: z=(z)'
+0 popme 'selfcanc'
+z return.
 )
 
 sci=: 3 : 0
@@ -863,8 +969,6 @@ end.
 )
 
 ucase=: 3 : 0
-ME=: <'ucase'
-msg 'ucase: ENTERED'
 if. 0=#y do. UCASE
 else. UCASE=: {.y
 end.
@@ -909,8 +1013,6 @@ z [ 'cspel csymb'=: SAV
 )
 
 udat=: 4 : 0
-ME=: <'udat'
-msg 'udat: ENTERED'
 
 
 
@@ -921,8 +1023,8 @@ if. x do.
   zfmla=. deb y-.TAB
   zdesc; znits; zfmla
 else.
-zvalu=. (i=. y i. SP){.y=. deb y-.TAB
-znitv=. }.i}.y
+  zvalu=. (i=. y i. SP){.y=. deb y-.TAB
+  znitv=. }.i}.y
   zdesc; znits; znitv; zvalu
 end.
 )
@@ -932,8 +1034,6 @@ end.
 
 
 udiv=: 4 : 0
-ME=: <'udiv'
-msg 'udiv: ENTERED'
 if. (1=#y) and (y=SL) do. x return. end.
 z=. cnvi utoks y
 z=. selfcanc x , ;z
@@ -941,11 +1041,10 @@ z=. z rplc '/^2';'/'
 )
 
 udumb=: 3 : 0
-ME=: <'udumb'
-msg 'udumb: ENTERED'
 'zdesc znits znitv zvalu'=. y
 zdesc; znits; 1
 )
+
 make_unitsOLD=: 0 ddefine
 
 
@@ -983,7 +1082,31 @@ end.
 i.0 0
 )
 
-make_units=: make_unitsOLD
+make_unitsNEW=: 0 ddefine
+
+
+
+
+sspel=: <;._1 ' PI Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
+ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
+
+cspel=: sspel, <;._1 ' deg amin asec'
+csymb=: ssymb, <;._1 '|°|''|"'
+
+
+
+mkss=: (SP,each mks),(SL,each mks),<,SL
+make_cutuuc''
+'v uv us'=. <"1 |: cutuuc UUC
+unitv=: deb each uv -.each TAB
+units=: deb each us
+uvalu=: eval >v
+
+uvalx=: cycs=: (#UUC)$0
+unitx=: (#UUC)$<'??'
+compat=: unitc i. unitc
+i.0 0
+)
 
 mj=: 0 $~ 256
 mj=: 1 ch}mj [ ch=. a.i. SP,TAB
@@ -1011,8 +1134,8 @@ cutuuc=: x&;: "1
 i.0 0
 )
 uniform=: _&$: : (4 : 0)"1
-ME=: <'uniform'
-	msg '+++ uniform: ENTERED: x=(x) y=(y)'
+0 pushme 'uniform'
+msg '+++ uniform: ENTERED: x=(x) y=(y)'
 
 
 y=. utf8 deb y
@@ -1027,18 +1150,28 @@ case. 1 do.
   end.
   ]z=. ucode z
 case. 2 do.
-  if. y-: ,SL do. '' [ msg '--- uniform: RETURNS NIL' return. end.
+  if. y-: ,SL do.
+    msg '--- uniform: RETURNS NIL'
+    0 popme 'uniform'
+    '' return.
+  end.
 
   ]z=. unucode undotted y
   ]z=. ucode deslash unslash1 z
 case. 3 do.
-  if. y-: ,SL do. '' [ msg '--- uniform: RETURNS NIL' return. end.
+  if. y-: ,SL do.
+    msg '--- uniform: RETURNS NIL'
+    0 popme 'uniform'
+    '' return.
+  end.
 
   z=. dotted 2 uniform y
 end.
-z [ msg '--- uniform: EXITS'
+popme 'uniform'
+z return.
 )
-3 :0''
+
+uniform_test=: 3 : 0
 if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
 assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
 assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
@@ -1054,7 +1187,6 @@ assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
 assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
 i.0 0
 )
-
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
 undotted=: 0&dotted
 unslash1=: 0&slash1
@@ -1063,7 +1195,6 @@ upost=: 4 : 'y,(x#~*UNICODE)'
 upref=: 4 : '(x#~*UNICODE),y'
 
 uuold=: '' ddefine
-ME=: <'uu'
 
 
 
@@ -1074,11 +1205,10 @@ if. isBoxed y do. z=. x uuboxed y
 else. z=. x uustring y
 end.
 msg LF,LF,LF
-z
+z return.
 )
 
 uustring=: 4 : 0
-ME=: <'uustring'
 
 ]val=. eval SP taketo y
 ]uns=. SP takeafter y
@@ -1087,19 +1217,19 @@ ME=: <'uustring'
 )
 
 uuboxed=: '' ddefine
-ME=: <'uuboxed'
+pushme 'uuboxed'
 
-msg '+++ uuboxed: ENTERED'
 'val uns'=. y
-	sllog 'x uuboxed__ val uns'
+msg '... uuboxed: x=(x) val=(val) uns=(uns)'
 'ux uy'=. bris each x;uns
 if. 0<#x do. if. -. ux compatible uy do.
-  emsg'>>> uuboxed: incompatible units: (ux) || (uy)'
-  return.
+  emsg '>>> uuboxed: incompatible units: (ux) || (uy)'
+  0 popme 'uuboxed' return.
 end. end.
 'unsc c fy'=. convert uns
 if. fy = _ do.
-  emsg'>>> uuboxed: unknown units: (uns)' return.
+  emsg '>>> uuboxed: unknown units: (uns)'
+  0 popme 'uuboxed' return.
 end.
 
 if. 0=#x do. ]ux=. bris x=. unsc end.
@@ -1108,7 +1238,8 @@ qty=. (fy%fx) * ('_',uns) adj val
 uno=. uniform x
 	sllog 'uuboxed__ fy fx uno ux'
 z=. (ux adj qty) ; uno
-z [ msg '--- uuboxed: EXITS'
+popme 'uuboxed'
+z return.
 )
 
 uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
@@ -1215,7 +1346,7 @@ dip 0=uvalc
 )
 
 qtcode4i=: (3 : 0)"0
-ME=: <'qtcode4i'
+pushme 'qtcode4i'
 
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
@@ -1259,7 +1390,7 @@ dip uvalx ~: uvalc
 )
 
 qtcode4bareunit=: 3 : 0
-ME=: <'qtcode4bareunit'
+pushme 'qtcode4bareunit'
 
 
 i=. units i. <,y
@@ -1272,8 +1403,7 @@ valc;code
 )
 
 qtcode4anyunit=: 3 : 0
-	y_uu_=:y
-ME=: <'qtcode4anyunit'
+pushme 'qtcode4anyunit'
 
 
 
@@ -1283,9 +1413,8 @@ if. SL-: >y do. 1;TRIVIALCODE return. end.
 if. ST-: >y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
-  'invert scale bareunit power'=. cnv2bare cunit=.>t
+  'invert scale bareunit power'=. cnvCunit cunit=.>t
   'valu code'=. qtcode4bareunit bareunit
-ME=: <'qtcode4anyunit'
 sllog 'cunit invert scale bareunit power valu code'
   if. invert do.
     z=. z , % (code^power)
@@ -1301,8 +1430,8 @@ msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
 muv;muz return.
 )
 
-cnv2bare=: 3 : 0
-ME=: <'cnv2bare'
+cnvCunit=: 3 : 0
+pushme 'cnvCunit'
 
 
 y_uu_=: y
@@ -1318,13 +1447,14 @@ if. PW e. z do.
 
   'p z'=. (".{:z) ; (}:}:z)
 end.
-msg '+++ cnv2bare: y=(y) z=(z) j=(j) p=(p)'
+msg '+++ cnvCunit: y=(y) z=(z) j=(j) p=(p)'
 
 
 if. (-.iskg z) and (not validunits z) do.
   'k z'=. scale4bareunit z
 end.
-msg '--- cnv2bare: j=(j) k=(k) z=(z) p=(p)'
+msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
+popme 'cnvCunit'
 j ; k ; z ; p return.
 )
 
@@ -1369,7 +1499,7 @@ k ; z
 
 0 :0
 tv 1
-tv '+cnv2bare'
+tv '+cnvCunit'
 -
 qtcode4bareunit 'acre'
 -
@@ -1377,36 +1507,18 @@ cocurrent 'uu'
 erase 'foo_uu_ foo_z_ foo__'
 foo_z_=: scale4bareunit_uu_
 foo_z_=: cnvj_uu_
-foo_z_=: cnv2bare_uu_
 foo_z_=: qtcode4bareunit_uu_
-foo_z_=: qtcode4anyunit_uu_
 redux 10
 redux 11
 redux 12
 redux 13
--
-foo
-foo 'acre'
-foo 'm'
-foo ,'m'
-foo 'km'
-foo 'm^3'
-foo '/m^3'
-foo 'rd'
-foo 'kWh'
-foo 'Hz'
-foo 'GHz'
-foo '/GHz^2'
-foo 'GHz^-2'
-foo 'GHz^_2'
-foo 'kg'
-foo '/kg'
-foo 'gbp/m^3'
+redux 14
+redux 15
 )
 
 uunew=: '' ddefine
 
-ME=: <'uunew'
+pushme 'uunew'
 val=. ". SP taketo y -. '°'
 unit=. SP takeafter y
 if. 0<#x do.
@@ -1505,20 +1617,37 @@ uum=: 3 : 'open TPATH_UUM'
 
 cocurrent 'uu'
 
-load temp 9
+setverbs=: 3 : 0
+
+if. y do.
+  compatible=: compatibleNEW
+  compatlist=: compatlistNEW
+  convert=: convertNEW
+  make_units=: make_unitsNEW
+  uu=: uunew
+  VALIDATE_unitc=: empty
+else.
+  compatible=: compatibleOLD
+  compatlist=: compatlistOLD
+  convert=: convertOLD
+  make_units=: make_unitsOLD
+  uu=: uuold
+end.
+i.0 0
+)
 
 start=: 3 : 0
-ME=: <'start'
 
 
 
 
 
-uu=: uuold
-uu=: uunew
-TRACEVERBS=: ''
+setverbs 1
 make_msg 1
-wd'msgs' [ msg '+++ start: ENTERED'
+tv 0
+tv '+start'
+pushme 'start'
+wd'msgs'
 0 make_msg 0
 if. -.fexist TPATH_UUC do.
   smoutput z=.'>>> start: file not found: ',TPATH_UUC
@@ -1540,7 +1669,8 @@ STARTED=: 1
 
 
 make_msg 1
-wd'msgs' [ msg '--- start: EXITS'
+wd'msgs'
+popme 'start'
 )
 
 start''
