@@ -3,6 +3,10 @@
 
 cocurrent 'uu'
 
+z=.     'Celsius degC Centigrade degC Fahrenheit degF'
+z=. z , ' Newton degN Roemer degRo Reamur degRe Delisle degDe'
+adjsub=: ;:z  NB. relacement template used by: adj
+
 adj=: 4 : 0
 pushme 'adj'
 msg '... adj: x=(x) y=(y)'
@@ -15,60 +19,18 @@ msg '... adj: x=(x) y=(y)'
   NB.  'degC'&adj SUBTRACTS 273.15
   NB. '_degC'&adj ADDS 273.15
   NB. SOURCE: WIKIPEDIA Conversion_of_units_of_temperature
-select. x
-NB. Celsius scale
-fcase. 'Celsius'	do.
-fcase. 'Centigrade'do.
-fcase. '°C'	do.
- case. 'degC'	do.	z=. y-273.15
-fcase. '_Celsius'	do.
-fcase.'_Centigrade'do.
-fcase. '_°C'	do.
- case. '_degC'	do.	z=. y+273.15
-NB. Fahrenheit scale
-fcase. 'Fahrenheit'do.
-fcase. '°F'	do.
- case. 'degF'	do.	z=. y-459.67
-fcase.'_Fahrenheit'do.
-fcase. '_°F'	do.
- case. '_degF'	do.	z=. y+459.67
-NB. Rømer scale
-fcase. 'Roemer'	do.
-fcase. 'Rømer'	do.
-fcase. '°Rø'	do.
- case. 'degRo'	do.	z=. y-650.762
-fcase. '_Roemer'	do.
-fcase. '_Rømer'	do.
-fcase. '_°Rø'	do.
- case. '_degRo'	do.	z=. y+650.762
-NB. Rankine scale	--needs no adj
-NB. Newton scale
-fcase. 'Newton'	do.
-fcase. '°N'	do.
- case. 'degN'	do.	z=. y-90.139
-fcase. '_Newton'	do.
-fcase. '_°N'	do.
- case. '_degN'	do.	z=. y+90.139
-NB. Delisle scale
-fcase. 'Delisle'	do.
-fcase. '°De'	do.
- case. 'degDe'	do.	z=. y+559.725
-fcase. '_Delisle'	do.
-fcase. '_°De'	do.
- case. '_degDe'	do.	z=. y-559.725
-NB. Réamur scale
-fcase. 'Reamur'	do.
-fcase. 'Réamur'	do.
-fcase. '°Ré'	do.
- case. 'degRe'	do.	z=. y-218.52
-fcase. '_Reamur'	do.
-fcase. '_Réamur'	do.
-fcase. '_°Ré'	do.
- case. '_degRe'	do.	z=. y+218.52
-NB. default scale  --needs no adj
+if. UL={.x do. sign=. _1 else. sign=. 1 end.
+xx=. (UL -.~ x rplc '°';'deg' ; 'ø';'oe' ; 'é';'e') rplc adjsub
+select. xx
+ case. 'degC'	do.	z=. y - 273.15*sign
+ case. 'degF'	do.	z=. y - 459.67*sign
+ case. 'degRo'	do.	z=. y - 650.762*sign
+ case. 'degN'	do.	z=. y - 90.139*sign
+ case. 'degDe'	do.	z=. y - 559.725*sign
+ case. 'degRe'	do.	z=. y - 218.52*sign
  case.		do.	z=. y 
 end.
-msg '--- adj: EXITS: z=(z)'
+msg '--- adj: EXITS: z=(z) sign=(sign) xx=(xx)'
 0 popme 'adj'
 z return.
 )
@@ -524,7 +486,7 @@ case. 'deg'	do. z=. format_deg y	NB. (deg amin asec)
 case. 'usd'	do. z=. '$',curfig y
 case. 'cnt'	do. z=. '¢',curfig y
 case. 'gbp'	do. z=. '£',curfig y
-case. 'eur'	do. z=. '€' curfig y
+case. 'eur'	do. z=. '€',curfig y
 case. ,'!'	do. z=. >(y=0){'YES';'NO'
 case. 'midi'	do. z=.": rnd midino y	NB. MIDI-number
 case. 'note'	do. z=. note y	NB. musical note
@@ -535,7 +497,7 @@ fcase. 'Hz'	do.	NB. frequency: Hertz
 case. 'rad'	do. z=. format_sci y
 NB. INSERT FURTHER fcase.s HERE for SIG controlled
 fcase. ,'/'	do.	NB. dimensionless
-case. ,'*'	do. z=. format_sig y
+case.  ,'*'	do. z=. format_sig y
 NB. ALL ELSE...
 case.		do. z=. format_general y
 end.

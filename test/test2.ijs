@@ -1,6 +1,6 @@
 NB. UU: scientific units conversion package - test2
 0 :0
-Friday 15 June 2018  11:11:07
+Thursday 16 August 2018  03:12:44
 -
 Sample statements to test verbs: expandcode upp4utok pp4xunit code4xunit encoded decoded
 )
@@ -21,7 +21,6 @@ upp4utok=: 3 : 0
 unit;power return.
 )
 
-3 :0''	NB. test immediately
 assert ''		-: expandcode_uu_ 1
 assert 'kg'	-: expandcode_uu_ 3
 assert '/kg'	-: expandcode_uu_ 1r3
@@ -30,16 +29,12 @@ assert ,<' kg'	-: 1&expandcode_uu_ 3
 assert ,<'/kg'	-: 1&expandcode_uu_ 1r3
 assert 'm^3/kg^2 s K^2 mol^2 eur^2'                -:   expandcode_uu_ 739944040r9
 assert (<;._1 '| m^3|/kg^2| s| K^2| mol^2| eur^2') -: 1&expandcode_uu_ 739944040r9
-)
-
-3 :0''	NB. test immediately
 assert ('kg';1)	-: upp4utok 'kg'
 assert ('kg';_1)	-: upp4utok '/kg'
 assert ('kg';_2)	-: upp4utok '/kg^2'
 assert ('kg';_2)	-: upp4utok 'kg^-2'
 assert ('kg';2)	-: upp4utok 'kg^2'
 assert ('kg';2)	-: upp4utok '/kg^-2'  NB. double-negation--never (or rare?) in practice
-)
 
 0 :0	NB. WITHDRAWN - pp4xunit_uu_ under development
 3 :0''	NB. test immediately

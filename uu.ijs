@@ -1,5 +1,5 @@
 0 :0
-2018-08-16  02:42:20
+2018-08-16  16:13:50
 -
 UU: scientific units conversion package
 )
@@ -311,6 +311,10 @@ any z e. a: default 'TRACEVERBS'
 
 cocurrent 'uu'
 
+z=.     'Celsius degC Centigrade degC Fahrenheit degF'
+z=. z , ' Newton degN Roemer degRo Reamur degRe Delisle degDe'
+adjsub=: ;:z
+
 adj=: 4 : 0
 pushme 'adj'
 msg '... adj: x=(x) y=(y)'
@@ -323,52 +327,18 @@ msg '... adj: x=(x) y=(y)'
 
 
 
-select. x
-fcase. 'Celsius'	do.
-fcase. 'Centigrade'do.
-fcase. '°C'	do.
- case. 'degC'	do.	z=. y-273.15
-fcase. '_Celsius'	do.
-fcase.'_Centigrade'do.
-fcase. '_°C'	do.
- case. '_degC'	do.	z=. y+273.15
-fcase. 'Fahrenheit'do.
-fcase. '°F'	do.
- case. 'degF'	do.	z=. y-459.67
-fcase.'_Fahrenheit'do.
-fcase. '_°F'	do.
- case. '_degF'	do.	z=. y+459.67
-fcase. 'Roemer'	do.
-fcase. 'Rømer'	do.
-fcase. '°Rø'	do.
- case. 'degRo'	do.	z=. y-650.762
-fcase. '_Roemer'	do.
-fcase. '_Rømer'	do.
-fcase. '_°Rø'	do.
- case. '_degRo'	do.	z=. y+650.762
-fcase. 'Newton'	do.
-fcase. '°N'	do.
- case. 'degN'	do.	z=. y-90.139
-fcase. '_Newton'	do.
-fcase. '_°N'	do.
- case. '_degN'	do.	z=. y+90.139
-fcase. 'Delisle'	do.
-fcase. '°De'	do.
- case. 'degDe'	do.	z=. y+559.725
-fcase. '_Delisle'	do.
-fcase. '_°De'	do.
- case. '_degDe'	do.	z=. y-559.725
-fcase. 'Reamur'	do.
-fcase. 'Réamur'	do.
-fcase. '°Ré'	do.
- case. 'degRe'	do.	z=. y-218.52
-fcase. '_Reamur'	do.
-fcase. '_Réamur'	do.
-fcase. '_°Ré'	do.
- case. '_degRe'	do.	z=. y+218.52
+if. UL={.x do. sign=. _1 else. sign=. 1 end.
+xx=. (UL -.~ x rplc '°';'deg' ; 'ø';'oe' ; 'é';'e') rplc adjsub
+select. xx
+ case. 'degC'	do.	z=. y - 273.15*sign
+ case. 'degF'	do.	z=. y - 459.67*sign
+ case. 'degRo'	do.	z=. y - 650.762*sign
+ case. 'degN'	do.	z=. y - 90.139*sign
+ case. 'degDe'	do.	z=. y - 559.725*sign
+ case. 'degRe'	do.	z=. y - 218.52*sign
  case.		do.	z=. y 
 end.
-msg '--- adj: EXITS: z=(z)'
+msg '--- adj: EXITS: z=(z) sign=(sign) xx=(xx)'
 0 popme 'adj'
 z return.
 )
@@ -818,7 +788,7 @@ case. 'deg'	do. z=. format_deg y
 case. 'usd'	do. z=. '$',curfig y
 case. 'cnt'	do. z=. '¢',curfig y
 case. 'gbp'	do. z=. '£',curfig y
-case. 'eur'	do. z=. '€' curfig y
+case. 'eur'	do. z=. '€',curfig y
 case. ,'!'	do. z=. >(y=0){'YES';'NO'
 case. 'midi'	do. z=.": rnd midino y
 case. 'note'	do. z=. note y
@@ -827,7 +797,7 @@ fcase. 'eV'	do.
 fcase. 'Hz'	do.
 case. 'rad'	do. z=. format_sci y
 fcase. ,'/'	do.
-case. ,'*'	do. z=. format_sig y
+case.  ,'*'	do. z=. format_sig y
 case.		do. z=. format_general y
 end.
 ucode z
@@ -1517,13 +1487,14 @@ uunew=: '' ddefine
 
 pushme 'uunew'
 val=. ". SP taketo y -. '°'
-unit=. SP takeafter y
+unit=. bris SP takeafter y
 if. 0<#x do.
   targ=. bris x
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
     emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     '' return.
   end.
   coeff=. coefu % coeft
@@ -1535,6 +1506,10 @@ end.
 va=. coeff * ('_',unit) adj val
 sllog 'uunew__ val unit targ coefu codeu coeft codet va'
 (ucode 8 u: targ format va),SP,(ucode uniform targ)
+)
+0 :0
+'ft/s^2' uu '1 Å h⁻²'
+x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
 )
 
 '==================== [uu] format.ijs =================='
