@@ -674,7 +674,9 @@ else.      NB. subst 'PI' for 'π' etc
   if. z begins ,'µ' do. z=. 'u',2}.z end.
 end.
 )
-3 :0''
+
+ucode_test=: 3 :0
+  NB. TEST ONLY -- try out verb: ucode
 if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
 assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
 assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
@@ -865,6 +867,7 @@ z return.
 )
 
 uniform_test=: 3 : 0
+  NB. TEST ONLY -- try out verb: uniform
 if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
 assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
 assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
@@ -881,14 +884,12 @@ assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
 i.0 0
 )
 
-NB. uniform_test''
-
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
 undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-upref=: 4 : '(x#~*UNICODE),y'
+NB. upref=: 4 : '(x#~*UNICODE),y'
 
 uuold=: '' ddefine
   NB. transform y (value;units) to: x (ux)
