@@ -24,10 +24,11 @@ NB. to be defined in the t-table itself (which is a J script).
 
 give=: 4 : 0
   NB. implements verb: format3
+  NB. ALT IMPLEMENTN: 
 GIVE=: ''
 ]z=. ; ('give_' nl 3) ,each <' :: '
 ]z=. 'x(' ,z, 'giverr)y'
-chain=: 3 : z	NB. for diagnostics only
+chain=: 3 : z
 ".z [sm GIVE
 )
 
