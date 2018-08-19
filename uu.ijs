@@ -1,5 +1,5 @@
 0 :0
-2018-08-19  13:46:54
+2018-08-19  16:23:30
 -
 UU: scientific units conversion package
 )
@@ -27,6 +27,7 @@ INVALID=: _.j_.
 MI=: '-'
 NOTFOUND=: _1
 NUN=: '??'
+PI=: o.1
 PWM=: '^-'
 PWU=: '^_'
 PW=: '^'
@@ -1544,7 +1545,7 @@ x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
 cocurrent 'uu'
 
 0 :0
-Sunday 19 August 2018  13:44:02
+Sunday 19 August 2018  14:02:45
 ┌────────────────────────────────────────────────┐
 │See temp 97 for new pattern-matching technique  │
 │which combines give_* & take_* into just 1 verb │
@@ -1566,26 +1567,32 @@ to be defined in the t-table itself (which is a J script).
  giverr is only called if no "give-" verbs chime with: x.
 )
 
+register=: 3 : 0
+
+VEX=: y
+)
+
 formatNEW=: ''&$: :(4 : 0)
 pushme'formatNEW'
-CC=: _1
 kx=. UNICODE kosher x
 z=. kx daisychain y
 popme'formatNEW'
-smoutput CC ; (>CC{CHAIN) ; CHAIN
+smoutput '+++ last give: ',VEX
 z return.
 )
+
+intersect=: ] -. -.~
 
 make_daisychain=: 3 : 0
 
 
-PRE=. ;:''
-POST=. ;:''
-]z=. 'give_' nl 3
+>PRE=. ;:'give_dms give_hms give_deg'
+>POST=. ;:'give_misc give_general'
+>z=. 'give_' nl 3
+>z=. z intersect PRE,(z -. PRE,POST),POST
 CHAIN=: z
-]z=. ; z,each <' :: '
-]z=. 'x(' ,z, 'giverr)y'
-daisychain=: 13 : z
+]z=. (; z,each <' ::'),'giverr'
+daisychain=: 13 : ('x(',z,')y')
 i.0 0
 )
 
@@ -1676,8 +1683,8 @@ catch. INVALID end.
 )
 
 give_deg=: 4 : 0
+register'give_deg'
 
-CC=: CC+1
 
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit
@@ -1714,8 +1721,8 @@ end.
 )
 
 give_misc=: 4 : 0
+register'give_misc'
 
-CC=: CC+1
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
 if. UNICODE>0 do. infinity=. '∞'
@@ -1727,12 +1734,12 @@ end.
 errif 1
 )
 
-give_zz=: 4 : 0
+give_general=: 4 : 0
+register'give_general'
 
 
-CC=: CC+1
 unit=. x
-msg '... give_zz: x=(x) y=(y) unit=(unit)'
+msg '... give_general: x=(x) y=(y) unit=(unit)'
 sw'(y) (unit)'
 )
 
@@ -1740,40 +1747,54 @@ isTime=: 4 : 0
 (<,x) e. compatlist 's'
 )
 
-s4hms=. 24 60 60 #. 3 {. ]
+s4hms=: 24 60 60 #. 3 {. ]
+s4h=: 3600 * ]
+s4min=: 60 * ]
+h4s=: 3600 %~ ]
+min4s=: 60 %~ ]
 
 give_hms=: 4 : 0
-CC=: CC+1
-errif -. x isTime y
+register'give_hms'
 
-if. y-:'' do. y=. s4hms 23 59 59.567 end.
-'h m s'=.": each 24 60 60 #: y
-if. 10>".h do. h=. '0',h end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-sw'(h):(m):(s)'
+errif x ~: 'hms'
+'hh mm ss'=.":each 24 60 60 #: y
+if. 10>".hh do. hh=. '0',hh end.
+if. 10>".mm do. mm=. '0',mm end.
+if. 10>".ss do. ss=. '0',ss end.
+sw'(hh):(mm):(ss)'
 )
 
 isAngle=: 4 : 0
 x-: 'deg'
 )
 
-d4dms=. 1296000x %~ 360 60 60 #. 3 {. ]
+d4dms=: 1296000x %~ 360 60 60 #. 3 {. ]
+
+deg4rad=: 13 : '180 * y%o.1'
+amin4rad=: 13 : '60 * deg4rad y'
+asec4rad=: 13 : '3600 * deg4rad y'
+rad4deg=: 13 : '(o.|y) % 180'
+rad4amin=: 13 : 'rad4deg y % 60'
+rad4asec=: 13 : 'rad4deg y % 3600'
 
 give_dms=: 4 : 0
-CC=: CC+1
+register'give_dms'
 
-errif -. x isAngle y
-if. y-:'' do. y=. d4dms 3 59 59 end.
-'d m s'=.": each 360 60 60 #: 3600*|y
-if. 10>".d do. h=. '0',d end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-sw'(d)(deg_symbol'') (m)(QT) (s)"'
+errif x ~: 'dms'
+'d m s'=.":each <.each 360 60 60 #: asec4rad |y
+ds=. deg_symbol''
+sw'(d)(ds) (m)(QT) (s)"'
+)
+
+
+0 :0
+deg4rad PI
+amin4rad PI%60
+asec4rad PI%3600
 )
 
 give_sci=: 4 : 0
-CC=: CC+1
+register'give_sci'
 
 z=. (toupper@hy@scino) y
 unit=. x
@@ -1785,6 +1806,10 @@ give_sig=: give_sci
 
 make_daisychain''
 
+format_test=: 3 : 0
+smoutput 'PI rad-->dms' ; 'dms' give_dms PI
+smoutput '60 s-->hms' ; 'hms' give_hms 60
+)
 0 :0
 fmt=: formatOLD
 fmt=: formatNEW
@@ -1793,8 +1818,11 @@ fmt=: formatNEW
 'able' fmt __
 'able' fmt UNDEFINED
 'able' fmt INVALID
-'min' fmt 121
-CC ; (>CC{CHAIN) ; CHAIN
+'hms' fmt 1
+'hms' fmt (s4h 4)+(s4min 2)+1
+'dms' fmt PI
+'dms' fmt (rad4deg 3)+(rad4amin 5)+(rad4asec 2)
+VEX
 )
 
 '==================== [uu] public ===================='

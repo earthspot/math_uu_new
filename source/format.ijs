@@ -318,11 +318,12 @@ give_sig=: give_sci
 
 make_daisychain''
 
-fmt=: formatNEW
-]PI=: o.1
-
+format_test=: 3 : 0
 smoutput 'PI rad-->dms' ; 'dms' give_dms PI
 smoutput '60 s-->hms' ; 'hms' give_hms 60
+)
+
+NB. format_test''
 
 0 :0
 fmt=: formatOLD

@@ -19,6 +19,7 @@ INVALID=: _.j_.
 MI=: '-'		NB. minus (==HY)
 NOTFOUND=: _1	NB. used by: cnvf cnvv
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
+PI=: o.1		NB. π
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
