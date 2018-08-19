@@ -1,5 +1,5 @@
 0 :0
-2018-08-19  00:02:05
+2018-08-19  13:46:54
 -
 UU: scientific units conversion package
 )
@@ -1542,19 +1542,49 @@ x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
 '==================== [uu] format.ijs =================='
 
 cocurrent 'uu'
+
+0 :0
+Sunday 19 August 2018  13:44:02
+┌────────────────────────────────────────────────┐
+│See temp 97 for new pattern-matching technique  │
+│which combines give_* & take_* into just 1 verb │
+│called: formatNEW                               │
+└────────────────────────────────────────────────┘
+New format verb based on daisychain
+Tries each give (give_* verb) in turn until one exits normally,
+ or giverr (the last one) is reached.
+If a give fails, the next give gets tried.
+If a give knows it's inappropriate, it calls: errif
+ to force an error.
+If it simply crashes, the same thing happens.
+-
+This arrangement allows ad-hoc 'give_' and 'take_' verbs
+to be defined in the t-table itself (which is a J script).
+-
+ x-arg is a units, e.g. 'gbp'
+ and y is the value to be formatted, e.g. to become: '£1.00'.
+ giverr is only called if no "give-" verbs chime with: x.
+)
+
 formatNEW=: ''&$: :(4 : 0)
 pushme'formatNEW'
-CC=: 0
-z=. x daisychain y
+CC=: _1
+kx=. UNICODE kosher x
+z=. kx daisychain y
 popme'formatNEW'
+smoutput CC ; (>CC{CHAIN) ; CHAIN
 z return.
 )
 
 make_daisychain=: 3 : 0
 
+
+PRE=. ;:''
+POST=. ;:''
 ]z=. 'give_' nl 3
+CHAIN=: z
 ]z=. ; z,each <' :: '
-]z=. 'x(' ,z, 'give_zz :: giverr)y'
+]z=. 'x(' ,z, 'giverr)y'
 daisychain=: 13 : z
 i.0 0
 )
@@ -1568,17 +1598,119 @@ deg_symbol=: 3 : 0
 if. UNICODE>0 do. '°' else. 'deg' end.
 )
 
+kosher=: 4 : 0
+
+
+if. x=0 do.
+z=. 0 ucode y
+z rplc 'é';'e' ; 'ø';'oe'
+else. y end.
+)
+toK=: (4 : 0)"0
+f=. {:>x
+r=. -/>x
+273.15 + 100*(y-f)%r
+)
+smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
+smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
+smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
+smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: 373.15 273.15
+fromK=: (4 : 0)"0
+f=. {:>x
+r=. -/>x
+f+r*(y-273.15)%100
+)
+
+Kr=: 373.15 273.15
+smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
+smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
+smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
+smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: 373.15 273.15
+
+
+boil_freeze=: 3 : 0
+
+select. y
+ case. 'C'	do.	bf=. 100 0
+ case. 'F'	do.	bf=. 212 32
+ case. 'Ro'	do.	bf=. 60 7.5
+ case. 'N'	do.	bf=. 33 0
+ case. 'De'	do.	bf=. 0 150
+ case. 'Ra'	do.	bf=. 671.64 491.67
+ case. 'Re'	do.	bf=. 80 0
+ case. 'K'	do.	bf=. 373.15 273.15
+ case.    	do.	bf=. _ _
+end.
+)
+toKelvin=: 'F' ddefine
+
+
+try. y toK~ <boil_freeze x
+catch. INVALID end.
+)
+fromKelvin=: 'F' ddefine
+
+
+try. y fromK~ <boil_freeze x
+catch. INVALID end.
+)
+
+0 :0
+'C' fromKelvin 273.15 373.15
+'F' fromKelvin 273.15 373.15
+'Ro'fromKelvin 273.15 373.15
+'N' fromKelvin 273.15 373.15
+'De'fromKelvin 273.15 373.15
+'Re'fromKelvin 273.15 373.15
+'K' fromKelvin 273.15 373.15
+'Ab' fromKelvin 273.15 373.15
+-
+'C' toKelvin 0 100
+'F' toKelvin 32 212
+'Ro'toKelvin 7.5 60
+'N' toKelvin 0 33
+'De'toKelvin 150 0
+'Re'toKelvin 0 80
+'K' toKelvin 273.15 373.15
+'Ab' toKelvin 273.15 373.15
+)
+
 give_deg=: 4 : 0
 
 CC=: CC+1
 
-if. -. x beginsWith 'deg' do.
-  errif -. any x E. 'Celsius Centigrade °C °F °Re °Ré °N °Ro °Rø °De'
+if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
+T=. {.unit
+if. T e. 'RD' do. T=. 2{.unit end.
+z=. T fromKelvin y
+ssw '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+if. T='K' do.
+  sw'(z) K'
+else.
+  sw'(z)(deg_symbol 0) (T)'
 end.
-unit=. x
-T=. dtb 2{. x-.'°'
-msg '... give_deg: x=(x) y=(y) unit=(unit)'
-sw'(y)(deg_symbol'')(T)'
+)
+
+0 :0
+'degC' give_deg 373.15
+'deg C' give_deg 373.15
+'Celsius' give_deg 373.15
+'C' give_deg 273.15
+'C' give_deg 373.15
+'F' give_deg 273.15
+'F' give_deg 373.15
+'Ro' give_deg 273.15
+'Ro' give_deg 373.15
+'N' give_deg 273.15
+'N' give_deg 373.15
+'De' give_deg 273.15
+'De' give_deg 373.15
+'Re' give_deg 273.15
+'Re' give_deg 373.15
+'K' give_deg 273.15
+'K' give_deg 373.15
+'Ab' give_deg 273.15
+'Ab' give_deg 373.15
 )
 
 give_misc=: 4 : 0
@@ -1604,28 +1736,36 @@ msg '... give_zz: x=(x) y=(y) unit=(unit)'
 sw'(y) (unit)'
 )
 
-isTime=: 1:
+isTime=: 4 : 0
+(<,x) e. compatlist 's'
+)
+
+s4hms=. 24 60 60 #. 3 {. ]
 
 give_hms=: 4 : 0
 CC=: CC+1
 errif -. x isTime y
 
-if. y-:'' do. y=. unhms 23 59 59.567 end.
-'h m s'=.": each _ 60 60 #: 3600*|y
+if. y-:'' do. y=. s4hms 23 59 59.567 end.
+'h m s'=.": each 24 60 60 #: y
 if. 10>".h do. h=. '0',h end.
 if. 10>".m do. m=. '0',m end.
 if. 10>".s do. s=. '0',s end.
 sw'(h):(m):(s)'
 )
 
-isAngle=: 1:
+isAngle=: 4 : 0
+x-: 'deg'
+)
+
+d4dms=. 1296000x %~ 360 60 60 #. 3 {. ]
 
 give_dms=: 4 : 0
 CC=: CC+1
 
 errif -. x isAngle y
-if. y-:'' do. y=. undms 23 59 59.567 end.
-'d m s'=.": each _ 60 60 #: 3600*|y
+if. y-:'' do. y=. d4dms 3 59 59 end.
+'d m s'=.": each 360 60 60 #: 3600*|y
 if. 10>".d do. h=. '0',d end.
 if. 10>".m do. m=. '0',m end.
 if. 10>".s do. s=. '0',s end.
@@ -1646,15 +1786,15 @@ give_sig=: give_sci
 make_daisychain''
 
 0 :0
--
-sm 'able' formatNEW 99
-GIVE
-sm 'units1' formatNEW 99
-GIVE
-sm 'units2' formatNEW 99
-GIVE
-sm 'units3' formatNEW 99
-GIVE
+fmt=: formatOLD
+fmt=: formatNEW
+'Celsius' fmt 373.15
+'able' fmt 99
+'able' fmt __
+'able' fmt UNDEFINED
+'able' fmt INVALID
+'min' fmt 121
+CC ; (>CC{CHAIN) ; CHAIN
 )
 
 '==================== [uu] public ===================='

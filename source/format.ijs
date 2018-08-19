@@ -3,46 +3,56 @@
 
 cocurrent 'uu'
 
-NB. ┌────────────────────────────────────────────────┐
-NB. │See DEV 97 for new pattern-matching technique   │
-NB. │which combines input & output into a single verb│
-NB. │called: formatNEW                                 │
-NB. └────────────────────────────────────────────────┘
+0 :0
+Sunday 19 August 2018  14:02:45
+┌────────────────────────────────────────────────┐
+│See temp 97 for new pattern-matching technique  │
+│which combines give_* & take_* into just 1 verb │
+│called: formatNEW                               │
+└────────────────────────────────────────────────┘
+New format verb based on daisychain
+Tries each give (give_* verb) in turn until one exits normally,
+ or giverr (the last one) is reached.
+If a give fails, the next give gets tried.
+If a give knows it's inappropriate, it calls: errif
+ to force an error.
+If it simply crashes, the same thing happens.
+-
+This arrangement allows ad-hoc 'give_' and 'take_' verbs
+to be defined in the t-table itself (which is a J script).
+-
+ x-arg is a units, e.g. 'gbp'
+ and y is the value to be formatted, e.g. to become: '£1.00'.
+ giverr is only called if no "give-" verbs chime with: x.
+)
 
-NB. This is a new version, based on the 'errif' technique
-NB. Every (pro)verb beginning 'take_' gets tried in turn
-NB.  until one works.
-
-NB. A corresponding set of (pro)verbs beginning 'give_'
-NB. accept input in a variety of formats and convert them
-NB. to a quantity (a scalar number)
-NB. Both 'give_' and 'take_' verbs are maintained as a single
-NB. collection in this script.
-NB.
-NB. This arrangement allows ad-hoc 'give_' and 'take_' verbs
-NB. to be defined in the t-table itself (which is a J script).
-
-NB.  x-arg is a units, e.g. 'gbp'
-NB.  and y is the value to be formatted, e.g. to become: '£1.00'.
-NB.  giverr is only called if no "give-" verbs chime with: x.
+register=: 3 : 0
+  NB. housekeeping for the last give_* verb to be entered
+VEX=: y
+)
 
 formatNEW=: ''&$: :(4 : 0)
 pushme'formatNEW'
-CC=: _1  NB. TEST ONLY: chain-counter, indexes the aux verb which chimes
 kx=. UNICODE kosher x
 z=. kx daisychain y
 popme'formatNEW'
-smoutput CC ; (>CC{CHAIN) ; CHAIN
+smoutput '+++ last give: ',VEX
 z return.
 )
 
+intersect=: ] -. -.~  NB. y dictates the order
+
 make_daisychain=: 3 : 0
   NB. makes the daisychain for: formatNEW
-]z=. 'give_' nl 3
+  NB. Preferred orders:
+NB. │give_deg│give_dms│give_hms│give_misc│give_sci│give_sig│give_general│
+>PRE=. ;:'give_dms give_hms give_deg'  NB. try these first
+>POST=. ;:'give_misc give_general'  NB. try these last
+>z=. 'give_' nl 3
+>z=. z intersect PRE,(z -. PRE,POST),POST
 CHAIN=: z
-]z=. ; z,each <' :: '
-]z=. 'x(' ,z, 'giverr)y'
-daisychain=: 13 : z
+]z=. (; z,each <' ::'),'giverr'
+daisychain=: 13 : ('x(',z,')y')
 i.0 0
 )
 
@@ -183,8 +193,8 @@ catch. INVALID end.
 )
 
 give_deg=: 4 : 0
-	NB. outputs y [K] in scale (x)
-CC=: CC+1
+register'give_deg'
+  NB. outputs y [K] in scale (x)
   NB. force error if wrong verb
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit  NB. the identifying 1st letter
@@ -221,8 +231,8 @@ end.
 )
 
 give_misc=: 4 : 0
+register'give_misc'
 	NB. picks up miscellaneous forms
-CC=: CC+1
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
 if. UNICODE>0 do. infinity=. '∞'
@@ -234,12 +244,12 @@ end.
 errif 1
 )
 
-give_zz=: 4 : 0
+give_general=: 4 : 0
+register'give_general'
   NB. chimes if nothing else does
   NB. Verb names are sorted --> this comes last in: 'give_' nl 3
-CC=: CC+1
 unit=. x
-msg '... give_zz: x=(x) y=(y) unit=(unit)'
+msg '... give_general: x=(x) y=(y) unit=(unit)'
 sw'(y) (unit)'
 )
 
@@ -247,40 +257,56 @@ isTime=: 4 : 0
 (<,x) e. compatlist 's'
 )
 
-s4hms=. 24 60 60 #. 3 {. ]
+s4hms=: 24 60 60 #. 3 {. ]
+s4h=: 3600 * ]
+s4min=: 60 * ]
+h4s=: 3600 %~ ]
+min4s=: 60 %~ ]
 
 give_hms=: 4 : 0
-CC=: CC+1
-errif -. x isTime y
-  NB. force error if wrong verb
-if. y-:'' do. y=. s4hms 23 59 59.567 end.
-'h m s'=.": each 24 60 60 #: y
-if. 10>".h do. h=. '0',h end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-sw'(h):(m):(s)'
+register'give_hms'
+  NB. converts seconds [s] to hh:mm:ss
+errif x ~: 'hms'  NB. force error if wrong verb
+NB. if. y-:'' do. y=. s4hms 23 59 59.567 end. ---DOUBTFUL
+'hh mm ss'=.":each 24 60 60 #: y
+if. 10>".hh do. hh=. '0',hh end.
+if. 10>".mm do. mm=. '0',mm end.
+if. 10>".ss do. ss=. '0',ss end.
+sw'(hh):(mm):(ss)'
 )
 
 isAngle=: 4 : 0
 x-: 'deg'
 )
 
-d4dms=. 1296000x %~ 360 60 60 #. 3 {. ]
+d4dms=: 1296000x %~ 360 60 60 #. 3 {. ]
+
+deg4rad=: 13 : '180 * y%o.1'
+amin4rad=: 13 : '60 * deg4rad y'
+asec4rad=: 13 : '3600 * deg4rad y'
+rad4deg=: 13 : '(o.|y) % 180'
+rad4amin=: 13 : 'rad4deg y % 60'
+rad4asec=: 13 : 'rad4deg y % 3600'
 
 give_dms=: 4 : 0
-CC=: CC+1
-  NB. force error if wrong verb
-errif -. x isAngle y
-if. y-:'' do. y=. d4dms 3 59 59 end.
-'d m s'=.": each 360 60 60 #: 3600*|y
-if. 10>".d do. h=. '0',d end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-sw'(d)(deg_symbol'') (m)(QT) (s)"'
+register'give_dms'
+  NB. converts radians [rad] to d° m' s"
+errif x ~: 'dms'  NB. force error if wrong verb
+NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
+'d m s'=.":each <.each 360 60 60 #: asec4rad |y
+ds=. deg_symbol''
+sw'(d)(ds) (m)(QT) (s)"'
+)
+
+
+0 :0
+deg4rad PI        NB. 180°
+amin4rad PI%60    NB. 180'
+asec4rad PI%3600  NB. 180"
 )
 
 give_sci=: 4 : 0
-CC=: CC+1
+register'give_sci'
   NB. force error if wrong verb
 z=. (toupper@hy@scino) y  NB. scientific notation (conventional)
 unit=. x
@@ -292,6 +318,12 @@ give_sig=: give_sci
 
 make_daisychain''
 
+fmt=: formatNEW
+]PI=: o.1
+
+smoutput 'PI rad-->dms' ; 'dms' give_dms PI
+smoutput '60 s-->hms' ; 'hms' give_hms 60
+
 0 :0
 fmt=: formatOLD
 fmt=: formatNEW
@@ -300,6 +332,9 @@ fmt=: formatNEW
 'able' fmt __
 'able' fmt UNDEFINED
 'able' fmt INVALID
-'min' fmt 121
-CC ; (>CC{CHAIN) ; CHAIN
+'hms' fmt 1
+'hms' fmt (s4h 4)+(s4min 2)+1  NB. 04:02:01
+'dms' fmt PI
+'dms' fmt (rad4deg 3)+(rad4amin 5)+(rad4asec 2)  NB. 3° 5' 2"
+VEX
 )
