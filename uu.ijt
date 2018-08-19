@@ -18,7 +18,8 @@ You can even define your own, by editing "UU-constants":
    open '~addons/math/uu/uuc.ijs'
 )
 
-require 'math/uu'
+NB. require 'math/uu'
+NB. ---ASSUME _uu_ ALREADY LOADED ... BY build/run
 
 uu '3 ft'
 uu '1 yd'

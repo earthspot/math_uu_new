@@ -210,6 +210,8 @@ end.
 ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
+tv_z_=: tv_uu_  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 clearme=: 3 : 0
   NB. clear the register of currently running verbs
 ME_uu_=: ''  NB. cleardown ME
@@ -240,3 +242,20 @@ traced=: 3 : 0
 z=. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
+
+
+runlab=: 3 : 0
+  NB. private way to run uu.ijt in j807
+  NB.   see: temp 16
+if. 0=#y do. y=. jpath'~Gituu/uu.ijt' end.  NB. THE LAB UNDER DEVT
+if. -.fexist y do.
+  smoutput '>>> runlab: file not found: ',y
+  return.
+end.
+]thelab_z_=: y
+tv 0	NB. to suppress any traced verbs
+require '~addons/labs/labs/labs805.ijs'
+NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
+lab_jlab_ thelab
+)
+runlab_z_=: runlab_uu_

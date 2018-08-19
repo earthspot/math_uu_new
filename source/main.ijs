@@ -319,7 +319,7 @@ Finally when no more units to expand (max cycles=30 as failsafe)
 convertOLD=: 1&$: : (4 : 0)"1
 pushme 'convertOLD'
   NB. y (units) --> cu ; loop_count ; cf
-yb=. bris y  NB. extend the range of acceptible units formats
+yb=. bris y  NB. work in "kosher" form of y
 msg '... convertOLD: x=(x) y=(y) yb=(yb)'
   NB. x=1 --use: uvalx
 if. x do.	NB. SPEEDUP: try: unitx, uvalx (if there)
@@ -364,7 +364,7 @@ popme 'convertOLD'
 convertNEW=: 1&$: : (4 : 0)"1
 ME=: <'convert'
   NB. y (units) --> cu ; loop_count ; cf
-yb=. bris y  NB. kosher format of (units) y
+yb=. bris y  NB. kosher of (units) y
 msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
   NB. x=1 --use: uvalx <<< THE ONLY USE OF (optional, default) x
 'fac code'=. qtcode4anyunit yb
@@ -461,7 +461,7 @@ if. 10>".s do. s=. '0',s end.
 h,':',m,':',s
 )
 
-format=: ''&$: : (4 : 0)
+formatOLD=: ''&$: : (4 : 0)
 NB. format numeral y by units: x
 NB. always returns a string
 if. undefined y do. 'UNDEFINED' return. end.
@@ -831,7 +831,7 @@ NB. ============================================
 uniform=: _&$: : (4 : 0)"1
 0 pushme 'uniform'
 msg '+++ uniform: ENTERED: x=(x) y=(y)'
-  NB. change units (y) to acceptable format for (UNICODE)
+  NB. change units (y) as appropriate for (UNICODE)
   NB. x==(_) (default value) x gets current value of (UNICODE)
 y=. utf8 deb y  NB. convert (y) from possible datatype=='unicode'
 if. x=_ do. x=. UNICODE end.
@@ -891,7 +891,7 @@ unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
 NB. upref=: 4 : '(x#~*UNICODE),y'
 
-uuold=: '' ddefine
+uuOLD=: '' ddefine
   NB. transform y (value;units) to: x (ux)
   NB. x is target units: ux
   NB. y is 2boxed expression, e.g. 9.5 ; 'kg'
@@ -918,7 +918,7 @@ pushme 'uuboxed'
   NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
 'val uns'=. y
 msg '... uuboxed: x=(x) val=(val) uns=(uns)'
-'ux uy'=. bris each x;uns  NB. Make (x) (uns) kosher format
+'ux uy'=. bris each x;uns  NB. Make (x) (uns) kosher
 if. 0<#x do. if. -. ux compatible uy do.
   emsg '>>> uuboxed: incompatible units: (ux) || (uy)'
   0 popme 'uuboxed' return.

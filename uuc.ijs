@@ -53,6 +53,7 @@ UUC=: cmx 0 : 0
 60 s	[min]	minute
 60 min	[h]		hour
 24 h	[d]		day
+1 h		[hms] h as h:min:s
 30.4375 d		[mo]	average month
 0.01 /	[%]	Percent
 1 *	[!]	YES-NO
@@ -97,6 +98,7 @@ UUC=: cmx 0 : 0
 1/360 cyc	[deg]	degree of arc
 1/60 deg	[amin]	minute of arc
 1/60 amin	[asec]	second of arc
+1 deg	[dms]	degrees as deg° min' sec"
 1 cyc/s	[r.p.s]	rev per sec
 1 cyc/min	[r.p.m]	rev per min
 1 cyc/h	[r.p.h]	rev per hour

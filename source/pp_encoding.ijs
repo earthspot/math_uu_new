@@ -268,23 +268,23 @@ foo_z_=: cnvj_uu_
 foo_z_=: qtcode4bareunit_uu_
 redux 10  NB. foo_z_=: cnvCunit_uu_
 redux 11  NB. foo_z_=: qtcode4anyunit_uu_
-redux 12  NB. foo_z_=: [: uuold '1 ' , ]
+redux 12  NB. foo_z_=: [: uuOLD '1 ' , ]
 redux 13  NB. foo_z_=: convert_uu_
 redux 14  NB. (test of UNICODE levels)
-redux 15  NB. foo_z_=: [: uunew '1 ' , ]
+redux 15  NB. foo_z_=: [: uuNEW '1 ' , ]
 )
 
-uunew=: '' ddefine
+uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
-pushme 'uunew'
+pushme 'uuNEW'
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.  NB. use non-empty (x) as targ...
-  targ=. bris x  NB. (x) in kosher format: 'm/s^2' NOT 'm s⁻²'
+  targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
-    emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     '' return.
   end.
@@ -295,10 +295,17 @@ else.  NB. (x) is empty or monadic
   targ=. canon expandcode code  NB. infer target units from: code
 end.
 va=. coeff * ('_',unit) adj val
-sllog 'uunew__ val unit targ coefu codeu coeft codet va'
+sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
 (ucode 8 u: targ format va),SP,(ucode uniform targ)
 )
 0 :0
 'ft/s^2' uu '1 Å h⁻²'
 x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
+        uu '100 degC'
+        uu '212 degF'
+        uu '373.15 K'
+ 'degF' uu '100 degC'
+ 'degC' uu '212 degF'
+ 'degF' uu '212 degF'
+ 'degC' uu '100 degC'
 )

@@ -1,5 +1,5 @@
 0 :0
-2018-08-17  09:21:09
+2018-08-19  00:02:05
 -
 UU: scientific units conversion package
 )
@@ -276,6 +276,8 @@ end.
 ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
+tv_z_=: tv_uu_
+
 clearme=: 3 : 0
 
 ME_uu_=: ''
@@ -306,6 +308,22 @@ traced=: 3 : 0
 z=. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
+
+
+runlab=: 3 : 0
+
+
+if. 0=#y do. y=. jpath'~Gituu/uu.ijt' end.
+if. -.fexist y do.
+  smoutput '>>> runlab: file not found: ',y
+  return.
+end.
+]thelab_z_=: y
+tv 0
+require '~addons/labs/labs/labs805.ijs'
+lab_jlab_ thelab
+)
+runlab_z_=: runlab_uu_
 
 '==================== [uu] main ===================='
 
@@ -767,7 +785,7 @@ if. 10>".s do. s=. '0',s end.
 h,':',m,':',s
 )
 
-format=: ''&$: : (4 : 0)
+formatOLD=: ''&$: : (4 : 0)
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
 if. UNICODE>0 do.
@@ -1168,7 +1186,7 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-uuold=: '' ddefine
+uuOLD=: '' ddefine
 
 
 
@@ -1485,9 +1503,9 @@ redux 14
 redux 15
 )
 
-uunew=: '' ddefine
+uuNEW=: '' ddefine
 
-pushme 'uunew'
+pushme 'uuNEW'
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.
@@ -1495,7 +1513,7 @@ if. 0<#x do.
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
-    emsg '>>> uunew: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     '' return.
   end.
@@ -1506,39 +1524,137 @@ else.
   targ=. canon expandcode code
 end.
 va=. coeff * ('_',unit) adj val
-sllog 'uunew__ val unit targ coefu codeu coeft codet va'
+sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
 (ucode 8 u: targ format va),SP,(ucode uniform targ)
 )
 0 :0
 'ft/s^2' uu '1 Å h⁻²'
 x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
+        uu '100 degC'
+        uu '212 degF'
+        uu '373.15 K'
+ 'degF' uu '100 degC'
+ 'degC' uu '212 degF'
+ 'degF' uu '212 degF'
+ 'degC' uu '100 degC'
 )
 
 '==================== [uu] format.ijs =================='
 
 cocurrent 'uu'
-give=: 4 : 0
+formatNEW=: ''&$: :(4 : 0)
+pushme'formatNEW'
+CC=: 0
+z=. x daisychain y
+popme'formatNEW'
+z return.
+)
 
-GIVE=: ''
-]z=. ; ('give_' nl 3) ,each <' :: '
-]z=. 'x(' ,z, 'giverr)y'
-".z [sm GIVE
+make_daisychain=: 3 : 0
+
+]z=. 'give_' nl 3
+]z=. ; z,each <' :: '
+]z=. 'x(' ,z, 'give_zz :: giverr)y'
+daisychain=: 13 : z
+i.0 0
 )
 
 giverr=: 4 : 0
-'giverr: ',llog 'x y'
+msg '>>> giverr: none chime: x=(x) y=(y)'
+sw'(y) ??'
 )
 
-give_test1=: 4 : 0
-	GIVE=: GIVE`give_test1
-errif -. x-: 'test1'
-'give_test1: ',":y
+deg_symbol=: 3 : 0
+if. UNICODE>0 do. '°' else. 'deg' end.
 )
 
-give_test2=: 4 : 0
-	GIVE=: GIVE`give_test2
-errif -. x-: 'test2'
-'give_test2: ',":y
+give_deg=: 4 : 0
+
+CC=: CC+1
+
+if. -. x beginsWith 'deg' do.
+  errif -. any x E. 'Celsius Centigrade °C °F °Re °Ré °N °Ro °Rø °De'
+end.
+unit=. x
+T=. dtb 2{. x-.'°'
+msg '... give_deg: x=(x) y=(y) unit=(unit)'
+sw'(y)(deg_symbol'')(T)'
+)
+
+give_misc=: 4 : 0
+
+CC=: CC+1
+if. undefined y do. 'UNDEFINED' return. end.
+if. invalid y do. 'INVALID' return. end.
+if. UNICODE>0 do. infinity=. '∞'
+else. infinity=. 'infinity'
+end.
+if. y=__ do. '-',infinity return.
+elseif. y=_ do. infinity return.
+end.
+errif 1
+)
+
+give_zz=: 4 : 0
+
+
+CC=: CC+1
+unit=. x
+msg '... give_zz: x=(x) y=(y) unit=(unit)'
+sw'(y) (unit)'
+)
+
+isTime=: 1:
+
+give_hms=: 4 : 0
+CC=: CC+1
+errif -. x isTime y
+
+if. y-:'' do. y=. unhms 23 59 59.567 end.
+'h m s'=.": each _ 60 60 #: 3600*|y
+if. 10>".h do. h=. '0',h end.
+if. 10>".m do. m=. '0',m end.
+if. 10>".s do. s=. '0',s end.
+sw'(h):(m):(s)'
+)
+
+isAngle=: 1:
+
+give_dms=: 4 : 0
+CC=: CC+1
+
+errif -. x isAngle y
+if. y-:'' do. y=. undms 23 59 59.567 end.
+'d m s'=.": each _ 60 60 #: 3600*|y
+if. 10>".d do. h=. '0',d end.
+if. 10>".m do. m=. '0',m end.
+if. 10>".s do. s=. '0',s end.
+sw'(d)(deg_symbol'') (m)(QT) (s)"'
+)
+
+give_sci=: 4 : 0
+CC=: CC+1
+
+z=. (toupper@hy@scino) y
+unit=. x
+msg '... give_sci: x=(x) y=(y) z=(z) unit=(unit)'
+sw'(z) (unit)'
+)
+
+give_sig=: give_sci
+
+make_daisychain''
+
+0 :0
+-
+sm 'able' formatNEW 99
+GIVE
+sm 'units1' formatNEW 99
+GIVE
+sm 'units2' formatNEW 99
+GIVE
+sm 'units3' formatNEW 99
+GIVE
 )
 
 '==================== [uu] public ===================='
@@ -1593,19 +1709,21 @@ cocurrent 'uu'
 
 setverbs=: 3 : 0
 
-if. y do.
+if. y-:'NEW' do.
   compatible=: compatibleNEW
   compatlist=: compatlistNEW
   convert=: convertNEW
   make_units=: make_unitsNEW
-  uu=: uunew
+  format=: formatNEW
+  uu=: uuNEW
   VALIDATE_unitc=: empty
 else.
   compatible=: compatibleOLD
   compatlist=: compatlistOLD
   convert=: convertOLD
+  format=: formatOLD
   make_units=: make_unitsOLD
-  uu=: uuold
+  uu=: uuOLD
 end.
 i.0 0
 )
@@ -1616,7 +1734,8 @@ start=: 3 : 0
 
 
 
-setverbs 1
+setverbs 'NEW'
+  format=: formatOLD
 make_msg 1
 tv 0
 tv '+start'

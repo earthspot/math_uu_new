@@ -5,19 +5,21 @@ cocurrent 'uu'
 
 setverbs=: 3 : 0
   NB. y==1 -- set NEW versions of given verbs
-if. y do.
+if. y-:'NEW' do.
   compatible=: compatibleNEW
   compatlist=: compatlistNEW
   convert=: convertNEW
   make_units=: make_unitsNEW
-  uu=: uunew
+  format=: formatNEW
+  uu=: uuNEW
   VALIDATE_unitc=: empty
 else.
   compatible=: compatibleOLD
   compatlist=: compatlistOLD
   convert=: convertOLD
+  format=: formatOLD
   make_units=: make_unitsOLD
-  uu=: uuold
+  uu=: uuOLD
 end.
 i.0 0
 )
@@ -28,7 +30,9 @@ start=: 3 : 0
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
-setverbs 1
+setverbs 'NEW'
+NB. BUT .............
+  format=: formatOLD
 make_msg 1	NB. enable diagnostics
 tv 0
 tv '+start'
