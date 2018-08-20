@@ -30,9 +30,12 @@ start=: 3 : 0
   NB. but can be called by apps using UU
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
-setverbs 'NEW'
+NB. =========================================================
+  setverbs 'NEW'
 NB. BUT .............
   format=: formatOLD
+  format=: formatNEW
+NB. =========================================================
 make_msg 1	NB. enable diagnostics
 tv 0
 tv '+start'

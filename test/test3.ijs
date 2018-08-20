@@ -1,6 +1,6 @@
 NB. UU: scientific units conversion package - test3
 0 :0
-Sunday 12 August 2018  02:42:14
+Monday 20 August 2018  01:27:58
 -
 >>>>>>>>>>> WARNING !!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 uunicode setting & their effect NEED FIXING
@@ -8,7 +8,7 @@ uunicode setting & their effect NEED FIXING
 -
 Sample statements to test verb: uu
 )
-smoutput '+++ test3.ijs - entered'
+smoutput PLS,'+++ test3.ijs - entered',PLS
 
 cocurrent 'uu'
 
@@ -52,4 +52,4 @@ assert z -:	 	'ft/s^2' uu '1 Å/h^2'
 assert z -:	 	'ft/s^2' uu '1 Å/h/h'
 assert z -:	 	'ft/s^2' uu '1 Ang/h/h'
 
-smoutput '--- test3.ijs - completed'
+smoutput PLS,'--- test3.ijs - completed',PLS

@@ -1,5 +1,5 @@
 0 :0
-2018-08-19  16:23:30
+2018-08-20  08:50:23
 -
 UU: scientific units conversion package
 )
@@ -561,20 +561,6 @@ ycode=. 1 pick qtcode4anyunit y
 xcode -: ycode
 )
 
-compatible_test=: 3 : 0
-
-assert '*' compatible ,'m'
-assert '*' compatible 'kg'
-assert '!' compatible ,'m'
-assert '!' compatible 'kg'
-assert (,'*') compatible ,'m'
-assert (,'*') compatible 'kg'
-assert (,'!') compatible ,'m'
-assert (,'!') compatible 'kg'
-assert (,'J') compatible 'cal'
-assert (,'J') compatible 'kcal'
-)
-
 compatlistOLD=: 3 : 0
 
 
@@ -595,51 +581,6 @@ compatlistNEW=: 3 : 0
 
 ]ycode=. 1 pick qtcode4anyunit y
 (ycode=unitc) # units
-)
-
-0 :0
-VERB: convert
--
-Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
-Needed to compare two arbitrary units to see if compatible / inter-convertible.
-Simplifies the result of a division of 2 physical quantities.
--
-Returns 3-element: z
- (>{.z) is the canonical units (cu)
- (>{:z) is conversion factor (cf)
- (>1{z) is diagnostic only: the number of lookup-cycles.
-
-Returns a canonical form (defined by: canon) to allow comparison using (-:).
- DEFN cunit: a canonical element, having prefix, scale and power, eg '/s^2'
-
-Has a set of service-fns all with names cnv* ...
- cnvnon z  extract 1st non-mks cunit(, returns: cunit;residue
- cnvj t  cut t into: (1_if_prefixed_SL ; 10^n_scale ; unit ; ^n_repetition)
- cnvf t  lookup t in: units-->unitv, returns (factor ; units)
-    -if not found, factor is _. -test using: isNaN f
- cnvv t  called by: cnvf
- j cnvi t  converts all SP<-->SL in cunits-str: t iff j=1
-    - (j=1 iff the cunit of which t is the expansion had prefix SL
-
-Uses: cnvnon to find first non-mks unit, t, 0=$t if no more units remaining.
-
-A units str consists of a series of tokens called "cunits", order immaterial.
-A cunit may be prefixed by SL (/) denoting denominator or by SP denoting numerator.
-
-Fn: utoks tokenises a units str. ensures 1st cunit has a leading SP
- provided a leading SL is not already present. Uses sp1 to achieve this.
-
-Since SP is a meaningful cunit prefix, use of: deb will expunge not only SP,SP
- but also any leading SP. But there must be a leading SP|SL.
-
-Uses: cnvf to lookup (bare) unit in: units-->unitv
-The expanded units tokens are then SUFFIXED to the unprocessed residue: rx
--we can do that since order of cunits is immaterial.
-
-Fn: cnvf also returns conversion factor (f)
-
-Finally when no more units to expand (max cycles=30 as failsafe)
- the result is converted to canonical form using: canon.
 )
 
 convertOLD=: 1&$: : (4 : 0)"1
@@ -699,21 +640,6 @@ loop=. _
 (canon ;z) ; loop ; fac return.
 )
 
-0 :0
-convert
-convert=: convertNEW
-convert=: convertOLD
--
-convert 'yd'
-convert 'yd/s'
-convert 'yd/h'
-convert 'Hz'
-convert 'GHz'
--
-make_units=: make_unitsNEW
-make_units=: make_unitsOLD
-)
-
 curfig=: 3 : 'hy (0 j. 2)":y'
 debSL=: #~ (+. (1: |. (> </\)))@('/'&~:)
 
@@ -745,10 +671,6 @@ for_cu. utoks y do. cunit=. >cu
 end.
 popme 'deslash'
 dlb r return.
-)
-
-0 :0
-deslash'ft/s^2'
 )
 
 dotted=: 1&$: : (4 : 0)
@@ -871,10 +793,6 @@ note=: 3 : 0
 NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
 ,>NOTE {~ rnd 12 | midino y
 )
-0 :0
-note 440
-note 194.18
-)
 
 np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
@@ -986,17 +904,6 @@ else.
 end.
 )
 
-ucode_test=: 3 :0
-
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
-assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'
-assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
-assert. 'ft/(s s)'		-: 0 ucode 'ft/(s·s)'
-assert. 'ft/(s·s)'		-: 1 ucode 'ft/(s·s)'
-assert. 'm²/K/s²'		-:   ucode 'm^2/K/s^2'
-i.0 0
-)
-
 ucods=: 1&$: : (4 : 0)
 
 SAV=. cspel ;< csymb
@@ -1022,11 +929,10 @@ else.
 end.
 )
 
-
-
-
-
 udiv=: 4 : 0
+
+
+
 if. (1=#y) and (y=SL) do. x return. end.
 z=. cnvi utoks y
 z=. selfcanc x , ;z
@@ -1164,24 +1070,6 @@ popme 'uniform'
 z return.
 )
 
-uniform_test=: 3 : 0
-
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
-assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
-assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
-assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uniform 'm m/(K s s)'
-assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uniform 'm m/(K s s)'
-assert. 'm^2/K/s^2'	-: 0 uniform 'm^2/K/s^2'
-assert. 'm²/(K s²)'	-: 1 uniform 'm^2/K/s^2'
-assert. 'm² K⁻¹ s⁻²'	-: 2 uniform 'm^2/K/s^2'
-assert. 'm²·K⁻¹·s⁻²'	-: 3 uniform 'm^2/K/s^2'
-assert. 'ft/s^2'		-: 0 uniform 'ft/s^2'
-assert. 'ft/s²'		-: 1 uniform 'ft/s^2'
-assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
-assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
-i.0 0
-)
-
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
 undotted=: 0&dotted
 unslash1=: 0&slash1
@@ -1242,12 +1130,11 @@ validunits=: 3 : 'units e.~ <,y'
 
 '==================== [uu] pp_encoding.ijs ===================='
 
+
 cocurrent 'uu'
 
 0 :0
-Thursday 16 August 2018  02:42:07
-abolish existing *CODEs in favour of ZEROCODE, isGoodCode
-(checkpointed in temp 8)
+Monday 20 August 2018  00:35:37
 )
 
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
@@ -1314,25 +1201,6 @@ end.
 n return.
 )
 
-0 :0
-make_unitc''
-VALIDATE_unitc''
-dip 0=uvalc
-2 make_unitc''
-3 make_unitc''
-4 make_unitc''
-)
-
-0 :0
-	units	nominal units in UUC, e.g. [Ohm]
-	unitv	units on which UUC defn is based
-	unitx	unitv expanded into fundamental units
-	uvalu	conversion factor explicit in UUC
-	uvalx	conversion factor to go with unitx
-	uvalc	conversion factor to go with unitc
-	unitc	pp-coded units, expandcode must match unitx
-)
-
 qtcode4i=: (3 : 0)"0
 pushme 'qtcode4i'
 
@@ -1366,15 +1234,6 @@ else.
   msg '--- qtcode4i: INVALID code=(crex code)'
   0;BADCODE
 end.
-)
-
-0 :0
-qtcode4i 59
-VIEWTABLE=: 10
-smoutput vt 59
-xxu 18 19
-xxu 30 + i.10
-dip uvalx ~: uvalc
 )
 
 qtcode4bareunit=: 3 : 0
@@ -1485,28 +1344,10 @@ z=. deb z
 k ; z
 )
 
-0 :0
-tv 1
-tv '+cnvCunit'
--
-qtcode4bareunit 'acre'
--
-cocurrent 'uu'
-erase 'foo_uu_ foo_z_ foo__'
-foo_z_=: scale4bareunit_uu_
-foo_z_=: cnvj_uu_
-foo_z_=: qtcode4bareunit_uu_
-redux 10
-redux 11
-redux 12
-redux 13
-redux 14
-redux 15
-)
-
 uuNEW=: '' ddefine
 
 pushme 'uuNEW'
+NO_UNITS_NEEDED=: 0
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.
@@ -1524,20 +1365,14 @@ else.
   codet=. codeu=. code
   targ=. canon expandcode code
 end.
-va=. coeff * ('_',unit) adj val
+if. 1 do. va=. coeff * ('_',unit) adj val
+else. va=. coeff * val
+end.
 sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-(ucode 8 u: targ format va),SP,(ucode uniform targ)
-)
-0 :0
-'ft/s^2' uu '1 Å h⁻²'
-x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
-        uu '100 degC'
-        uu '212 degF'
-        uu '373.15 K'
- 'degF' uu '100 degC'
- 'degC' uu '212 degF'
- 'degF' uu '212 degF'
- 'degC' uu '100 degC'
+z=. ucode 8 u: targ format va
+if. NO_UNITS_NEEDED do. z
+else. z,SP,(ucode uniform targ)
+end.
 )
 
 '==================== [uu] format.ijs =================='
@@ -1545,26 +1380,10 @@ x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
 cocurrent 'uu'
 
 0 :0
-Sunday 19 August 2018  14:02:45
-┌────────────────────────────────────────────────┐
-│See temp 97 for new pattern-matching technique  │
-│which combines give_* & take_* into just 1 verb │
-│called: formatNEW                               │
-└────────────────────────────────────────────────┘
-New format verb based on daisychain
-Tries each give (give_* verb) in turn until one exits normally,
- or giverr (the last one) is reached.
-If a give fails, the next give gets tried.
-If a give knows it's inappropriate, it calls: errif
- to force an error.
-If it simply crashes, the same thing happens.
+Monday 20 August 2018  01:48:31
 -
-This arrangement allows ad-hoc 'give_' and 'take_' verbs
-to be defined in the t-table itself (which is a J script).
--
- x-arg is a units, e.g. 'gbp'
- and y is the value to be formatted, e.g. to become: '£1.00'.
- giverr is only called if no "give-" verbs chime with: x.
+for hived-off test-phrases see:
+ot 18
 )
 
 register=: 3 : 0
@@ -1574,10 +1393,11 @@ VEX=: y
 
 formatNEW=: ''&$: :(4 : 0)
 pushme'formatNEW'
+NO_UNITS_NEEDED=: 0
 kx=. UNICODE kosher x
 z=. kx daisychain y
+msg '... last give: (VEX)'
 popme'formatNEW'
-smoutput '+++ last give: ',VEX
 z return.
 )
 
@@ -1652,72 +1472,56 @@ end.
 toKelvin=: 'F' ddefine
 
 
-try. y toK~ <boil_freeze x
+try. z=. y toK~ <boil_freeze x
+     if. z<0 do. INVALID return. end.
 catch. INVALID end.
 )
 fromKelvin=: 'F' ddefine
 
 
+if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
-
-0 :0
-'C' fromKelvin 273.15 373.15
-'F' fromKelvin 273.15 373.15
-'Ro'fromKelvin 273.15 373.15
-'N' fromKelvin 273.15 373.15
-'De'fromKelvin 273.15 373.15
-'Re'fromKelvin 273.15 373.15
-'K' fromKelvin 273.15 373.15
-'Ab' fromKelvin 273.15 373.15
--
-'C' toKelvin 0 100
-'F' toKelvin 32 212
-'Ro'toKelvin 7.5 60
-'N' toKelvin 0 33
-'De'toKelvin 150 0
-'Re'toKelvin 0 80
-'K' toKelvin 273.15 373.15
-'Ab' toKelvin 273.15 373.15
-)
-
 give_deg=: 4 : 0
 register'give_deg'
 
 
+errif -. any 'deg' E. x
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit
 if. T e. 'RD' do. T=. 2{.unit end.
 z=. T fromKelvin y
-ssw '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+msg '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T='K' do.
+  NO_UNITS_NEEDED=: 1
   sw'(z) K'
 else.
-  sw'(z)(deg_symbol 0) (T)'
+  NO_UNITS_NEEDED=: 1
+  sw'(z)(deg_symbol 0)(T)'
 end.
 )
 
 0 :0
-'degC' give_deg 373.15
-'deg C' give_deg 373.15
-'Celsius' give_deg 373.15
-'C' give_deg 273.15
-'C' give_deg 373.15
-'F' give_deg 273.15
-'F' give_deg 373.15
-'Ro' give_deg 273.15
-'Ro' give_deg 373.15
-'N' give_deg 273.15
-'N' give_deg 373.15
-'De' give_deg 273.15
-'De' give_deg 373.15
-'Re' give_deg 273.15
-'Re' give_deg 373.15
-'K' give_deg 273.15
-'K' give_deg 373.15
-'Ab' give_deg 273.15
-'Ab' give_deg 373.15
+'degC' give_deg 100
+uu '100 degC'
+   'degC' 	uu '100 degC'
+100°C
+   'degF' 	uu '100 degC'
+   'degF' 	uu '100 °C'
+212°F
+   'degC' 	uu '212 degF'
+100°C
+   'degC' 	uu '373.16 K'
+100.01°C
+   'degF' 	uu '373.16 K'
+212.018°F
+   'Fahrenheit'	uu '373.16 K'
+212.018° Fahrenheit
+   'Centigrade'	uu '373.16 K'
+100.01° Centigrade
+   'Celsius'	uu '373.16 K'
+100.01° Celsius
 )
 
 give_misc=: 4 : 0
@@ -1786,11 +1590,10 @@ ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"'
 )
 
-
-0 :0
-deg4rad PI
-amin4rad PI%60
-asec4rad PI%3600
+give_note=: 4 : 0
+register'give_note'
+errif -. x -: 'note'
+sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 )
 
 give_sci=: 4 : 0
@@ -1799,31 +1602,12 @@ register'give_sci'
 z=. (toupper@hy@scino) y
 unit=. x
 msg '... give_sci: x=(x) y=(y) z=(z) unit=(unit)'
-sw'(z) (unit)'
+z return.
 )
 
 give_sig=: give_sci
 
 make_daisychain''
-
-format_test=: 3 : 0
-smoutput 'PI rad-->dms' ; 'dms' give_dms PI
-smoutput '60 s-->hms' ; 'hms' give_hms 60
-)
-0 :0
-fmt=: formatOLD
-fmt=: formatNEW
-'Celsius' fmt 373.15
-'able' fmt 99
-'able' fmt __
-'able' fmt UNDEFINED
-'able' fmt INVALID
-'hms' fmt 1
-'hms' fmt (s4h 4)+(s4min 2)+1
-'dms' fmt PI
-'dms' fmt (rad4deg 3)+(rad4amin 5)+(rad4asec 2)
-VEX
-)
 
 '==================== [uu] public ===================='
 
@@ -1902,8 +1686,9 @@ start=: 3 : 0
 
 
 
-setverbs 'NEW'
+  setverbs 'NEW'
   format=: formatOLD
+  format=: formatNEW
 make_msg 1
 tv 0
 tv '+start'

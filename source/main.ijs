@@ -235,20 +235,6 @@ ycode=. 1 pick qtcode4anyunit y
 xcode -: ycode
 )
 
-compatible_test=: 3 : 0
-  NB. TEST ONLY -- try out verb: compatible
-assert '*' compatible ,'m'
-assert '*' compatible 'kg'
-assert '!' compatible ,'m'
-assert '!' compatible 'kg'
-assert (,'*') compatible ,'m'
-assert (,'*') compatible 'kg'
-assert (,'!') compatible ,'m'
-assert (,'!') compatible 'kg'
-assert (,'J') compatible 'cal'
-assert (,'J') compatible 'kcal'
-)
-
 compatlistOLD=: 3 : 0
   NB. return extract of (units) compatible with units: y
   NB. if there's a compat-code (uy), get its mates
@@ -269,51 +255,6 @@ compatlistNEW=: 3 : 0
   NB. return extract of (units) compatible with units: y
 ]ycode=. 1 pick qtcode4anyunit y
 (ycode=unitc) # units
-)
-
-0 :0
-VERB: convert
--
-Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
-Needed to compare two arbitrary units to see if compatible / inter-convertible.
-Simplifies the result of a division of 2 physical quantities.
--
-Returns 3-element: z
- (>{.z) is the canonical units (cu)
- (>{:z) is conversion factor (cf)
- (>1{z) is diagnostic only: the number of lookup-cycles.
-
-Returns a canonical form (defined by: canon) to allow comparison using (-:).
- DEFN cunit: a canonical element, having prefix, scale and power, eg '/s^2'
-
-Has a set of service-fns all with names cnv* ...
- cnvnon z  extract 1st non-mks cunit(, returns: cunit;residue
- cnvj t  cut t into: (1_if_prefixed_SL ; 10^n_scale ; unit ; ^n_repetition)
- cnvf t  lookup t in: units-->unitv, returns (factor ; units)
-    -if not found, factor is _. -test using: isNaN f
- cnvv t  called by: cnvf
- j cnvi t  converts all SP<-->SL in cunits-str: t iff j=1
-    - (j=1 iff the cunit of which t is the expansion had prefix SL
-
-Uses: cnvnon to find first non-mks unit, t, 0=$t if no more units remaining.
-
-A units str consists of a series of tokens called "cunits", order immaterial.
-A cunit may be prefixed by SL (/) denoting denominator or by SP denoting numerator.
-
-Fn: utoks tokenises a units str. ensures 1st cunit has a leading SP
- provided a leading SL is not already present. Uses sp1 to achieve this.
-
-Since SP is a meaningful cunit prefix, use of: deb will expunge not only SP,SP
- but also any leading SP. But there must be a leading SP|SL.
-
-Uses: cnvf to lookup (bare) unit in: units-->unitv
-The expanded units tokens are then SUFFIXED to the unprocessed residue: rx
--we can do that since order of cunits is immaterial.
-
-Fn: cnvf also returns conversion factor (f)
-
-Finally when no more units to expand (max cycles=30 as failsafe)
- the result is converted to canonical form using: canon.
 )
 
 convertOLD=: 1&$: : (4 : 0)"1
@@ -362,30 +303,18 @@ popme 'convertOLD'
 )
 
 convertNEW=: 1&$: : (4 : 0)"1
-ME=: <'convert'
+pushme 'convertNEW'
   NB. y (units) --> cu ; loop_count ; cf
+  NB. x was speedup flag, but is now unused
 yb=. bris y  NB. kosher of (units) y
 msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
-  NB. x=1 --use: uvalx <<< THE ONLY USE OF (optional, default) x
 'fac code'=. qtcode4anyunit yb
 z=. expandcode code
 loop=. _  NB. dummy value as placeholder
+msg '--- convertNEW: EXITS'
+wd'msgs'  NB. is this still needed?
+popme 'convertNEW'
 (canon ;z) ; loop ; fac return.
-)
-
-0 :0
-convert
-convert=: convertNEW
-convert=: convertOLD
--
-convert 'yd'
-convert 'yd/s'     NB. │m/s│_│0.9144│
-convert 'yd/h'     NB. │m/s│_│0.000254│
-convert 'Hz'
-convert 'GHz'
--
-make_units=: make_unitsNEW
-make_units=: make_unitsOLD
 )
 
 curfig=: 3 : 'hy (0 j. 2)":y'
@@ -419,10 +348,6 @@ for_cu. utoks y do. cunit=. >cu
 end.
 popme 'deslash'
 dlb r return.
-)
-
-0 :0
-deslash'ft/s^2'
 )
 
 dotted=: 1&$: : (4 : 0)
@@ -557,10 +482,6 @@ note=: 3 : 0
 NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
 ,>NOTE {~ rnd 12 | midino y
 )
-0 :0
-note 440		NB. A (concert-pitch is 440 Hz)
-note 194.18	NB. G (earth-rotation musical note)
-)
 
 np=: [: <: 2 * -.
 rnd=: [: <. 0.5 + ]
@@ -675,17 +596,6 @@ else.      NB. subst 'PI' for 'π' etc
 end.
 )
 
-ucode_test=: 3 :0
-  NB. TEST ONLY -- try out verb: ucode
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
-assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
-assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
-assert. 'ft/(s s)'		-: 0 ucode 'ft/(s·s)'
-assert. 'ft/(s·s)'		-: 1 ucode 'ft/(s·s)'
-assert. 'm²/K/s²'		-:   ucode 'm^2/K/s^2'
-i.0 0
-)
-
 ucods=: 1&$: : (4 : 0)
 	NB. saddle to call ucode, but ignoring currency symbols
 SAV=. cspel ;< csymb
@@ -712,11 +622,10 @@ else.
 end.
 )
 
+udiv=: 4 : 0
   NB. udiv
   NB. divides 2 generalized units-strs: x y
   NB. For use by (eg): combine in: cal
-
-udiv=: 4 : 0
 if. (1=#y) and (y=SL) do. x return. end.
 z=. cnvi utoks y    NB. invert token-list y
 z=. selfcanc x , ;z NB. combine x, z as if multiplied
@@ -864,24 +773,6 @@ case. 3 do.  NB. Standard SI units with dots
 end.
 popme 'uniform'
 z return.
-)
-
-uniform_test=: 3 : 0
-  NB. TEST ONLY -- try out verb: uniform
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
-assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
-assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
-assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uniform 'm m/(K s s)'
-assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uniform 'm m/(K s s)'
-assert. 'm^2/K/s^2'	-: 0 uniform 'm^2/K/s^2'
-assert. 'm²/(K s²)'	-: 1 uniform 'm^2/K/s^2'
-assert. 'm² K⁻¹ s⁻²'	-: 2 uniform 'm^2/K/s^2'
-assert. 'm²·K⁻¹·s⁻²'	-: 3 uniform 'm^2/K/s^2'
-assert. 'ft/s^2'		-: 0 uniform 'ft/s^2'
-assert. 'ft/s²'		-: 1 uniform 'ft/s^2'
-assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
-assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
-i.0 0
 )
 
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]

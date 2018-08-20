@@ -1,12 +1,11 @@
 	NB. uu - pp_encoding.ijs
 '==================== [uu] pp_encoding.ijs ===================='
 	NB. The notes here have been moved to temp 181 /179
+	NB. AND 0 :0 -inserts have been hived-off to temp 18
 cocurrent 'uu'
 
 0 :0
-Thursday 16 August 2018  02:42:07
-abolish existing *CODEs in favour of ZEROCODE, isGoodCode
-(checkpointed in temp 8)
+Monday 20 August 2018  00:35:37
 )
 
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
@@ -83,25 +82,6 @@ end.
 n return.  NB. count of unitc entries reassigned
 )
 
-0 :0
-make_unitc''		NB. 1st pass
-VALIDATE_unitc''
-dip 0=uvalc
-2 make_unitc''	NB. 2nd pass
-3 make_unitc''	NB. 3rd pass
-4 make_unitc''	NB. 4th pass
-)
-
-0 :0
-	units	nominal units in UUC, e.g. [Ohm]
-	unitv	units on which UUC defn is based
-	unitx	unitv expanded into fundamental units
-	uvalu	conversion factor explicit in UUC
-	uvalx	conversion factor to go with unitx
-	uvalc	conversion factor to go with unitc
-	unitc	pp-coded units, expandcode must match unitx
-)
-
 qtcode4i=: (3 : 0)"0
 pushme 'qtcode4i'
   NB. returns (valu;code) for index: y
@@ -135,15 +115,6 @@ else.
   msg '--- qtcode4i: INVALID code=(crex code)'
   0;BADCODE
 end.
-)
-
-0 :0
-qtcode4i 59
-VIEWTABLE=: 10  NB. number of lines in viewtable output
-smoutput vt 59
-xxu 18 19
-xxu 30 + i.10
-dip uvalx ~: uvalc
 )
 
 qtcode4bareunit=: 3 : 0
@@ -255,28 +226,10 @@ z=. deb z  NB. guarantee z has NO prefixed SP (or SL)
 k ; z
 )
 
-0 :0
-tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit
-tv '+cnvCunit'
--
-qtcode4bareunit 'acre'    NB. │4046.86│4│
--
-cocurrent 'uu'
-erase 'foo_uu_ foo_z_ foo__'
-foo_z_=: scale4bareunit_uu_
-foo_z_=: cnvj_uu_
-foo_z_=: qtcode4bareunit_uu_
-redux 10  NB. foo_z_=: cnvCunit_uu_
-redux 11  NB. foo_z_=: qtcode4anyunit_uu_
-redux 12  NB. foo_z_=: [: uuOLD '1 ' , ]
-redux 13  NB. foo_z_=: convert_uu_
-redux 14  NB. (test of UNICODE levels)
-redux 15  NB. foo_z_=: [: uuNEW '1 ' , ]
-)
-
 uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uuNEW'
+NO_UNITS_NEEDED=: 0
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.  NB. use non-empty (x) as targ...
@@ -294,18 +247,13 @@ else.  NB. (x) is empty or monadic
   codet=. codeu=. code
   targ=. canon expandcode code  NB. infer target units from: code
 end.
-va=. coeff * ('_',unit) adj val
+NB. THIS CODE-SWITCH NEEDS RESOLVING >>>>>>>>>>>>>>>
+if. 1 do. va=. coeff * ('_',unit) adj val
+else. va=. coeff * val  NB. but only when input-formatting done
+end.
 sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-(ucode 8 u: targ format va),SP,(ucode uniform targ)
-)
-0 :0
-'ft/s^2' uu '1 Å h⁻²'
-x_uu_=:'ft/s^2' [ y_uu_=: '1 Å h⁻²'
-        uu '100 degC'
-        uu '212 degF'
-        uu '373.15 K'
- 'degF' uu '100 degC'
- 'degC' uu '212 degF'
- 'degF' uu '212 degF'
- 'degC' uu '100 degC'
+z=. ucode 8 u: targ format va  NB. (string) value to return
+if. NO_UNITS_NEEDED do. z  NB. set by format when it provides units
+else. z,SP,(ucode uniform targ)
+end.
 )

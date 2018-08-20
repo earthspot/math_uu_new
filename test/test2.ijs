@@ -4,7 +4,7 @@ Thursday 16 August 2018  03:12:44
 -
 Sample statements to test verbs: expandcode upp4utok pp4xunit code4xunit encoded decoded
 )
-smoutput '+++ test2.ijs - entered'
+smoutput PLS,'+++ test2.ijs - entered',PLS
 
 cocurrent 'base'  NB. TO ENSURE ALL TEST VARS GET CREATED IN _z_
 
@@ -129,4 +129,4 @@ erase 'uc' names 0
 erase 'z' names 0
 erase 'noun_table toks4expandcode upp4utok'
 
-smoutput '--- test2.ijs - completed'
+smoutput PLS,'--- test2.ijs - completed',PLS

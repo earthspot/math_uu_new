@@ -4,26 +4,10 @@
 cocurrent 'uu'
 
 0 :0
-Sunday 19 August 2018  14:02:45
-┌────────────────────────────────────────────────┐
-│See temp 97 for new pattern-matching technique  │
-│which combines give_* & take_* into just 1 verb │
-│called: formatNEW                               │
-└────────────────────────────────────────────────┘
-New format verb based on daisychain
-Tries each give (give_* verb) in turn until one exits normally,
- or giverr (the last one) is reached.
-If a give fails, the next give gets tried.
-If a give knows it's inappropriate, it calls: errif
- to force an error.
-If it simply crashes, the same thing happens.
+Monday 20 August 2018  01:48:31
 -
-This arrangement allows ad-hoc 'give_' and 'take_' verbs
-to be defined in the t-table itself (which is a J script).
--
- x-arg is a units, e.g. 'gbp'
- and y is the value to be formatted, e.g. to become: '£1.00'.
- giverr is only called if no "give-" verbs chime with: x.
+for hived-off test-phrases see:
+ot 18
 )
 
 register=: 3 : 0
@@ -33,10 +17,11 @@ VEX=: y
 
 formatNEW=: ''&$: :(4 : 0)
 pushme'formatNEW'
+NO_UNITS_NEEDED=: 0
 kx=. UNICODE kosher x
 z=. kx daisychain y
+msg '... last give: (VEX)'
 popme'formatNEW'
-smoutput '+++ last give: ',VEX
 z return.
 )
 
@@ -143,8 +128,9 @@ NB. )
 
 toKelvin=: 'F' ddefine
   NB. convert y [x-units] into Kelvin
-  NB. e.g. 'C'forKelvin 273.15 --> 0
-try. y toK~ <boil_freeze x
+  NB. e.g. 'C'toKelvin 0 --> 273.15
+try. z=. y toK~ <boil_freeze x
+     if. z<0 do. INVALID return. end.
 catch. INVALID end.
 )
 
@@ -166,68 +152,53 @@ NB. (<bf) fromK y
 NB. )
 
 fromKelvin=: 'F' ddefine
-  NB. convert y [K] into temperature scale (lit) x
-  NB. e.g. 'C'forKelvin 273.15 --> 0
+  NB. convert (Kelvin) y [K] into temperature scale (lit) x
+  NB. e.g. 'C'fromKelvin 273.15 --> 0
+if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
 
-0 :0
-'C' fromKelvin 273.15 373.15
-'F' fromKelvin 273.15 373.15
-'Ro'fromKelvin 273.15 373.15
-'N' fromKelvin 273.15 373.15
-'De'fromKelvin 273.15 373.15
-'Re'fromKelvin 273.15 373.15
-'K' fromKelvin 273.15 373.15
-'Ab' fromKelvin 273.15 373.15  NB. INVALID (no such scale)
--
-'C' toKelvin 0 100
-'F' toKelvin 32 212
-'Ro'toKelvin 7.5 60
-'N' toKelvin 0 33
-'De'toKelvin 150 0
-'Re'toKelvin 0 80
-'K' toKelvin 273.15 373.15
-'Ab' toKelvin 273.15 373.15  NB. INVALID (no such scale)
-)
-
+NB. >>>>>>>>>>> GETTING CALLED WITH y NOT IN Kelvin.
 give_deg=: 4 : 0
 register'give_deg'
-  NB. outputs y [K] in scale (x)
-  NB. force error if wrong verb
+  NB. outputs (Kelvin) y [K] in scale (x)
+  NB. force error if wrong verb…
+errif -. any 'deg' E. x
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit  NB. the identifying 1st letter
 if. T e. 'RD' do. T=. 2{.unit end. NB. take 2nd letter too
 z=. T fromKelvin y
-ssw '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+msg '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T='K' do.
+  NO_UNITS_NEEDED=: 1
   sw'(z) K'	NB. does not have deg_symbol
 else.
-  sw'(z)(deg_symbol 0) (T)'
+  NO_UNITS_NEEDED=: 1
+  sw'(z)(deg_symbol 0)(T)'
 end.
 )
 
 0 :0
-'degC' give_deg 373.15
-'deg C' give_deg 373.15
-'Celsius' give_deg 373.15
-'C' give_deg 273.15
-'C' give_deg 373.15
-'F' give_deg 273.15
-'F' give_deg 373.15
-'Ro' give_deg 273.15
-'Ro' give_deg 373.15
-'N' give_deg 273.15
-'N' give_deg 373.15
-'De' give_deg 273.15
-'De' give_deg 373.15
-'Re' give_deg 273.15
-'Re' give_deg 373.15
-'K' give_deg 273.15
-'K' give_deg 373.15
-'Ab' give_deg 273.15  NB. INVALID (no such scale)
-'Ab' give_deg 373.15  NB. INVALID (no such scale)
+'degC' give_deg 100
+uu '100 degC'
+   'degC' 	uu '100 degC'
+100°C
+   'degF' 	uu '100 degC'	NB. X
+   'degF' 	uu '100 °C'	NB. X
+212°F
+   'degC' 	uu '212 degF'
+100°C
+   'degC' 	uu '373.16 K'
+100.01°C
+   'degF' 	uu '373.16 K'  NB. X
+212.018°F
+   'Fahrenheit'	uu '373.16 K'  NB. X
+212.018° Fahrenheit
+   'Centigrade'	uu '373.16 K'  NB. X
+100.01° Centigrade
+   'Celsius'	uu '373.16 K'  NB. X
+100.01° Celsius
 )
 
 give_misc=: 4 : 0
@@ -298,11 +269,10 @@ ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"'
 )
 
-
-0 :0
-deg4rad PI        NB. 180°
-amin4rad PI%60    NB. 180'
-asec4rad PI%3600  NB. 180"
+give_note=: 4 : 0
+register'give_note'
+errif -. x -: 'note'  NB. force error if wrong verb
+sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 )
 
 give_sci=: 4 : 0
@@ -311,31 +281,9 @@ register'give_sci'
 z=. (toupper@hy@scino) y  NB. scientific notation (conventional)
 unit=. x
 msg '... give_sci: x=(x) y=(y) z=(z) unit=(unit)'
-sw'(z) (unit)'
+z return.
 )
 
 give_sig=: give_sci
 
 make_daisychain''
-
-format_test=: 3 : 0
-smoutput 'PI rad-->dms' ; 'dms' give_dms PI
-smoutput '60 s-->hms' ; 'hms' give_hms 60
-)
-
-NB. format_test''
-
-0 :0
-fmt=: formatOLD
-fmt=: formatNEW
-'Celsius' fmt 373.15
-'able' fmt 99
-'able' fmt __
-'able' fmt UNDEFINED
-'able' fmt INVALID
-'hms' fmt 1
-'hms' fmt (s4h 4)+(s4min 2)+1  NB. 04:02:01
-'dms' fmt PI
-'dms' fmt (rad4deg 3)+(rad4amin 5)+(rad4asec 2)  NB. 3° 5' 2"
-VEX
-)
