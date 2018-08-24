@@ -239,7 +239,9 @@ i.0 0
 
 traced=: 3 : 0
   NB. (bool) verb/s (y) is/are listed in TRACEVERBS
-z=. boxopen y
+  NB. (y) is usually: (ME)
+NB. z=. boxopen y
+z=. {. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
 

@@ -14,6 +14,12 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0			NB. pre-start value
 
+BOIL_F=: 212	NB. water boils [°F]
+BOIL_C=: 100 	NB. water boils [°C]
+BOIL_K=: 373.15	NB. water boils [K]
+ICE_F=: 32	NB. water freezes [°F]
+ICE_C=: 0 	NB. water freezes [°C]
+ICE_K=: 273.15	NB. water freezes [K]
 HD=: '·'		NB. hi-dot, optional SI convention
 INVALID=: _.j_.
 MI=: '-'		NB. minus (==HY)

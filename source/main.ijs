@@ -475,12 +475,19 @@ z=. }: ; (>y) ,. '|'
 brack z -. SP
 )
 
-midino=: 69 + 12 * 2 ^. 440 %~ ]	NB. "midi number" of freq: y (Hz)
+midino=: midi4Hz=: 69 + 12 * 2 ^. 440 %~ ]	NB. "midi number" of freq: y (Hz)
 
-note=: 3 : 0
+note=: note4Hz=: 3 : 0
   NB. nearest musical note of freq: y (Hz)
 NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
-,>NOTE {~ rnd 12 | midino y
+,>NOTE {~ rnd (12 | midino y)
+)
+
+Hz4note=: 3 : 0
+  NB. freq [Hz] for given musical note
+  NB. UNFINISHED <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
+130.81  NB. [Hz] for C3	-- TEST ONLY. (WHOLE TABLE NEEDED!]
 )
 
 np=: [: <: 2 * -.

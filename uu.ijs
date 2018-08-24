@@ -1,5 +1,5 @@
 0 :0
-2018-08-20  08:50:23
+2018-08-25  00:39:25
 -
 UU: scientific units conversion package
 )
@@ -22,6 +22,12 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'
 CUTAB=: CUTAB0
 
+BOIL_F=: 212
+BOIL_C=: 100
+BOIL_K=: 373.15
+ICE_F=: 32
+ICE_C=: 0
+ICE_K=: 273.15
 HD=: '·'
 INVALID=: _.j_.
 MI=: '-'
@@ -74,6 +80,75 @@ UUM=: ''
 
 
 mks=: ;:'m kg s A K cd mol rad eur'
+0 :0
+Friday 24 August 2018  21:11:03
+-
+Used by: formatin.ijs -for testing take_1_ verbs
+)
+
+cocurrent 'uu'
+
+blink=: 4 ddefine
+
+
+
+
+
+
+
+f=. '~/sh/blink1-tool'
+fade=. 100
+color=. 'red'
+r=. 255
+g=. '0x66'
+b=. 0
+rgb=. 'ff9900'
+rgb=. 'ff6600'
+s=. 3
+t0=. '(f) --off -m 0 &'
+t1=. '(f) --(color) &'
+t2=. '(f) --rgb (r),(g),(b) &'
+t3=. '(f) --rgb=(rgb) &'
+t4=. '(f) -m (fade) --rgb (r),(g),(b) --blink (s) &'
+t=. ".'t',":x
+z=. sw t
+select. y
+case. 'take_1_deg'     do. z=. sw '(f) --red &'
+case. 'take_1_dms'     do. z=. sw '(f) --green &'
+case. 'take_1_hms'     do. z=. sw '(f) --blue &'
+case. 'take_9_general' do. z=. sw '(f) --rgb=ff6600 &'
+case. 'take_8_misc'    do. z=. sw '(f) --magenta &'
+case. 'take_1_note'    do. z=. sw '(f) --cyan &'
+case. 'take_1_sci'     do. z=. sw '(f) --white &'
+case. 'take_1_sig'     do. z=. sw '(f) --white &'
+case. 0 do. z=. sw t0
+case. 1 do. z=. sw t
+case. 2 do. z=. sw '(f) -m (fade) --rgb (r),(g),(b) &'
+case. 3 do. z=. sw '(f)           --rgb (r),(g),(b) &'
+case. 4 do. z=. sw '(f) --red &'
+case. 5 do. z=. sw '(f) --green &'
+case. 6 do. z=. sw '(f) --blue &'
+fcase. 'white' do.
+fcase. 'red' do.
+fcase. 'green' do.
+case. 'blue' do. z=. sw'(f) --(y) &'
+case.        do. z=. sw'(f) (y) &'
+end.
+2!:1 z
+)
+
+0 :0
+blink 1
+blink 0
+blink '--white'
+blink '--cyan'
+4 blink '--red --glimmer=10'
+2!:1 '~/sh/blink1-tool --off --m 0 &'
+2!:1 '~/sh/blink1-tool --rgb=ff6600 &'
+blink 4
+3 blink 1
+blink 'red'
+)
 
 '==================== [uu] utilities ===================='
 
@@ -306,7 +381,8 @@ i.0 0
 
 traced=: 3 : 0
 
-z=. boxopen y
+
+z=. {. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
 
@@ -629,14 +705,17 @@ popme 'convertOLD'
 )
 
 convertNEW=: 1&$: : (4 : 0)"1
-ME=: <'convert'
+pushme 'convertNEW'
+
 
 yb=. bris y
 msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
-
 'fac code'=. qtcode4anyunit yb
 z=. expandcode code
 loop=. _
+msg '--- convertNEW: EXITS'
+wd'msgs'
+popme 'convertNEW'
 (canon ;z) ; loop ; fac return.
 )
 
@@ -786,12 +865,19 @@ z=. }: ; (>y) ,. '|'
 brack z -. SP
 )
 
-midino=: 69 + 12 * 2 ^. 440 %~ ]
+midino=: midi4Hz=: 69 + 12 * 2 ^. 440 %~ ]
 
-note=: 3 : 0
+note=: note4Hz=: 3 : 0
 
 NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
-,>NOTE {~ rnd 12 | midino y
+,>NOTE {~ rnd (12 | midino y)
+)
+
+Hz4note=: 3 : 0
+
+
+NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
+130.81
 )
 
 np=: [: <: 2 * -.
@@ -1344,10 +1430,27 @@ z=. deb z
 k ; z
 )
 
+0 :0
+smoutput 8 1$' '
+	uuNEW '1 yd'
+'ft'	uuNEW '1 yd'
+   	uu '100 degC'
+   	uu '212 degF'
+'degC' 	uu '100 degC'
+'degF' 	uu '100 degC'
+'degC' 	uu '212 degF'
+'degC' 	uu '373.16 K'
+'degF' 	uu '373.16 K'
+'Fahrenheit'uu '373.16 K'
+'Centigrade'uu '373.16 K'
+'Celsius'	uu '373.16 K'
+)
+
 uuNEW=: '' ddefine
 
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
+y=. x formatIN y
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.
@@ -1365,11 +1468,11 @@ else.
   codet=. codeu=. code
   targ=. canon expandcode code
 end.
-if. 1 do. va=. coeff * ('_',unit) adj val
+if. 0 do. va=. coeff * ('_',unit) adj val
 else. va=. coeff * val
 end.
 sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-z=. ucode 8 u: targ format va
+z=. ucode 8 u: targ formatOUT va
 if. NO_UNITS_NEEDED do. z
 else. z,SP,(ucode uniform targ)
 end.
@@ -1380,37 +1483,30 @@ end.
 cocurrent 'uu'
 
 0 :0
-Monday 20 August 2018  01:48:31
+Thursday 23 August 2018  02:45:20
 -
-for hived-off test-phrases see:
 ot 18
 )
 
 register=: 3 : 0
 
+
 VEX=: y
 )
 
-formatNEW=: ''&$: :(4 : 0)
-pushme'formatNEW'
+formatOUT=: ''&$: :(4 : 0)
+pushme'formatOUT'
 NO_UNITS_NEEDED=: 0
 kx=. UNICODE kosher x
 z=. kx daisychain y
-msg '... last give: (VEX)'
-popme'formatNEW'
+msg '... last give: (VEX) -returns z=(z)'
+popme'formatOUT'
 z return.
 )
 
-intersect=: ] -. -.~
-
 make_daisychain=: 3 : 0
 
-
->PRE=. ;:'give_dms give_hms give_deg'
->POST=. ;:'give_misc give_general'
 >z=. 'give_' nl 3
->z=. z intersect PRE,(z -. PRE,POST),POST
-CHAIN=: z
 ]z=. (; z,each <' ::'),'giverr'
 daisychain=: 13 : ('x(',z,')y')
 i.0 0
@@ -1418,7 +1514,7 @@ i.0 0
 
 giverr=: 4 : 0
 msg '>>> giverr: none chime: x=(x) y=(y)'
-sw'(y) ??'
+sw'(y) [??]'
 )
 
 deg_symbol=: 3 : 0
@@ -1436,23 +1532,23 @@ else. y end.
 toK=: (4 : 0)"0
 f=. {:>x
 r=. -/>x
-273.15 + 100*(y-f)%r
+ICE_K + 100*(y-f)%r
 )
 smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
 smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
 smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
-smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: 373.15 273.15
+smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: ICE_K+100 0
 fromK=: (4 : 0)"0
 f=. {:>x
 r=. -/>x
-f+r*(y-273.15)%100
+f+r*(y-ICE_K)%100
 )
 
-Kr=: 373.15 273.15
+Kr=: ICE_K + 100 0
 smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
 smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
 smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
-smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: 373.15 273.15
+smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: ICE_K+100 0
 
 
 boil_freeze=: 3 : 0
@@ -1465,7 +1561,7 @@ select. y
  case. 'De'	do.	bf=. 0 150
  case. 'Ra'	do.	bf=. 671.64 491.67
  case. 'Re'	do.	bf=. 80 0
- case. 'K'	do.	bf=. 373.15 273.15
+ case. 'K'	do.	bf=. ICE_K+100 0
  case.    	do.	bf=. _ _
 end.
 )
@@ -1483,16 +1579,16 @@ if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
-give_deg=: 4 : 0
-register'give_deg'
+give_0_deg=: 4 : 0
+register'give_0_deg'
 
 
-errif -. any 'deg' E. x
+assert. any 'deg' E. x
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit
 if. T e. 'RD' do. T=. 2{.unit end.
 z=. T fromKelvin y
-msg '... give_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+msg '... give_0_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T='K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'
@@ -1503,7 +1599,7 @@ end.
 )
 
 0 :0
-'degC' give_deg 100
+'degC' give_0_deg 100
 uu '100 degC'
    'degC' 	uu '100 degC'
 100°C
@@ -1524,8 +1620,8 @@ uu '100 degC'
 100.01° Celsius
 )
 
-give_misc=: 4 : 0
-register'give_misc'
+give_9_misc=: 4 : 0
+register'give_9_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
@@ -1535,15 +1631,15 @@ end.
 if. y=__ do. '-',infinity return.
 elseif. y=_ do. infinity return.
 end.
-errif 1
+assert. 0
 )
 
-give_general=: 4 : 0
-register'give_general'
+give_9_general=: 4 : 0
+register'give_9_general'
 
 
 unit=. x
-msg '... give_general: x=(x) y=(y) unit=(unit)'
+msg '... give_9_general: x=(x) y=(y) unit=(unit)'
 sw'(y) (unit)'
 )
 
@@ -1557,10 +1653,10 @@ s4min=: 60 * ]
 h4s=: 3600 %~ ]
 min4s=: 60 %~ ]
 
-give_hms=: 4 : 0
-register'give_hms'
+give_0_hms=: 4 : 0
+register'give_0_hms'
 
-errif x ~: 'hms'
+assert. x -: 'hms'
 'hh mm ss'=.":each 24 60 60 #: y
 if. 10>".hh do. hh=. '0',hh end.
 if. 10>".mm do. mm=. '0',mm end.
@@ -1581,33 +1677,169 @@ rad4deg=: 13 : '(o.|y) % 180'
 rad4amin=: 13 : 'rad4deg y % 60'
 rad4asec=: 13 : 'rad4deg y % 3600'
 
-give_dms=: 4 : 0
-register'give_dms'
+give_0_dms=: 4 : 0
+register'give_0_dms'
 
-errif x ~: 'dms'
+assert. x -: 'dms'
 'd m s'=.":each <.each 360 60 60 #: asec4rad |y
 ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"'
 )
 
-give_note=: 4 : 0
-register'give_note'
-errif -. x -: 'note'
+give_1_note=: 4 : 0
+register'give_1_note'
+assert. x -: 'note'
 sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 )
 
-give_sci=: 4 : 0
-register'give_sci'
+give_1_sci=: 4 : 0
+register'give_1_sci'
 
 z=. (toupper@hy@scino) y
 unit=. x
-msg '... give_sci: x=(x) y=(y) z=(z) unit=(unit)'
+msg '... give_1_sci: x=(x) y=(y) z=(z) unit=(unit)'
 z return.
 )
 
-give_sig=: give_sci
+give_1_sig=: give_1_sci
 
 make_daisychain''
+
+'==================== [uu] formatin.ijs =================='
+0 :0
+Friday 24 August 2018  21:40:43
+-
+formatIN -- input-counterpart to: format
+ot 17
+	...but style of programming so alien that it isn't much use.
+ot 18
+-
+STRATEGY: hedge bets by simply converting string--> string, e.g...
+   '100 degC' --> '373.15 K'
+   '212 degF' --> '373.15 K'
+-
+       uuNEW	'373.15 K'
+'degC' uuNEW	'373.15 K'
+'degF' uuNEW	'373.15 K'
+'degF' formatIN	'373.15 K'
+	...NOT formatIN's biz to use [x] EXCEPT to disambiguate.
+'degF' take_deg	'373.15 K'
+)
+
+cocurrent 'uu'
+	
+registerIN=: 3 : 0
+
+
+VEXIN=: y
+blink y
+)
+
+formatIN=: ''&$: :(4 : 0)
+pushme'formatIN'
+
+blink 0
+kx=. UNICODE kosher x
+z=. kx daisychainIN y
+msg '... last take: (VEXIN) -returns z=(z)'
+popme'formatIN'
+z return.
+)
+
+make_daisychainIN=: 3 : 0
+
+>z=. 'take_' nl 3
+]z=. (; z,each <' ::'),'takerr'
+daisychainIN=: 13 : ('x(',z,')y')
+i.0 0
+)
+
+takerr=: 4 : 0
+msg '>>> takerr: none chime: x=(x) y=(y)'
+sw'(y) [???]'
+)
+take_1_deg=: 4 : 0
+registerIN'take_1_deg'
+
+
+assert. any 'deg' E. x
+if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
+T=. {.unit
+if. T e. 'RD' do. T=. 2{.unit end.
+z=. T fromKelvin y
+msg '... take_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+if. T='K' do.
+  sw'(z) K'
+else.
+  sw'(z)(deg_symbol 0)(T)'
+end.
+)
+
+0 :0
+'degC' take_1_deg '373.15 K'
+
+uu '100 degC'
+   'degC' 	uu '100 degC'
+100°C
+   'degF' 	uu '100 degC'
+   'degF' 	uu '100 °C'
+212°F
+   'degC' 	uu '212 degF'
+100°C
+   'degC' 	uu '373.16 K'
+100.01°C
+   'degF' 	uu '373.16 K'
+212.018°F
+   'Fahrenheit'	uu '373.16 K'
+212.018° Fahrenheit
+   'Centigrade'	uu '373.16 K'
+100.01° Centigrade
+   'Celsius'	uu '373.16 K'
+100.01° Celsius
+)
+
+take_8_misc=: 4 : 0
+registerIN'take_8_misc'
+
+if. undefined y do. 'UNDEFINED' return. end.
+if. invalid y do. 'INVALID' return. end.
+if. UNICODE>0 do. infinity=. '∞'
+else. infinity=. 'infinity'
+end.
+if. y=__ do. '-',infinity return.
+elseif. y=_ do. infinity return.
+end.
+assert. 0
+)
+
+take_9_general=: 4 : 0
+registerIN'take_9_general'
+
+
+unit=. x
+z=. y
+msg '... take_9_general: x=(x) unit=(unit) y=(y) --> z=(z)'
+z return.
+)
+sval_unit=: '' ddefine
+
+sval=. SP taketo y -. '°'
+if. 0<#x do. 
+  unit=. bris x
+else.
+  unit=. bris SP takeafter y
+end.
+sval,SP,unit
+)
+
+split_val_unit=: 3 : 0
+
+val=. ". SP taketo y -. '°'
+unit=. bris SP takeafter y
+val ; unit
+)
+
+make_daisychainIN''
 
 '==================== [uu] public ===================='
 
@@ -1666,7 +1898,7 @@ if. y-:'NEW' do.
   compatlist=: compatlistNEW
   convert=: convertNEW
   make_units=: make_unitsNEW
-  format=: formatNEW
+  format=: formatOUT
   uu=: uuNEW
   VALIDATE_unitc=: empty
 else.
@@ -1687,8 +1919,6 @@ start=: 3 : 0
 
 
   setverbs 'NEW'
-  format=: formatOLD
-  format=: formatNEW
 make_msg 1
 tv 0
 tv '+start'

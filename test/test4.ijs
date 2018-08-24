@@ -8,9 +8,9 @@ smoutput PLS,'+++ test4.ijs - entered',PLS
 cocurrent 'uu'
 
 format_test=: 3 : 0
-smoutput 'PI rad-->dms' ; 'dms' formatNEW PI
+smoutput 'PI rad-->dms' ; 'dms' formatOUT PI
 smoutput 'VEX=',VEX
-smoutput '60 s-->hms' ; 'hms' formatNEW 60
+smoutput '60 s-->hms' ; 'hms' formatOUT 60
 smoutput 'VEX=',VEX
 )
 
@@ -74,7 +74,7 @@ Sunday 19 August 2018  14:02:45
 ┌────────────────────────────────────────────────┐
 │See temp 97 for new pattern-matching technique  │
 │which combines give_* & take_* into just 1 verb │
-│called: formatNEW                               │
+│called: formatOUT                               │
 └────────────────────────────────────────────────┘
 New format verb based on daisychain
 Tries each give (give_* verb) in turn until one exits normally,
@@ -142,7 +142,7 @@ asec4rad PI%3600  NB. 180"
 
 0 :0
 fmt=: formatOLD
-fmt=: formatNEW
+fmt=: formatOUT
 'Celsius' fmt 373.15
 'able' fmt 99
 'able' fmt __

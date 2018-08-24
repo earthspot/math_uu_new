@@ -226,10 +226,27 @@ z=. deb z  NB. guarantee z has NO prefixed SP (or SL)
 k ; z
 )
 
+0 :0
+smoutput 8 1$' '
+	uuNEW '1 yd'	NB. 0.914 m	√
+'ft'	uuNEW '1 yd'	NB. 3 ft		√
+   	uu '100 degC'	NB. 100 K		XXX
+   	uu '212 degF'	NB. 117.778 K	XXX
+'degC' 	uu '100 degC'	NB. _173.15°C	XXX
+'degF' 	uu '100 degC'	NB. _135.67°F	XXX
+'degC' 	uu '212 degF'	NB. _155.372°C	XXX
+'degC' 	uu '373.16 K'	NB. 100.01°C	XXX
+'degF' 	uu '373.16 K'	NB. 749.368°F	XXX
+'Fahrenheit'uu '373.16 K'	NB. 671.688 Fahrenheit	XXX
+'Centigrade'uu '373.16 K'	NB. 373.160 Centigrade	XXX
+'Celsius'	uu '373.16 K'	NB. 373.160 Celsius	XXX
+)
+
 uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
+y=. x formatIN y  NB. y--> SI units, esp Fahrenheit--> K
 val=. ". SP taketo y -. '°'
 unit=. bris SP takeafter y
 if. 0<#x do.  NB. use non-empty (x) as targ...
@@ -248,12 +265,12 @@ else.  NB. (x) is empty or monadic
   targ=. canon expandcode code  NB. infer target units from: code
 end.
 NB. THIS CODE-SWITCH NEEDS RESOLVING >>>>>>>>>>>>>>>
-if. 1 do. va=. coeff * ('_',unit) adj val
+if. 0 do. va=. coeff * ('_',unit) adj val
 else. va=. coeff * val  NB. but only when input-formatting done
 end.
 sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-z=. ucode 8 u: targ format va  NB. (string) value to return
-if. NO_UNITS_NEEDED do. z  NB. set by format when it provides units
+z=. ucode 8 u: targ formatOUT va  NB. (string) value to return
+if. NO_UNITS_NEEDED do. z  NB. set by formatOUT when appropriate
 else. z,SP,(ucode uniform targ)
 end.
 )

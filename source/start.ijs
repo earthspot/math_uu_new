@@ -10,7 +10,7 @@ if. y-:'NEW' do.
   compatlist=: compatlistNEW
   convert=: convertNEW
   make_units=: make_unitsNEW
-  format=: formatNEW
+  format=: formatOUT	NB. formerly: formatNEW
   uu=: uuNEW
   VALIDATE_unitc=: empty
 else.
@@ -33,8 +33,7 @@ start=: 3 : 0
 NB. =========================================================
   setverbs 'NEW'
 NB. BUT .............
-  format=: formatOLD
-  format=: formatNEW
+NB.   format=: formatOLD
 NB. =========================================================
 make_msg 1	NB. enable diagnostics
 tv 0
