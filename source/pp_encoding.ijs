@@ -127,6 +127,7 @@ if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
 valc=. i{uvalc
 code=. i{unitc
 msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+popme 'qtcode4bareunit'
 valc;code
 )
 
@@ -156,6 +157,7 @@ end.
 muv=. */v  NB. combine all the valus
 muz=. */z  NB. combine all the codes
 msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+popme 'qtcode4anyunit'
 muv;muz return.
 )
 
@@ -232,25 +234,33 @@ smoutput 8 1$' '
 'ft'	uuNEW '1 yd'	NB. 3 ft		√
    	uu '100 degC'	NB. 373.15 K	√
    	uu '212 degF'	NB. 373.15 K	√
+------------
 'degC' 	uu '100 degC'	NB. 100°C		√
-'degF' 	uu '0 degC'	NB. 425.336°F	XXX 32 degF
 'degF' 	uu '100 degC'	NB. 749.336°F	XXX 212 degF
+'degF' 	uu '0 degC'	NB. 425.336°F	XXX 32 degF
+------------
 'degC' 	uu '212 degF'	NB. 100°C		√
 'degC' 	uu '373.15 K'	NB. 100°C		√
 'degF' 	uu '373.15 K'	NB. 749.368°F	XXX 212 degF
 'Fahrenheit'uu '373.15 K'	NB. 749.368°F	XXX 212 degF
 'Centigrade'uu '373.15 K'	NB. 100°C		√
 'Celsius'	uu '373.15 K'	NB. 100°C		√
+   yf ; val ; unit
+   '°C' 	uu '100 °C'
+   '°C' 	uu '100°C'
 )
 
 uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
-yf=: x formatIN y  NB. y--> SI units, esp Fahrenheit--> K
-val=: valueOf yf
-unit=: bris unitsOf yf
-	assert. -.invalid val
+]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
+]val=: valueOf yf
+]unit=: bris unitsOf yf
+if. invalid val do.
+  emsg '>>> uuNEW: bad value: yf=[(yf)] y=[(y)]'
+  BADQTY return.
+end.
 if. 0<#x do.  NB. use non-empty (x) as targ...
   targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
@@ -258,21 +268,54 @@ if. 0<#x do.  NB. use non-empty (x) as targ...
   if. codet ~: codeu do.
     emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
-    '' return.
+    BADQTY return.
   end.
   coeff=. coefu % coeft
-else.  NB. (x) is empty or monadic
+  msg '... uuNEW: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
+else.  NB. (x) is empty or invocation is monadic
   'coeff code'=. qtcode4anyunit unit
-  codet=. codeu=. code
-  targ=. canon expandcode code  NB. infer target units from: code
+  ]codet=. codeu=. code
+  ]targ=. canon expandcode code  NB. infer target units from: code
+  msg '... uuNEW: x=empty; coeff=(coeff) val=(val)'
 end.
 NB. THIS CODE-SWITCH NEEDS RESOLVING >>>>>>>>>>>>>>>
-if. 0 do. va=. coeff * ('_',unit) adj val
-else. va=. coeff * val  NB. but only when input-formatting done
+NB. va=. coeff * ('_',unit) adj val  NB. adj is obsolete
+if. cannotScale unit do.
+  ]va=. val  NB. formatOUT must handle (unit)
+else.
+  ]va=. coeff * val
 end.
-sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-z=. ucode 8 u: targ formatOUT va  NB. (string) value to return
-if. NO_UNITS_NEEDED do. z  NB. set by formatOUT when appropriate
-else. z,SP,(ucode uniform targ)
+sllog 'uuNEW__ val va coeff unit targ coefu codeu coeft codet'
+  NB. Note that uniform applies ucode to its own result
+]z=. targ formatOUT va
+]z=. uniformD z  NB. (string) value to return
+  NB. NO_UNITS_NEEDED gets set by formatOUT when appropriate
+if. NO_UNITS_NEEDED do. z return.
+else. deb z,SP,uniform targ return. end.
+)
+
+uniformD=: 3 : 0
+  NB. apply verb: uniform to units ONLY in (qty) y
+brack sval=: strValueOf y
+brack unit=: uniform unitsOf y
+]sval,SP,unit
+)
+
+cannotScale=: 3 : 0
+  NB. (kosher unit) y cannot be scaled, e.g. temperature scale
+if. isTemperature y do. 1 return. end.
+unsc=. ;:'gas.mark midino note'
+if. unsc e.~ <y do. 1 return. end.
+0 return.  NB. (unit) y can be scaled
+)
+
+isTemperature=: 3 : 0
+  NB. (kosher unit) y is a temperature scale
+by=. <deb y
+if. y beginsWith 'deg' do. 1 return.
+elseif. by e. TEMPERATURE_SCALES do. 1 return.
+elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
+elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
+elseif. do. 0 return.  NB. not a temperature scale
 end.
 )

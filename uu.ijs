@@ -1,5 +1,5 @@
 0 :0
-2018-08-25  02:34:42
+2018-08-26  00:49:37
 -
 UU: scientific units conversion package
 )
@@ -22,6 +22,7 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'
 CUTAB=: CUTAB0
 
+BADQTY=. '0 ??'
 BOIL_F=: 212
 BOIL_C=: 100
 BOIL_K=: 373.15
@@ -61,6 +62,28 @@ MAXLOOP=: 30
 UCASE=: 0
 )
 
+TEMPERATURE_SCALES=: b4f }: noun define
+K
+Kelvin
+Newton
+C
+Centigrade
+Celsius
+F
+Fahrenheit
+Re
+Ré
+Reaumur
+Réaumur
+Ro
+Roe
+Rø
+Roemer
+Rømer
+Delisle
+De
+)
+
 
 UUC=: cmx 0 : 0
 1 /	[saved]	Saturday 9 June 2018  05:16:54
@@ -88,6 +111,8 @@ Used by: formatin.ijs -for testing take_1_ verbs
 
 cocurrent 'uu'
 
+BLINK=: '##'
+
 blink=: 4 ddefine
 
 
@@ -102,8 +127,10 @@ color=. 'red'
 r=. 255
 g=. '0x66'
 b=. 0
-rgb=. 'ff9900'
-rgb=. 'ff6600'
+rgbWhite=. 'ff8844'
+rgbFlame=. 'ff9900'
+rgbYellow=. 'ff6600'
+rgb=. rgbFlame
 s=. 3
 t0=. '(f) --off -m 0 &'
 t1=. '(f) --(color) &'
@@ -111,40 +138,55 @@ t2=. '(f) --rgb (r),(g),(b) &'
 t3=. '(f) --rgb=(rgb) &'
 t4=. '(f) -m (fade) --rgb (r),(g),(b) --blink (s) &'
 t=. ".'t',":x
-z=. sw t
 select. y
-case. 'take_1_deg'     do. z=. sw '(f) --red &'
-case. 'take_1_dms'     do. z=. sw '(f) --green &'
-case. 'take_1_hms'     do. z=. sw '(f) --blue &'
-case. 'take_9_general' do. z=. sw '(f) --rgb=ff6600 &'
+case. '?' do. smoutput '+++ blink: shell cmd was: ',BLINK return.
+case. 'take_0_deg'     do. z=. sw '(f) --red &'
+case. 'take_0_dms'     do. z=. sw '(f) --green &'
+case. 'take_0_hms'     do. z=. sw '(f) --blue &'
+case. 'take_9_general' do. z=. sw '(f) --rgb=(rgbYellow) &'
 case. 'take_8_misc'    do. z=. sw '(f) --magenta &'
 case. 'take_1_note'    do. z=. sw '(f) --cyan &'
-case. 'take_1_sci'     do. z=. sw '(f) --white &'
+case. 'take_1_sci'     do. z=. sw '(f) --rgb=(rgbWhite) &'
 case. 'take_1_sig'     do. z=. sw '(f) --white &'
-case. 0 do. z=. sw t0
-case. 1 do. z=. sw t
-case. 2 do. z=. sw '(f) -m (fade) --rgb (r),(g),(b) &'
-case. 3 do. z=. sw '(f)           --rgb (r),(g),(b) &'
-case. 4 do. z=. sw '(f) --red &'
-case. 5 do. z=. sw '(f) --green &'
-case. 6 do. z=. sw '(f) --blue &'
-fcase. 'white' do.
+case. 0 do. z=. sw '(f) --off -m 0 &'
+case. 1 do. z=. sw '(f) --red &'
+case. 2 do. z=. sw '(f) --green &'
+case. 3 do. z=. sw '(f) --blue &'
+case. 4 do. z=. sw t
+case. 5 do. z=. sw '(f) --rgb (r),(g),(b) -m (fade) &'
+case. 6 do. z=. sw '(f) --rgb (r),(g),(b) &'
+
+case. 'white'          do. z=. sw '(f) --rgb=(rgbWhite) &'
+fcase. 'yellow' do.
+fcase. 'magenta' do.
+fcase. 'cyan' do.
 fcase. 'red' do.
 fcase. 'green' do.
 case. 'blue' do. z=. sw'(f) --(y) &'
 case.        do. z=. sw'(f) (y) &'
 end.
-2!:1 z
+2!:1 BLINK=:z
 )
 
-0 :0
-blink 1
 blink 0
+
+0 :0
+blink '?'
+blink 'take_9_general'
+blink 'take_1_sci'
+blink 'take_1_sig'
+blink 0
+blink 1
+blink 2
+blink 3
+blink 4
 blink '--white'
+blink 'white'
 blink '--cyan'
+blink 'cyan'
 4 blink '--red --glimmer=10'
-2!:1 '~/sh/blink1-tool --off --m 0 &'
-2!:1 '~/sh/blink1-tool --rgb=ff6600 &'
+2!:1 '~/sh/blink1-tool --off -m 0 &'
+2!:1 '~/sh/blink1-tool --rgb=ff6600 -m 0 &'
 blink 4
 3 blink 1
 blink 'red'
@@ -338,13 +380,17 @@ tv=: 3 : 0
 
 PLUS=. '+'
 MINUS=. '-'
-verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+verbs1=. ;: 'uuNEW formatIN formatOUT'
+verbs2=. ;: 'uuNEW'
+verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs4=. verbs1 , ;: 'cnvj cnv2bare'
 select. {.y
 case. ' '   do. z=. TRACEVERBS_uu_  
 case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
 case. 1     do. z=. TRACEVERBS_uu_=: verbs1
 case. 2     do. z=. TRACEVERBS_uu_=: verbs2
+case. 3     do. z=. TRACEVERBS_uu_=: verbs3
+case. 4     do. z=. TRACEVERBS_uu_=: verbs4
 case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y
@@ -760,8 +806,8 @@ if. x do.
   if. any HD E. z do. y return. end.
   ]z=. z rplc SP;HD
 else.
-  if. -.any '·' E. z do. y return. end.
-  z=. z rplc '·';' '
+  if. -.any HD E. z do. y return. end.
+  z=. z rplc HD;SP
 end.
 )
 
@@ -973,7 +1019,10 @@ hasutf=: [: +./ 127 < a. i. ]
 isascii=: [: *./ 128 > a. i. ]
 undeslash=: 0&deslash
 
-ucode=: 1&$: : (4 : 0)
+ucode=: 1 ddefine
+
+
+
 y=. utf8 y
 if. x do.
   if. -.isascii y do. y return. end.
@@ -1118,39 +1167,30 @@ x=. 0;sj;mj
 cutuuc=: x&;: "1
 i.0 0
 )
-uniform=: _&$: : (4 : 0)"1
+uniform=: 3 : 0
 0 pushme 'uniform'
-msg '+++ uniform: ENTERED: x=(x) y=(y)'
-
+msg '+++ uniform: ENTERED: y=(y)'
 
 y=. utf8 deb y
-if. x=_ do. x=. UNICODE end.
-select. x
-case. 0 do.
+select. UNICODE
+ case. 0 do.
   z=. unucode undotted y
-case. 1 do.
+ case. 1 do.
   ]z=. undotted y
   if. 1< +/SL=y do.
     ]z=. slash1 z
   end.
   ]z=. ucode z
-case. 2 do.
+fcase. 2 do.
+ case. 3 do.
   if. y-: ,SL do.
-    msg '--- uniform: RETURNS NIL'
+    msg '--- uniform: y=SL returns NIL'
     0 popme 'uniform'
     '' return.
   end.
-
   ]z=. unucode undotted y
   ]z=. ucode deslash unslash1 z
-case. 3 do.
-  if. y-: ,SL do.
-    msg '--- uniform: RETURNS NIL'
-    0 popme 'uniform'
-    '' return.
-  end.
-
-  z=. dotted 2 uniform y
+  if. UNICODE=3 do. z=. dotted z end.
 end.
 popme 'uniform'
 z return.
@@ -1161,6 +1201,7 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
+
 uuOLD=: '' ddefine
 
 
@@ -1332,6 +1373,7 @@ if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
 valc=. i{uvalc
 code=. i{unitc
 msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+popme 'qtcode4bareunit'
 valc;code
 )
 
@@ -1360,6 +1402,7 @@ end.
 muv=. */v
 muz=. */z
 msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+popme 'qtcode4anyunit'
 muv;muz return.
 )
 
@@ -1436,25 +1479,33 @@ smoutput 8 1$' '
 'ft'	uuNEW '1 yd'
    	uu '100 degC'
    	uu '212 degF'
+------------
 'degC' 	uu '100 degC'
-'degF' 	uu '0 degC'
 'degF' 	uu '100 degC'
+'degF' 	uu '0 degC'
+------------
 'degC' 	uu '212 degF'
 'degC' 	uu '373.15 K'
 'degF' 	uu '373.15 K'
 'Fahrenheit'uu '373.15 K'
 'Centigrade'uu '373.15 K'
 'Celsius'	uu '373.15 K'
+   yf ; val ; unit
+   '°C' 	uu '100 °C'
+   '°C' 	uu '100°C'
 )
 
 uuNEW=: '' ddefine
 
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
-yf=: x formatIN y
-val=: valueOf yf
-unit=: bris unitsOf yf
-	assert. -.invalid val
+]yf=: formatIN y
+]val=: valueOf yf
+]unit=: bris unitsOf yf
+if. invalid val do.
+  emsg '>>> uuNEW: bad value: yf=[(yf)] y=[(y)]'
+  BADQTY return.
+end.
 if. 0<#x do.
   targ=. bris x
   'coeft codet'=. qtcode4anyunit targ
@@ -1462,21 +1513,53 @@ if. 0<#x do.
   if. codet ~: codeu do.
     emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
-    '' return.
+    BADQTY return.
   end.
   coeff=. coefu % coeft
+  msg '... uuNEW: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
 else.
   'coeff code'=. qtcode4anyunit unit
-  codet=. codeu=. code
-  targ=. canon expandcode code
+  ]codet=. codeu=. code
+  ]targ=. canon expandcode code
+  msg '... uuNEW: x=empty; coeff=(coeff) val=(val)'
 end.
-if. 0 do. va=. coeff * ('_',unit) adj val
-else. va=. coeff * val
+if. cannotScale unit do.
+  ]va=. val
+else.
+  ]va=. coeff * val
 end.
-sllog 'uuNEW__ val unit targ coefu codeu coeft codet va'
-z=. ucode 8 u: targ formatOUT va
-if. NO_UNITS_NEEDED do. z
-else. z,SP,(ucode uniform targ)
+sllog 'uuNEW__ val va coeff unit targ coefu codeu coeft codet'
+
+]z=. targ formatOUT va
+]z=. uniformD z
+
+if. NO_UNITS_NEEDED do. z return.
+else. deb z,SP,uniform targ return. end.
+)
+
+uniformD=: 3 : 0
+
+brack sval=: strValueOf y
+brack unit=: uniform unitsOf y
+]sval,SP,unit
+)
+
+cannotScale=: 3 : 0
+
+if. isTemperature y do. 1 return. end.
+unsc=. ;:'gas.mark midino note'
+if. unsc e.~ <y do. 1 return. end.
+0 return.
+)
+
+isTemperature=: 3 : 0
+
+by=. <deb y
+if. y beginsWith 'deg' do. 1 return.
+elseif. by e. TEMPERATURE_SCALES do. 1 return.
+elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
+elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
+elseif. do. 0 return.
 end.
 )
 
@@ -1497,12 +1580,13 @@ VEX=: y
 )
 
 formatOUT=: ''&$: :(4 : 0)
-pushme'formatOUT'
+0 pushme'formatOUT'
+msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
 NO_UNITS_NEEDED=: 0
-kx=. UNICODE kosher x
+kx=. bris x
 z=. kx daisychain y
-msg '... last give: (VEX) -returns z=(z)'
-popme'formatOUT'
+msg '--- formatOUT: EXITS, last give_ verb: (VEX) -returns z=(z)'
+0 popme'formatOUT'
 z return.
 )
 
@@ -1523,23 +1607,15 @@ deg_symbol=: 3 : 0
 if. UNICODE>0 do. '°' else. 'deg' end.
 )
 
-kosher=: 4 : 0
+deEuroName=: 3 : 0
 
-
-if. x=0 do.
-z=. 0 ucode y
-z rplc 'é';'e' ; 'ø';'oe'
-else. y end.
+y rplc 'é';'e' ; 'ø';'oe'
 )
 toK=: (4 : 0)"0
 f=. {:>x
 r=. -/>x
 ICE_K + 100*(y-f)%r
 )
-smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
-smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
-smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
-smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: ICE_K+100 0
 fromK=: (4 : 0)"0
 f=. {:>x
 r=. -/>x
@@ -1547,11 +1623,6 @@ f+r*(y-ICE_K)%100
 )
 
 Kr=: ICE_K + 100 0
-smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
-smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
-smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
-smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: ICE_K+100 0
-
 
 boil_freeze=: 3 : 0
 
@@ -1567,6 +1638,7 @@ select. y
  case.    	do.	bf=. _ _
 end.
 )
+
 toKelvin=: 'F' ddefine
 
 
@@ -1574,6 +1646,7 @@ try. z=. y toK~ <boil_freeze x
      if. z<0 do. INVALID return. end.
 catch. INVALID end.
 )
+
 fromKelvin=: 'F' ddefine
 
 
@@ -1585,13 +1658,12 @@ catch. INVALID end.
 give_0_deg=: 4 : 0
 register'give_0_deg'
 
-assert. (any 'deg' E. x) or (x = 'K')
-if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=. {.unit
-if. T e. 'RD' do. T=. 2{.unit end.
+unit=. ,x
+assert. isTemperature unit
+T=. shorT unit
 z=. T fromKelvin y
 msg '... give_0_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
-if. T='K' do.
+if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'
 else.
@@ -1601,10 +1673,10 @@ end.
 )
 
 0 :0
-'degC' give_0_deg 100
+'degC' give_0_deg 373.15
+'degF' give_0_deg 373.15
 uu '100 degC'
    'degC' 	uu '100 degC'
-100°C
    'degF' 	uu '100 degC'
    'degF' 	uu '100 °C'
 212°F
@@ -1622,8 +1694,8 @@ uu '100 degC'
 100.01° Celsius
 )
 
-give_9_misc=: 4 : 0
-register'give_9_misc'
+give_8_misc=: 4 : 0
+register'give_8_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
@@ -1737,30 +1809,35 @@ VEXIN=: y
 blink y
 )
 
-formatIN=: ''&$: :(4 : 0)
-pushme'formatIN'
-msg '+++ formatIN: ENTERED, x=[(x)] y=[(y)]'
+0 :0
+'degC' formatIN '100 °C'
+)
+
+formatIN=: 3 : 0
+0 pushme'formatIN'
+msg '+++ formatIN: ENTERED, y=[(y)]'
 
 blink 0
-kx=. UNICODE kosher x
-z=. kx daisychainIN y
-msg '--- formatIN: EXITS, last take_ verb: (VEXIN) -returns z=(z)'
-popme'formatIN'
+z=. daisychainIN y
+msg '--- formatIN: EXITS, last take_ verb: (VEXIN) kuy=(kuy) -returns z=(z)'
+0 popme'formatIN'
 z return.
 )
 
 make_daisychainIN=: 3 : 0
 
+
 >z=. 'take_' nl 3
 ]z=. (; z,each <' ::'),'takerr'
-daisychainIN=: 13 : ('x(',z,')y')
+daisychainIN=: 13 : ('(',z,')y')
 i.0 0
 )
 
-takerr=: 4 : 0
+takerr=: 3 : 0
 msg '>>> takerr: none chime: x=(x) y=(y)'
 sw'(y) [???]'
 )
+
 valueOf=: 3 : 0
 
 try. val=. ". strValueOf y
@@ -1778,22 +1855,48 @@ numeral=. strValueOf y
 deb y }.~ #numeral
 )
 
-take_1_deg=: 4 : 0
-	yIN=: y
-	xIN=: x
-registerIN'take_1_deg'
+dedeg=: 3 : 0
+
+y=. deb y
+if. y beginsWith 'deg' do. dlb 3}.y else. y end.
+)
+
+0 :0
+brack dedeg 'degC'
+brack dedeg 'deg C'
+brack dedeg ' degC'
+brack dedeg ' deg C'
+)
+
+shorT=: 3 : 0
 
 
-unit=. unitsOf y
-assert. (any 'deg' E. unit) or (unit -: ,'K')
+y=. dedeg deEuroName y
+T=. {.y
+if. T e. 'RD' do. T=. 2{.y end.
+)
 
-if. unit beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=: {.unit
-if. T e. 'RD' do. T=: 2{.unit end.
-msg '... take_1_deg: unit=[(unit)] T=(T)'
+0 :0
+brack shorT 'degC'
+brack shorT 'deg C'
+brack shorT ' degC'
+brack shorT ' deg C'
+brack shorT 'Réaumur'
+deEuroName 'Réaumur'
+brack shorT 'Reaumur'
+)
+
+take_0_deg=: 3 : 0
+registerIN 'take_0_deg'
+
+
+unit=. deb (bris unitsOf y) rplc 'deg' ; ' deg'
+assert. isTemperature unit
+T=. shorT unit
+msg '... take_0_deg: unit=[(unit)] T=(T)'
 assert. -.invalid vy=. valueOf y
 ]z=. T toKelvin vy
-msg '... take_1_deg: x=[(x)] y=[(y)] unit=(unit) T=(T) z=(z)'
+msg '... take_0_deg: y=[(y)] unit=(unit) T=(T) z=(z)'
 sw'(z) K'
 )
 
@@ -1801,8 +1904,8 @@ sw'(z) K'
 uu '100 degC'
 'degC' 	uu '100 degC'
 
-       take_1_deg '100 degC'
-'degC' take_1_deg '373.15 K'
+       take_0_deg '100 degC'
+'degC' take_0_deg '373.15 K'
 
 uu '100 degC'
    'degC' 	uu '100 degC'
@@ -1824,7 +1927,7 @@ uu '100 degC'
 100.01° Celsius
 )
 
-take_8_misc=: 4 : 0
+take_8_misc=: 3 : 0
 registerIN'take_8_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
@@ -1838,15 +1941,15 @@ end.
 assert. 0
 )
 
-take_9_general=: 4 : 0
+take_9_general=: 3 : 0
 registerIN'take_9_general'
 
 
-unit=. x
 z=. y
-msg '... take_9_general: x=(x) unit=(unit) y=(y) --> z=(z)'
+msg '... take_9_general: y=(y) --> z=(z)'
 z return.
 )
+
 sval_unit=: '' ddefine
 
 sval=. SP taketo y -. '°'

@@ -194,8 +194,10 @@ tv=: 3 : 0
   NB. sets/resets TRACEVERBS
 PLUS=. '+'
 MINUS=. '-'
-verbs1=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs2=. verbs1 , ;: 'cnvj cnv2bare'
+verbs1=. ;: 'uuNEW formatIN formatOUT'
+verbs2=. ;: 'uuNEW'
+verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+verbs4=. verbs1 , ;: 'cnvj cnv2bare'
 NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS_uu_ -. ;: y-.MINUS
 select. {.y
@@ -203,6 +205,8 @@ case. ' '   do. z=. TRACEVERBS_uu_
 case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
 case. 1     do. z=. TRACEVERBS_uu_=: verbs1
 case. 2     do. z=. TRACEVERBS_uu_=: verbs2
+case. 3     do. z=. TRACEVERBS_uu_=: verbs3
+case. 4     do. z=. TRACEVERBS_uu_=: verbs4
 case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y  NB. dflt: y==openlist of verbs

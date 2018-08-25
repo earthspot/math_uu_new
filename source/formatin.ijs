@@ -29,109 +29,34 @@ VEXIN=: y
 blink y
 )
 
-formatIN=: ''&$: :(4 : 0)
-pushme'formatIN'
-msg '+++ formatIN: ENTERED, x=[(x)] y=[(y)]'
+0 :0
+'degC' formatIN '100 °C'
+)
+
+formatIN=: 3 : 0
+0 pushme'formatIN'
+msg '+++ formatIN: ENTERED, y=[(y)]'
   NB. y is right arg of uu_uu - the input string for conversion
 blink 0	NB. turn blink-1 OFF to start with
-kx=. UNICODE kosher x
-z=. kx daisychainIN y
-msg '--- formatIN: EXITS, last take_ verb: (VEXIN) -returns z=(z)'
-popme'formatIN'
+z=. daisychainIN y
+msg '--- formatIN: EXITS, last take_ verb: (VEXIN) kuy=(kuy) -returns z=(z)'
+0 popme'formatIN'
 z return.
 )
 
 make_daisychainIN=: 3 : 0
   NB. makes the daisychain for: formatIN
+  NB. NOTE: take_ verbs are all MONADIC
 >z=. 'take_' nl 3
 ]z=. (; z,each <' ::'),'takerr'
-daisychainIN=: 13 : ('x(',z,')y')
+daisychainIN=: 13 : ('(',z,')y')
 i.0 0
 )
 
-takerr=: 4 : 0
+takerr=: 3 : 0
 msg '>>> takerr: none chime: x=(x) y=(y)'
 sw'(y) [???]'
 )
-
-NB. deg_symbol=: 3 : 0
-NB. if. UNICODE>0 do. '°' else. 'deg' end.
-NB. )
-
-NB. kosher=: 4 : 0
-NB.   NB. convert (utf-8) y to pure ascii form
-NB.   NB. called like this: UNICODE kosher 'Å/Ω'
-NB. if. x=0 do.
-NB. z=. 0 ucode y
-NB. z rplc 'é';'e' ; 'ø';'oe'
-NB. else. y end.
-NB. )
-
-NB. toC=: (4 : 0)"0
-NB. f=. {:>x
-NB. r=. -/>x
-NB. 100*(y-f)%r
-NB. )
-
-NB. toK=: (4 : 0)"0
-NB. f=. {:>x
-NB. r=. -/>x
-NB. ICE_K + 100*(y-f)%r
-NB. )
-NB. smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
-NB. smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
-NB. smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
-NB. smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: ICE_K + 100 0
-
-NB. fromC=: (4 : 0)"0
-NB. f=. {:>x
-NB. r=. -/>x
-NB. f+r*y%100
-NB. )
-
-NB. fromK=: (4 : 0)"0
-NB. f=. {:>x
-NB. r=. -/>x
-NB. f+r*(y-ICE_K)%100
-NB. )
-NB.
-NB. Kr=: ICE_K+100 0
-NB. smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
-NB. smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
-NB. smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
-NB. smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: ICE_K+100 0
-NB.
-NB.
-NB. boil_freeze=: 3 : 0
-NB.   NB. returns (water boils),(water freezes) for scale: y
-NB. select. y
-NB.  case. 'C'	do.	bf=. 100 0
-NB.  case. 'F'	do.	bf=. 212 32
-NB.  case. 'Ro'	do.	bf=. 60 7.5
-NB.  case. 'N'	do.	bf=. 33 0
-NB.  case. 'De'	do.	bf=. 0 150
-NB.  case. 'Ra'	do.	bf=. 671.64 491.67
-NB.  case. 'Re'	do.	bf=. 80 0
-NB.  case. 'K'	do.	bf=. ICE_K+100 0
-NB.  case.    	do.	bf=. _ _
-NB. end.
-NB. )
-
-NB. toKelvin=: 'F' ddefine
-NB.   NB. convert y [x-units] into Kelvin
-NB.   NB. e.g. 'C'toKelvin 0 --> 273.15
-NB. try. z=. y toK~ <boil_freeze x
-NB.      if. z<0 do. INVALID return. end.
-NB. catch. INVALID end.
-NB. )
-
-NB. fromKelvin=: 'F' ddefine
-NB.   NB. convert (Kelvin) y [K] into temperature scale (lit) x
-NB.   NB. e.g. 'C'fromKelvin 273.15 --> 0
-NB. if. y<0 do. INVALID return. end.
-NB. try. y fromK~ <boil_freeze x
-NB. catch. INVALID end.
-NB. )
 
 valueOf=: 3 : 0
   NB. extract the (numeric) value of (qty-string) y
@@ -150,31 +75,59 @@ numeral=. strValueOf y
 deb y }.~ #numeral
 )
 
-take_1_deg=: 4 : 0
-	yIN=: y
-	xIN=: x
-registerIN'take_1_deg'
-  NB. inputs (any scale) y and converts to Kelvin [K]
-  NB. SHOULD IGNORE (x) -- only supplied for compatibility with give_
-unit=. unitsOf y
-assert. (any 'deg' E. unit) or (unit -: ,'K')
+dedeg=: 3 : 0
+  NB. remove leading: 'deg'
+y=. deb y
+if. y beginsWith 'deg' do. dlb 3}.y else. y end.
+)
 
-if. unit beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=: {.unit  NB. the identifying temperature scale letter
-if. T e. 'RD' do. T=: 2{.unit end. NB. take 2nd letter too
-msg '... take_1_deg: unit=[(unit)] T=(T)'
+0 :0
+brack dedeg 'degC'
+brack dedeg 'deg C'
+brack dedeg ' degC'
+brack dedeg ' deg C'
+)
+
+shorT=: 3 : 0
+  NB. the identifying temperature scale letter(s) (1 or 2)
+  NB. y-- temperature unit, e.g. 'degC' or 'Réaumur'
+y=. dedeg deEuroName y
+T=. {.y
+if. T e. 'RD' do. T=. 2{.y end. NB. take leading 2 letters
+)
+
+0 :0
+brack shorT 'degC'
+brack shorT 'deg C'
+brack shorT ' degC'
+brack shorT ' deg C'
+brack shorT 'Réaumur'
+deEuroName 'Réaumur'
+brack shorT 'Reaumur'
+)
+
+take_0_deg=: 3 : 0
+registerIN 'take_0_deg'
+  NB. inputs (any temperature qty) y; outputs Kelvin [K]
+  NB. Ensure 'deg' doesn't run-into the value…
+unit=. deb (bris unitsOf y) rplc 'deg' ; ' deg'
+assert. isTemperature unit
+T=. shorT unit
+NB. T=: {.dedeg unit  NB. the identifying temperature scale letter
+NB. if. T e. 'RD' do. T=: 2{.dedeg unit end. NB. take leading 2 letters
+msg '... take_0_deg: unit=[(unit)] T=(T)'
 assert. -.invalid vy=. valueOf y
 ]z=. T toKelvin vy
-msg '... take_1_deg: x=[(x)] y=[(y)] unit=(unit) T=(T) z=(z)'
-sw'(z) K'  NB. since z is always in Kelvin
+msg '... take_0_deg: y=[(y)] unit=(unit) T=(T) z=(z)'
+sw'(z) K'  NB. since uu expects (value) z in Kelvin
 )
 
 0 :0
 uu '100 degC'
 'degC' 	uu '100 degC'
 
-       take_1_deg '100 degC'
-'degC' take_1_deg '373.15 K'
+       take_0_deg '100 degC'
+'degC' take_0_deg '373.15 K'
 
 uu '100 degC'
    'degC' 	uu '100 degC'
@@ -196,7 +149,7 @@ uu '100 degC'
 100.01° Celsius
 )
 
-take_8_misc=: 4 : 0
+take_8_misc=: 3 : 0
 registerIN'take_8_misc'
 	NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
@@ -210,18 +163,14 @@ end.
 assert. 0  NB. force error if has not already return.ed
 )
 
-take_9_general=: 4 : 0
+take_9_general=: 3 : 0
 registerIN'take_9_general'
   NB. chimes if nothing else does
   NB. Verb names are sorted --> this comes last of all
-unit=. x
 z=. y	NB. FOR THE PRESENT: DOES NOTHING <<<<<<<<<<<<<<<<<<
-msg '... take_9_general: x=(x) unit=(unit) y=(y) --> z=(z)'
+msg '... take_9_general: y=(y) --> z=(z)'
 z return.
 )
-
-NB. WHY NOT?--
-NB. take_9_general=: ]
 
 sval_unit=: '' ddefine
   NB. returns combined string with val,SP,unit
@@ -252,10 +201,10 @@ NB. s4min=: 60 * ]
 NB. h4s=: 3600 %~ ]
 NB. min4s=: 60 %~ ]
 NB.
-NB. take_1_hms=: 4 : 0
-NB. registerIN'take_1_hms'
+NB. take_0_hms=: 3 : 0
+NB. registerIN'take_0_hms'
 NB.   NB. converts seconds [s] to hh:mm:ss
-NB. errif x ~: 'hms'  NB. force error if wrong verb
+NB. errif x ~: 'hms'  NB. force error if wrong verb --------NO x
 NB. NB. if. y-:'' do. y=. s4hms 23 59 59.567 end. ---DOUBTFUL
 NB. 'hh mm ss'=.":each 24 60 60 #: y
 NB. if. 10>".hh do. hh=. '0',hh end.
@@ -277,27 +226,27 @@ NB. rad4deg=: 13 : '(o.|y) % 180'
 NB. rad4amin=: 13 : 'rad4deg y % 60'
 NB. rad4asec=: 13 : 'rad4deg y % 3600'
 NB.
-NB. take_1_dms=: 4 : 0
-NB. registerIN'take_1_dms'
+NB. take_0_dms=: 3 : 0
+NB. registerIN'take_0_dms'
 NB.   NB. converts radians [rad] to d° m' s"
-NB. errif x ~: 'dms'  NB. force error if wrong verb
+NB. errif x ~: 'dms'  NB. force error if wrong verb --------NO x
 NB. NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
 NB. 'd m s'=.":each <.each 360 60 60 #: asec4rad |y
 NB. ds=. deg_symbol''
 NB. sw'(d)(ds) (m)(QT) (s)"'
 NB. )
 NB.
-NB. take_1_note=: 4 : 0
+NB. take_1_note=: 3 : 0
 NB. registerIN'take_1_note'
-NB. errif -. x -: 'note'  NB. force error if wrong verb
+NB. errif -. x -: 'note'  NB. force error if wrong verb --------NO x
 NB. sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 NB. )
 NB.
-NB. take_1_sci=: 4 : 0
+NB. take_1_sci=: 3 : 0
 NB. registerIN'take_1_sci'
 NB.   NB. force error if wrong verb
 NB. z=. (toupper@hy@scino) y  NB. scientific notation (conventional)
-NB. unit=. x
+NB. unit=. x --------NO
 NB. msg '... take_1_sci: x=(x) y=(y) z=(z) unit=(unit)'
 NB. z return.
 NB. )

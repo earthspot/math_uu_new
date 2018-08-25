@@ -16,12 +16,13 @@ VEX=: y
 )
 
 formatOUT=: ''&$: :(4 : 0)
-pushme'formatOUT'
+0 pushme'formatOUT'
+msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
 NO_UNITS_NEEDED=: 0
-kx=. UNICODE kosher x
+kx=. bris x  NB. work internally in kosher units
 z=. kx daisychain y
-msg '... last give: (VEX) -returns z=(z)'
-popme'formatOUT'
+msg '--- formatOUT: EXITS, last give_ verb: (VEX) -returns z=(z)'
+0 popme'formatOUT'
 z return.
 )
 
@@ -42,13 +43,9 @@ deg_symbol=: 3 : 0
 if. UNICODE>0 do. '°' else. 'deg' end.
 )
 
-kosher=: 4 : 0
-  NB. convert (utf-8) y to pure ascii form
-  NB. called like this: UNICODE kosher 'Å/Ω'
-if. x=0 do.
-z=. 0 ucode y
-z rplc 'é';'e' ; 'ø';'oe'
-else. y end.
+deEuroName=: 3 : 0
+  NB. asciify extended-Latin surname
+y rplc 'é';'e' ; 'ø';'oe'
 )
 
 NB. toC=: (4 : 0)"0
@@ -62,10 +59,11 @@ f=. {:>x
 r=. -/>x
 ICE_K + 100*(y-f)%r
 )
-smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
-smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
-smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
-smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: ICE_K+100 0
+
+NB. smoutput 'Reaumur-->K';		(<bf) toK bf [ bf=: 80 0
+NB. smoutput 'Celsius-->K';		(<bf) toK bf [ bf=: 100 0
+NB. smoutput 'Fahrenheit-->K';	(<bf) toK bf [ bf=: 212 32
+NB. smoutput 'Kelvin-->K';		(<bf) toK bf [ bf=: ICE_K+100 0
 
 NB. fromC=: (4 : 0)"0
 NB. f=. {:>x
@@ -80,10 +78,11 @@ f+r*(y-ICE_K)%100
 )
 
 Kr=: ICE_K + 100 0
-smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
-smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
-smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
-smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: ICE_K+100 0
+
+NB. smoutput 'K-->Reaumur';		(<bf) fromK Kr [ bf=: 80 0
+NB. smoutput 'K-->Celsius';		(<bf) fromK Kr [ bf=: 100 0
+NB. smoutput 'K-->Fahrenheit';	(<bf) fromK Kr [ bf=: 212 32
+NB. smoutput 'K-->Kelvin';		(<bf) fromK Kr [ bf=: ICE_K+100 0
 
 
 boil_freeze=: 3 : 0
@@ -101,23 +100,6 @@ select. y
 end.
 )
 
-NB. toKelvin=: 'F' ddefine
-NB.   NB. convert y [x-units] into Kelvin
-NB.   NB. e.g. 'C'forKelvin 273.15 --> 0
-NB. select. x
-NB.  case. 'C'	do.	bf=. 100 0
-NB.  case. 'F'	do.	bf=. 212 32
-NB.  case. 'Ro'	do.	bf=. 60 7.5
-NB.  case. 'N'	do.	bf=. 33 0
-NB.  case. 'De'	do.	bf=. 0 150
-NB.  case. 'Ra'	do.	bf=. 671.64 491.67
-NB.  case. 'Re'	do.	bf=. 80 0
-NB.  case. 'K'	do.	bf=. ICE_K + 100 0
-NB.  case.    	do.	INVALID return.
-NB. end.
-NB. (<bf) toK y
-NB. )
-
 toKelvin=: 'F' ddefine
   NB. convert y [x-units] into Kelvin
   NB. e.g. 'C'toKelvin 0 --> 273.15
@@ -126,57 +108,39 @@ try. z=. y toK~ <boil_freeze x
 catch. INVALID end.
 )
 
-NB. fromKelvin=: 'F' ddefine
-NB.   NB. convert y [K] into temperature scale (lit) x
-NB.   NB. e.g. 'C'forKelvin 273.15 --> 0
-NB. select. x
-NB.  case. 'C'	do.	bf=. 100 0
-NB.  case. 'F'	do.	bf=. 212 32
-NB.  case. 'Ro'	do.	bf=. 60 7.5
-NB.  case. 'N'	do.	bf=. 33 0
-NB.  case. 'De'	do.	bf=. 0 150
-NB.  case. 'Ra'	do.	bf=. 671.64102 491.67
-NB.  case. 'Re'	do.	bf=. 80 0
-NB.  case. 'K'	do.	bf=. ICE_K + 100 0
-NB.  case.    	do.	INVALID return.
-NB. end.
-NB. (<bf) fromK y
-NB. )
-
 fromKelvin=: 'F' ddefine
   NB. convert (Kelvin) y [K] into temperature scale (lit) x
   NB. e.g. 'C'fromKelvin 273.15 --> 0
-ssw '+++ fromKelvin: T=x=(x) y=(y)'
+NB. ssw '+++ fromKelvin: T=x=(x) y=(y)'
 if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
 
-TSCALES=: ;:'Kelvin Newton Centigrade Celsius Fahrenheit Reaumur Réaumur Roemer Rømer Delisle'
-
 give_0_deg=: 4 : 0
 register'give_0_deg'
   NB. outputs (Kelvin) y [K] converted to scale (x)
-assert. (any 'deg' E. x) or (x = 'K') or (TSCALES e.~ <x)
-if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=. {.unit  NB. the identifying 1st letter
-if. T e. 'RD' do. T=. 2{.unit end. NB. take 2nd letter too
+unit=. ,x
+assert. isTemperature unit
+T=. shorT unit
+NB. T=: {.dedeg unit  NB. the identifying temperature scale letter
+NB. if. T e. 'RD' do. T=. 2{.dedeg unit end. NB. take leading 2 letters
 z=. T fromKelvin y
 msg '... give_0_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
-if. T='K' do.
+if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
-  sw'(z) K'	NB. does not have deg_symbol
+  sw'(z) K'	NB. [K] qty does not have deg_symbol
 else.
   NO_UNITS_NEEDED=: 1
-  sw'(z)(deg_symbol 0)(T)'
+  sw'(z)(deg_symbol 0)(T)'  NB. (T) not (unit) - use short-form after °
 end.
 )
 
 0 :0
-'degC' give_0_deg 100
+'degC' give_0_deg 373.15		NB. 100°C	√
+'degF' give_0_deg 373.15		NB. 32°F	√
 uu '100 degC'
-   'degC' 	uu '100 degC'
-100°C
+   'degC' 	uu '100 degC'	NB. 100°C	√
    'degF' 	uu '100 degC'	NB. X
    'degF' 	uu '100 °C'	NB. X
 212°F
@@ -194,8 +158,8 @@ uu '100 degC'
 100.01° Celsius
 )
 
-give_9_misc=: 4 : 0
-register'give_9_misc'
+give_8_misc=: 4 : 0
+register'give_8_misc'
 	NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.

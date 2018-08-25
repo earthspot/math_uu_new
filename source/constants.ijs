@@ -14,6 +14,7 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0			NB. pre-start value
 
+BADQTY=. '0 ??'	NB. error returned qty by verb: uu
 BOIL_F=: 212	NB. water boils [°F]
 BOIL_C=: 100 	NB. water boils [°C]
 BOIL_K=: 373.15	NB. water boils [K]
@@ -51,6 +52,28 @@ SCI_z_=: 5	NB. used by: scino_z_
 UNICODE=: 1	NB. Used chiefly by: ucode
 MAXLOOP=: 30	NB. limits: convert
 UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
+)
+
+TEMPERATURE_SCALES=: b4f }: noun define
+K
+Kelvin
+Newton
+C
+Centigrade
+Celsius
+F
+Fahrenheit
+Re
+Ré
+Reaumur
+Réaumur
+Ro
+Roe
+Rø
+Roemer
+Rømer
+Delisle
+De
 )
 
   NB. data table stubs for basic testing

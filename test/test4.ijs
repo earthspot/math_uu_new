@@ -1,34 +1,37 @@
 NB. UU: scientific units conversion package - test4
 NB. Hive-off all *_test verbs and inserts from the source code
 0 :0
-Monday 20 August 2018  01:30:07
+Saturday 25 August 2018  23:58:24
 )
 smoutput PLS,'+++ test4.ijs - entered',PLS
 
 cocurrent 'uu'
 
 format_test=: 3 : 0
+smoutput '+++ format_test: ENTER'
 smoutput 'PI rad-->dms' ; 'dms' formatOUT PI
 smoutput 'VEX=',VEX
 smoutput '60 s-->hms' ; 'hms' formatOUT 60
 smoutput 'VEX=',VEX
+smoutput '--- format_test: EXIT'
 )
 
 format_test''
 
 compatible_test=: 3 : 0
   NB. TEST ONLY -- try out verb: compatible
-assert '*' compatible ,'m'
-assert '*' compatible 'kg'
-assert '!' compatible ,'m'
-assert '!' compatible 'kg'
-assert (,'*') compatible ,'m'
-assert (,'*') compatible 'kg'
-assert (,'!') compatible ,'m'
-assert (,'!') compatible 'kg'
-assert (,'J') compatible 'cal'
-assert (,'J') compatible 'kcal'
-i.0 0
+smoutput '+++ compatible_test: ENTER'
+assert. '*' compatible ,'m'
+assert. '*' compatible 'kg'
+assert. '!' compatible ,'m'
+assert. '!' compatible 'kg'
+assert. (,'*') compatible ,'m'
+assert. (,'*') compatible 'kg'
+assert. (,'!') compatible ,'m'
+assert. (,'!') compatible 'kg'
+assert. (,'J') compatible 'cal'
+assert. (,'J') compatible 'kcal'
+smoutput '--- compatible_test: EXIT'
 )
 
 compatible_test''
@@ -36,32 +39,41 @@ compatible_test''
 ucode_test=: 3 :0
   NB. TEST ONLY -- try out verb: ucode
 if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
+smoutput '+++ ucode_test: ENTER'
 assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
 assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
 assert. 'ft/(s s)'		-: 0 ucode 'ft/(s·s)'
 assert. 'ft/(s·s)'		-: 1 ucode 'ft/(s·s)'
 assert. 'm²/K/s²'		-:   ucode 'm^2/K/s^2'
-i.0 0
+smoutput '--- ucode_test: EXIT'
 )
 
 ucode_test''
 
+uuniform=: 4 : 0
+  NB. sets temporary value in UNICODE then does: uniform
+RESTORED=. UNICODE
+z=. uniform_uu_ y [UNICODE=: x
+z [UNICODE=: RESTORED
+)
+
 uniform_test=: 3 : 0
   NB. TEST ONLY -- try out verb: uniform
 if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
-assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
-assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
-assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uniform 'm m/(K s s)'
-assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uniform 'm m/(K s s)'
-assert. 'm^2/K/s^2'	-: 0 uniform 'm^2/K/s^2'
-assert. 'm²/(K s²)'	-: 1 uniform 'm^2/K/s^2'
-assert. 'm² K⁻¹ s⁻²'	-: 2 uniform 'm^2/K/s^2'
-assert. 'm²·K⁻¹·s⁻²'	-: 3 uniform 'm^2/K/s^2'
-assert. 'ft/s^2'		-: 0 uniform 'ft/s^2'
-assert. 'ft/s²'		-: 1 uniform 'ft/s^2'
-assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
-assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
-i.0 0
+smoutput '+++ uniform_test: ENTER'
+assert. 'm m/(K s s)'	-: 0 uuniform 'm m/(K s s)'
+assert. 'm m/(K s s)'	-: 1 uuniform 'm m/(K s s)'
+assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uuniform 'm m/(K s s)'
+assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uuniform 'm m/(K s s)'
+assert. 'm^2/K/s^2'	-: 0 uuniform 'm^2/K/s^2'
+assert. 'm²/(K s²)'	-: 1 uuniform 'm^2/K/s^2'
+assert. 'm² K⁻¹ s⁻²'	-: 2 uuniform 'm^2/K/s^2'
+assert. 'm²·K⁻¹·s⁻²'	-: 3 uuniform 'm^2/K/s^2'
+assert. 'ft/s^2'		-: 0 uuniform 'ft/s^2'
+assert. 'ft/s²'		-: 1 uuniform 'ft/s^2'
+assert. 'ft s⁻²'		-: 2 uuniform 'ft/s^2'
+assert. 'ft·s⁻²'		-: 3 uuniform 'ft/s^2'
+smoutput '--- uniform_test: EXIT'
 )
 
 uniform_test''

@@ -358,13 +358,13 @@ if. x do.  NB. apply convention
   if. any HD E. z do. y return. end.  NB. convention already applied
   ]z=. z rplc SP;HD
 else.  NB. unapply convention
-  if. -.any '·' E. z do. y return. end.  NB. convention not applied
-  z=. z rplc '·';' '
+  if. -.any HD E. z do. y return. end.  NB. convention not applied
+  z=. z rplc HD;SP
 end.
 )
 
 eval=: 3 : 0 "1
-	NB. used to evaluate numeric exprns in UUC
+  NB. used to evaluate numeric exprns in UUC
 y=. '/%-_Ee'charsub ;y
 try. {.".y catch. INVALID end.
 )
@@ -586,7 +586,10 @@ NB. isascii 'able'
 
 undeslash=: 0&deslash
 
-ucode=: 1&$: : (4 : 0)
+ucode=: 1 ddefine
+  NB. Substitutes (for) correct utf-8 symbols in (string) y
+  NB. x==1 kosher-->unicoded
+  NB. x==0 unicoded-->kosher
 y=. utf8 y  NB. This algo needs y to be bytes not wchars
 if. x do.  NB. subst 'π' for 'PI' etc
   if. -.isascii y do. y return. end.  NB. already converted
@@ -744,39 +747,30 @@ NB.    cutuuc '-1.5 my-u [my-new] test'
 
 NB. ============================================
 
-uniform=: _&$: : (4 : 0)"1
+uniform=: 3 : 0
 0 pushme 'uniform'
-msg '+++ uniform: ENTERED: x=(x) y=(y)'
+msg '+++ uniform: ENTERED: y=(y)'
   NB. change units (y) as appropriate for (UNICODE)
-  NB. x==(_) (default value) x gets current value of (UNICODE)
 y=. utf8 deb y  NB. convert (y) from possible datatype=='unicode'
-if. x=_ do. x=. UNICODE end.
-select. x
-case. 0 do.  NB. ASCII only
+select. UNICODE
+ case. 0 do.  NB. ASCII only
   z=. unucode undotted y
-case. 1 do.  NB. SI units with /
+ case. 1 do.  NB. SI units with /
   ]z=. undotted y
   if. 1< +/SL=y do.  NB. if more than 1 slash
     ]z=. slash1 z
   end.
   ]z=. ucode z
-case. 2 do.  NB. Standard SI units
-  if. y-: ,SL do.
-    msg '--- uniform: RETURNS NIL'
+fcase. 2 do.  NB. Standard SI units
+ case. 3 do.  NB. Standard SI units with dots
+  if. y-: ,SL do.  NB. …no bare '/' in Standard SI
+    msg '--- uniform: y=SL returns NIL'
     0 popme 'uniform'
     '' return.
   end.
-  NB. …no bare '/' in Standard SI
   ]z=. unucode undotted y	NB. c/f case 0
   ]z=. ucode deslash unslash1 z
-case. 3 do.  NB. Standard SI units with dots
-  if. y-: ,SL do.
-    msg '--- uniform: RETURNS NIL'
-    0 popme 'uniform'
-    '' return.
-  end.
-  NB. …no bare '/' in Standard SI
-  z=. dotted 2 uniform y
+  if. UNICODE=3 do. z=. dotted z end.
 end.
 popme 'uniform'
 z return.
@@ -787,7 +781,6 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-NB. upref=: 4 : '(x#~*UNICODE),y'
 
 uuOLD=: '' ddefine
   NB. transform y (value;units) to: x (ux)

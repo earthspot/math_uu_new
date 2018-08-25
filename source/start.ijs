@@ -32,8 +32,7 @@ start=: 3 : 0
   NB. (start'' not needed when the functions library (UUF) changed)
 NB. =========================================================
   setverbs 'NEW'
-NB. BUT .............
-NB.   format=: formatOLD
+NB.   setverbs 'OLD'
 NB. =========================================================
 make_msg 1	NB. enable diagnostics
 tv 0
