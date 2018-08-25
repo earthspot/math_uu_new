@@ -146,17 +146,18 @@ NB. )
 fromKelvin=: 'F' ddefine
   NB. convert (Kelvin) y [K] into temperature scale (lit) x
   NB. e.g. 'C'fromKelvin 273.15 --> 0
+ssw '+++ fromKelvin: T=x=(x) y=(y)'
 if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
 
-NB. >>>>>>>>>>> BUG: GETTING CALLED WITH y NOT IN Kelvin.
+TSCALES=: ;:'Kelvin Newton Centigrade Celsius Fahrenheit Reaumur Réaumur Roemer Rømer Delisle'
+
 give_0_deg=: 4 : 0
 register'give_0_deg'
-  NB. outputs (Kelvin) y [K] in scale (x)
-  NB. force error if wrong verb…
-assert. any 'deg' E. x
+  NB. outputs (Kelvin) y [K] converted to scale (x)
+assert. (any 'deg' E. x) or (x = 'K') or (TSCALES e.~ <x)
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit  NB. the identifying 1st letter
 if. T e. 'RD' do. T=. 2{.unit end. NB. take 2nd letter too

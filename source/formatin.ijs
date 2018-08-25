@@ -31,11 +31,12 @@ blink y
 
 formatIN=: ''&$: :(4 : 0)
 pushme'formatIN'
+msg '+++ formatIN: ENTERED, x=[(x)] y=[(y)]'
   NB. y is right arg of uu_uu - the input string for conversion
 blink 0	NB. turn blink-1 OFF to start with
 kx=. UNICODE kosher x
 z=. kx daisychainIN y
-msg '... last take: (VEXIN) -returns z=(z)'
+msg '--- formatIN: EXITS, last take_ verb: (VEXIN) -returns z=(z)'
 popme'formatIN'
 z return.
 )
@@ -132,26 +133,47 @@ NB. try. y fromK~ <boil_freeze x
 NB. catch. INVALID end.
 NB. )
 
+valueOf=: 3 : 0
+  NB. extract the (numeric) value of (qty-string) y
+try. val=. ". strValueOf y
+catch. INVALID end.
+)
+
+strValueOf=: 3 : 0
+  NB. extract the (numeral-string) value of (qty-string) y
+SP taketo y rplc (deg_symbol 0) ; SP
+)
+
+unitsOf=: 3 : 0
+  NB. extract the (utf-8 string) units of (qty-string) y
+numeral=. strValueOf y
+deb y }.~ #numeral
+)
+
 take_1_deg=: 4 : 0
+	yIN=: y
+	xIN=: x
 registerIN'take_1_deg'
-  NB. accepts (Kelvin) y [K] in form of scale (x)
-  NB. force error if wrong verb…
-assert. any 'deg' E. x
-if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=. {.unit  NB. the identifying 1st letter
-if. T e. 'RD' do. T=. 2{.unit end. NB. take 2nd letter too
-z=. T fromKelvin y
-msg '... take_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
-if. T='K' do.
-NB.   NO_UNITS_NEEDED=: 1
-  sw'(z) K'	NB. does not have deg_symbol
-else.
-NB.   NO_UNITS_NEEDED=: 1
-  sw'(z)(deg_symbol 0)(T)'
-end.
+  NB. inputs (any scale) y and converts to Kelvin [K]
+  NB. SHOULD IGNORE (x) -- only supplied for compatibility with give_
+unit=. unitsOf y
+assert. (any 'deg' E. unit) or (unit -: ,'K')
+
+if. unit beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
+T=: {.unit  NB. the identifying temperature scale letter
+if. T e. 'RD' do. T=: 2{.unit end. NB. take 2nd letter too
+msg '... take_1_deg: unit=[(unit)] T=(T)'
+assert. -.invalid vy=. valueOf y
+]z=. T toKelvin vy
+msg '... take_1_deg: x=[(x)] y=[(y)] unit=(unit) T=(T) z=(z)'
+sw'(z) K'  NB. since z is always in Kelvin
 )
 
 0 :0
+uu '100 degC'
+'degC' 	uu '100 degC'
+
+       take_1_deg '100 degC'
 'degC' take_1_deg '373.15 K'
 
 uu '100 degC'

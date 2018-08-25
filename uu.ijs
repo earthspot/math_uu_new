@@ -1,5 +1,5 @@
 0 :0
-2018-08-25  00:39:25
+2018-08-25  02:34:42
 -
 UU: scientific units conversion package
 )
@@ -1437,22 +1437,24 @@ smoutput 8 1$' '
    	uu '100 degC'
    	uu '212 degF'
 'degC' 	uu '100 degC'
+'degF' 	uu '0 degC'
 'degF' 	uu '100 degC'
 'degC' 	uu '212 degF'
-'degC' 	uu '373.16 K'
-'degF' 	uu '373.16 K'
-'Fahrenheit'uu '373.16 K'
-'Centigrade'uu '373.16 K'
-'Celsius'	uu '373.16 K'
+'degC' 	uu '373.15 K'
+'degF' 	uu '373.15 K'
+'Fahrenheit'uu '373.15 K'
+'Centigrade'uu '373.15 K'
+'Celsius'	uu '373.15 K'
 )
 
 uuNEW=: '' ddefine
 
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
-y=. x formatIN y
-val=. ". SP taketo y -. '°'
-unit=. bris SP takeafter y
+yf=: x formatIN y
+val=: valueOf yf
+unit=: bris unitsOf yf
+	assert. -.invalid val
 if. 0<#x do.
   targ=. bris x
   'coeft codet'=. qtcode4anyunit targ
@@ -1579,11 +1581,11 @@ if. y<0 do. INVALID return. end.
 try. y fromK~ <boil_freeze x
 catch. INVALID end.
 )
+
 give_0_deg=: 4 : 0
 register'give_0_deg'
 
-
-assert. any 'deg' E. x
+assert. (any 'deg' E. x) or (x = 'K')
 if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
 T=. {.unit
 if. T e. 'RD' do. T=. 2{.unit end.
@@ -1737,11 +1739,12 @@ blink y
 
 formatIN=: ''&$: :(4 : 0)
 pushme'formatIN'
+msg '+++ formatIN: ENTERED, x=[(x)] y=[(y)]'
 
 blink 0
 kx=. UNICODE kosher x
 z=. kx daisychainIN y
-msg '... last take: (VEXIN) -returns z=(z)'
+msg '--- formatIN: EXITS, last take_ verb: (VEXIN) -returns z=(z)'
 popme'formatIN'
 z return.
 )
@@ -1758,24 +1761,47 @@ takerr=: 4 : 0
 msg '>>> takerr: none chime: x=(x) y=(y)'
 sw'(y) [???]'
 )
+valueOf=: 3 : 0
+
+try. val=. ". strValueOf y
+catch. INVALID end.
+)
+
+strValueOf=: 3 : 0
+
+SP taketo y rplc (deg_symbol 0) ; SP
+)
+
+unitsOf=: 3 : 0
+
+numeral=. strValueOf y
+deb y }.~ #numeral
+)
+
 take_1_deg=: 4 : 0
+	yIN=: y
+	xIN=: x
 registerIN'take_1_deg'
 
 
-assert. any 'deg' E. x
-if. (unit=. ,x) beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
-T=. {.unit
-if. T e. 'RD' do. T=. 2{.unit end.
-z=. T fromKelvin y
-msg '... take_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
-if. T='K' do.
-  sw'(z) K'
-else.
-  sw'(z)(deg_symbol 0)(T)'
-end.
+unit=. unitsOf y
+assert. (any 'deg' E. unit) or (unit -: ,'K')
+
+if. unit beginsWith 'deg' do. unit=. SP-.~ 3}.unit end.
+T=: {.unit
+if. T e. 'RD' do. T=: 2{.unit end.
+msg '... take_1_deg: unit=[(unit)] T=(T)'
+assert. -.invalid vy=. valueOf y
+]z=. T toKelvin vy
+msg '... take_1_deg: x=[(x)] y=[(y)] unit=(unit) T=(T) z=(z)'
+sw'(z) K'
 )
 
 0 :0
+uu '100 degC'
+'degC' 	uu '100 degC'
+
+       take_1_deg '100 degC'
 'degC' take_1_deg '373.15 K'
 
 uu '100 degC'

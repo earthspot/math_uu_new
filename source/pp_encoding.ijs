@@ -230,25 +230,27 @@ k ; z
 smoutput 8 1$' '
 	uuNEW '1 yd'	NB. 0.914 m	√
 'ft'	uuNEW '1 yd'	NB. 3 ft		√
-   	uu '100 degC'	NB. 100 K		XXX
-   	uu '212 degF'	NB. 117.778 K	XXX
-'degC' 	uu '100 degC'	NB. _173.15°C	XXX
-'degF' 	uu '100 degC'	NB. _135.67°F	XXX
-'degC' 	uu '212 degF'	NB. _155.372°C	XXX
-'degC' 	uu '373.16 K'	NB. 100.01°C	XXX
-'degF' 	uu '373.16 K'	NB. 749.368°F	XXX
-'Fahrenheit'uu '373.16 K'	NB. 671.688 Fahrenheit	XXX
-'Centigrade'uu '373.16 K'	NB. 373.160 Centigrade	XXX
-'Celsius'	uu '373.16 K'	NB. 373.160 Celsius	XXX
+   	uu '100 degC'	NB. 373.15 K	√
+   	uu '212 degF'	NB. 373.15 K	√
+'degC' 	uu '100 degC'	NB. 100°C		√
+'degF' 	uu '0 degC'	NB. 425.336°F	XXX 32 degF
+'degF' 	uu '100 degC'	NB. 749.336°F	XXX 212 degF
+'degC' 	uu '212 degF'	NB. 100°C		√
+'degC' 	uu '373.15 K'	NB. 100°C		√
+'degF' 	uu '373.15 K'	NB. 749.368°F	XXX 212 degF
+'Fahrenheit'uu '373.15 K'	NB. 749.368°F	XXX 212 degF
+'Centigrade'uu '373.15 K'	NB. 100°C		√
+'Celsius'	uu '373.15 K'	NB. 100°C		√
 )
 
 uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uuNEW'
 NO_UNITS_NEEDED=: 0
-y=. x formatIN y  NB. y--> SI units, esp Fahrenheit--> K
-val=. ". SP taketo y -. '°'
-unit=. bris SP takeafter y
+yf=: x formatIN y  NB. y--> SI units, esp Fahrenheit--> K
+val=: valueOf yf
+unit=: bris unitsOf yf
+	assert. -.invalid val
 if. 0<#x do.  NB. use non-empty (x) as targ...
   targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
