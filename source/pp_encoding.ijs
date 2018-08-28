@@ -250,6 +250,21 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
+convertNEW=: 1&$: : (4 : 0)"1
+pushme 'convertNEW'
+  NB. y (units) --> cu ; loop_count ; cf
+  NB. x was speedup flag, but is now unused
+yb=. bris y  NB. kosher of (units) y
+msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
+'factor code'=. qtcode4anyunit yb
+targ=. canon expandcode code
+loop=. _  NB. dummy value to act as a placeholder
+msg '--- convertNEW: EXITS'
+wd'msgs'  NB. is this still needed?
+popme 'convertNEW'
+targ ; loop ; factor return.
+)
+
 uuNEW=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
 pushme 'uuNEW'

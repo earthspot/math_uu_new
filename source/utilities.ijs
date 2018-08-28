@@ -3,6 +3,13 @@
 
 cocurrent 'uu'
 
+NB. from handy, post-analoc
+isLit=: 2 2048 e.~ 3!:0
+ifdefined=: 0 <: [: 4!:0 <
+isNum=: 1 4 8 64 128 e.~ 3!:0
+isScalar=: [: {. 0 = [: $ $
+isNo=: isNum *. isScalar
+   
 ddefine=: 1 : 'm&$: : (4 : 0)'
 isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
@@ -249,11 +256,12 @@ z=. {. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
 
-
 runlab=: 3 : 0
   NB. private way to run uu.ijt in j807
   NB.   see: temp 16
-if. 0=#y do. y=. jpath'~Gituu/uu.ijt' end.  NB. THE LAB UNDER DEVT
+if. 0=#y do.
+  ]y=. jpath'~Gituu/uu.ijt'
+end.  NB. THE LAB UNDER DEVT
 if. -.fexist y do.
   smoutput '>>> runlab: file not found: ',y
   return.
@@ -265,3 +273,16 @@ NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab
 )
 runlab_z_=: runlab_uu_
+
+
+tpath=: 3 : 0
+  NB. queries TPATH_ settings
+smoutput'———————————————————————————'
+]tt=. 'TPATH_' nl_z_ 0
+for_tboxed. tt do. t=. >tboxed
+  tx=. 16{. t,'_z_'
+  ssw '(tx) =: ''(t~)'''
+end.
+smoutput'———————————————————————————'
+)
+tpath_z_=: tpath_uu_

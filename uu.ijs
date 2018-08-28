@@ -1,5 +1,5 @@
 0 :0
-2018-08-26  00:49:37
+2018-08-28  03:15:07
 -
 UU: scientific units conversion package
 )
@@ -22,7 +22,7 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'
 CUTAB=: CUTAB0
 
-BADQTY=. '0 ??'
+BADQTY=: '0 ??'
 BOIL_F=: 212
 BOIL_C=: 100
 BOIL_K=: 373.15
@@ -40,6 +40,7 @@ PWU=: '^_'
 PW=: '^'
 SL=: '/'
 SP=: ' '
+ST=: '*'
 UL=: '_'
 UNDEFINED=: _.
 
@@ -195,7 +196,12 @@ blink 'red'
 '==================== [uu] utilities ===================='
 
 cocurrent 'uu'
-
+isLit=: 2 2048 e.~ 3!:0
+ifdefined=: 0 <: [: 4!:0 <
+isNum=: 1 4 8 64 128 e.~ 3!:0
+isScalar=: [: {. 0 = [: $ $
+isNo=: isNum *. isScalar
+   
 ddefine=: 1 : 'm&$: : (4 : 0)'
 isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
@@ -432,11 +438,12 @@ z=. {. boxopen y
 any z e. a: default 'TRACEVERBS'
 )
 
-
 runlab=: 3 : 0
 
 
-if. 0=#y do. y=. jpath'~Gituu/uu.ijt' end.
+if. 0=#y do.
+  ]y=. jpath'~Gituu/uu.ijt'
+end.
 if. -.fexist y do.
   smoutput '>>> runlab: file not found: ',y
   return.
@@ -447,6 +454,19 @@ require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
 runlab_z_=: runlab_uu_
+
+
+tpath=: 3 : 0
+
+smoutput'———————————————————————————'
+]tt=. 'TPATH_' nl_z_ 0
+for_tboxed. tt do. t=. >tboxed
+  tx=. 16{. t,'_z_'
+  ssw '(tx) =: ''(t~)'''
+end.
+smoutput'———————————————————————————'
+)
+tpath_z_=: tpath_uu_
 
 '==================== [uu] main ===================='
 
@@ -747,21 +767,6 @@ end.
 if. loop=MAXLOOP do. loop=. 0 end.
 wd'msgs'
 popme 'convertOLD'
-(canon ;z) ; loop ; fac return.
-)
-
-convertNEW=: 1&$: : (4 : 0)"1
-pushme 'convertNEW'
-
-
-yb=. bris y
-msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
-'fac code'=. qtcode4anyunit yb
-z=. expandcode code
-loop=. _
-msg '--- convertNEW: EXITS'
-wd'msgs'
-popme 'convertNEW'
 (canon ;z) ; loop ; fac return.
 )
 
@@ -1493,6 +1498,21 @@ smoutput 8 1$' '
    yf ; val ; unit
    '°C' 	uu '100 °C'
    '°C' 	uu '100°C'
+)
+
+convertNEW=: 1&$: : (4 : 0)"1
+pushme 'convertNEW'
+
+
+yb=. bris y
+msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
+'factor code'=. qtcode4anyunit yb
+targ=. canon expandcode code
+loop=. _
+msg '--- convertNEW: EXITS'
+wd'msgs'
+popme 'convertNEW'
+targ ; loop ; factor return.
 )
 
 uuNEW=: '' ddefine

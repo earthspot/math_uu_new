@@ -14,7 +14,7 @@ cocurrent 'uu'
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0			NB. pre-start value
 
-BADQTY=. '0 ??'	NB. error returned qty by verb: uu
+BADQTY=: '0 ??'	NB. error returned qty by verb: uu
 BOIL_F=: 212	NB. water boils [°F]
 BOIL_C=: 100 	NB. water boils [°C]
 BOIL_K=: 373.15	NB. water boils [K]
@@ -32,6 +32,7 @@ PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
 SL=: '/'
 SP=: ' '
+ST=: '*'
 UL=: '_'
 UNDEFINED=: _.	NB. should propagate in a formula
 

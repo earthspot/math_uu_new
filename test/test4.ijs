@@ -1,5 +1,8 @@
 NB. UU: scientific units conversion package - test4
 NB. Hive-off all *_test verbs and inserts from the source code
+NB. (from temp 18)
+NB. component tests of: format compatible ucode uniform
+NB. plus a lot of misc tests as 0:0 inserts
 0 :0
 Saturday 25 August 2018  23:58:24
 )
@@ -216,9 +219,9 @@ Finally when no more units to expand (max cycles=30 as failsafe)
 )
 
 0 :0
+setverbs 'OLD'
+setverbs 'NEW'
 convert
-convert=: convertNEW
-convert=: convertOLD
 -
 convert 'yd'
 convert 'yd/s'     NB. │m/s│_│0.9144│

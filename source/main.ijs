@@ -302,21 +302,6 @@ popme 'convertOLD'
 (canon ;z) ; loop ; fac return.
 )
 
-convertNEW=: 1&$: : (4 : 0)"1
-pushme 'convertNEW'
-  NB. y (units) --> cu ; loop_count ; cf
-  NB. x was speedup flag, but is now unused
-yb=. bris y  NB. kosher of (units) y
-msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
-'fac code'=. qtcode4anyunit yb
-z=. expandcode code
-loop=. _  NB. dummy value as placeholder
-msg '--- convertNEW: EXITS'
-wd'msgs'  NB. is this still needed?
-popme 'convertNEW'
-(canon ;z) ; loop ; fac return.
-)
-
 curfig=: 3 : 'hy (0 j. 2)":y'
 debSL=: #~ (+. (1: |. (> </\)))@('/'&~:)
 

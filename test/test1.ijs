@@ -16,7 +16,7 @@ tv 0  NB. turn off ALL trace messages --which redux will gag at
 
 SUCCESS=: <,:'no difference'
 
-load '~proj/testcreator.ijs'  NB. provides: redux
+load '~proj/redux.ijs'  NB. provides: redux
 
 smoutput r5=. redux 5  NB. uunicode 3
 assert r5 -: SUCCESS
