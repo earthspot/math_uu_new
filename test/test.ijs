@@ -10,8 +10,6 @@ smoutput PLS,'+++ test.ijs - entered',PLS
 NB. trace these verbs…
 NB. tv 'start qty4i qty4anyunit qty4bareunit'
 
-NB. assert 0 = #VALIDATE_unitc_uu_''
-
 load '~Gituu/test/test4.ijs'
 load '~Gituu/test/test2.ijs'
 load '~Gituu/test/test3.ijs'
@@ -19,6 +17,7 @@ load '~Gituu/test/test1.ijs'
 
 redux 14  NB. test flag: UNICODE with a sufficiently complex definition
 redux 19  NB. test: convert
+redux 21  NB. test: temperature scales
 
 NB. tv 0  NB. turn trace off
 

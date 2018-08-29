@@ -12,9 +12,9 @@ STRATEGY: hedge bets by simply converting string--> string, e.g...
    '100 degC' --> '373.15 K'
    '212 degF' --> '373.15 K'
 -
-       uuNEW	'373.15 K'	NB. 373.15 K
-'degC' uuNEW	'373.15 K'
-'degF' uuNEW	'373.15 K'
+       uu	'373.15 K'	NB. 373.15 K
+'degC' uu	'373.15 K'
+'degF' uu	'373.15 K'
 'degF' formatIN	'373.15 K'	NB. 373.15 K
 	...NOT formatIN's biz to use [x] EXCEPT to disambiguate.
 'degF' take_deg	'373.15 K'

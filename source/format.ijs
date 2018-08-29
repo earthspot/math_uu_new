@@ -4,9 +4,22 @@
 cocurrent 'uu'
 
 0 :0
-Thursday 23 August 2018  02:45:20
+Wednesday 29 August 2018  03:45:10
 -
-ot 18	NB. hived-off component-test phrases
+New format verb based on daisychain
+Tries each give (give_* verb) in turn until one exits normally,
+ or giverr (the last one) is reached.
+If a give fails, the next give gets tried.
+If a give knows it's inappropriate, it calls: errif
+ to force an error.
+If it simply crashes, the same thing happens.
+-
+This arrangement allows ad-hoc 'give_' and 'take_' verbs
+to be defined in the t-table itself (which is a J script).
+-
+x-arg is a units, e.g. 'gbp'
+ and y is the value to be formatted, e.g. to become: '£1.00'.
+giverr is only called if no "give-" verbs chime with: x.
 )
 
 register=: 3 : 0
@@ -160,7 +173,7 @@ uu '100 degC'
 
 give_8_misc=: 4 : 0
 register'give_8_misc'
-	NB. picks up miscellaneous forms
+  NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
 if. UNICODE>0 do. infinity=. '∞'

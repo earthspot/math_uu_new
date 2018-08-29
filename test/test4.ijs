@@ -81,31 +81,6 @@ smoutput '--- uniform_test: EXIT'
 
 uniform_test''
 
-NB. =========================================================
-NB. format.ijs
-
-0 :0
-Sunday 19 August 2018  14:02:45
-┌────────────────────────────────────────────────┐
-│See temp 97 for new pattern-matching technique  │
-│which combines give_* & take_* into just 1 verb │
-│called: formatOUT                               │
-└────────────────────────────────────────────────┘
-New format verb based on daisychain
-Tries each give (give_* verb) in turn until one exits normally,
- or giverr (the last one) is reached.
-If a give fails, the next give gets tried.
-If a give knows it's inappropriate, it calls: errif
- to force an error.
-If it simply crashes, the same thing happens.
--
-This arrangement allows ad-hoc 'give_' and 'take_' verbs
-to be defined in the t-table itself (which is a J script).
--
- x-arg is a units, e.g. 'gbp'
- and y is the value to be formatted, e.g. to become: '£1.00'.
- giverr is only called if no "give-" verbs chime with: x.
-)
 
 0 :0
 'C' fromKelvin 273.15 373.15
@@ -174,66 +149,6 @@ VEX
 NB. main.ijs
 
 0 :0
-VERB: convert
--
-Converts arbitrary compound units (str) to primitive SI-units as defined in: mks
-Needed to compare two arbitrary units to see if compatible / inter-convertible.
-Simplifies the result of a division of 2 physical quantities.
--
-Returns 3-element: z
- (>{.z) is the canonical units (cu)
- (>{:z) is conversion factor (cf)
- (>1{z) is diagnostic only: the number of lookup-cycles.
-
-Returns a canonical form (defined by: canon) to allow comparison using (-:).
- DEFN cunit: a canonical element, having prefix, scale and power, eg '/s^2'
-
-Has a set of service-fns all with names cnv* ...
- cnvnon z  extract 1st non-mks cunit(, returns: cunit;residue
- cnvj t  cut t into: (1_if_prefixed_SL ; 10^n_scale ; unit ; ^n_repetition)
- cnvf t  lookup t in: units-->unitv, returns (factor ; units)
-    -if not found, factor is _. -test using: isNaN f
- cnvv t  called by: cnvf
- j cnvi t  converts all SP<-->SL in cunits-str: t iff j=1
-    - (j=1 iff the cunit of which t is the expansion had prefix SL
-
-Uses: cnvnon to find first non-mks unit, t, 0=$t if no more units remaining.
-
-A units str consists of a series of tokens called "cunits", order immaterial.
-A cunit may be prefixed by SL (/) denoting denominator or by SP denoting numerator.
-
-Fn: utoks tokenises a units str. ensures 1st cunit has a leading SP
- provided a leading SL is not already present. Uses sp1 to achieve this.
-
-Since SP is a meaningful cunit prefix, use of: deb will expunge not only SP,SP
- but also any leading SP. But there must be a leading SP|SL.
-
-Uses: cnvf to lookup (bare) unit in: units-->unitv
-The expanded units tokens are then SUFFIXED to the unprocessed residue: rx
--we can do that since order of cunits is immaterial.
-
-Fn: cnvf also returns conversion factor (f)
-
-Finally when no more units to expand (max cycles=30 as failsafe)
- the result is converted to canonical form using: canon.
-)
-
-0 :0
-setverbs 'OLD'
-setverbs 'NEW'
-convert
--
-convert 'yd'
-convert 'yd/s'     NB. │m/s│_│0.9144│
-convert 'yd/h'     NB. │m/s│_│0.000254│
-convert 'Hz'
-convert 'GHz'
--
-make_units=: make_unitsNEW
-make_units=: make_unitsOLD
-)
-
-0 :0
 deslash'ft/s^2'
 )
 
@@ -246,7 +161,6 @@ NB. pp_encoding.ijs
 
 0 :0
 make_unitc''		NB. 1st pass
-VALIDATE_unitc''
 dip 0=uvalc
 2 make_unitc''	NB. 2nd pass
 3 make_unitc''	NB. 3rd pass
@@ -267,8 +181,6 @@ dip 0=uvalc
 qtcode4i 59
 VIEWTABLE=: 10  NB. number of lines in viewtable output
 smoutput vt 59
-xxu 18 19
-xxu 30 + i.10
 dip uvalx ~: uvalc
 )
 

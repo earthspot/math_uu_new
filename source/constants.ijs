@@ -24,7 +24,6 @@ ICE_K=: 273.15	NB. water freezes [K]
 HD=: '·'		NB. hi-dot, optional SI convention
 INVALID=: _.j_.
 MI=: '-'		NB. minus (==HY)
-NOTFOUND=: _1	NB. used by: cnvf cnvv
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PI=: o.1		NB. π
 PWM=: '^-'	NB. power,minus (precedes a negative power)
@@ -48,7 +47,7 @@ factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
   NB. ONLY SCI and SIG reside in z-locale
 ME=: ''		NB. used by tracing: pushme popme etc
-SIG_z_=: 3	NB. used by: scino_z_ and format_sig
+SIG_z_=: 3	NB. used by: scino_z_
 SCI_z_=: 5	NB. used by: scino_z_
 UNICODE=: 1	NB. Used chiefly by: ucode
 MAXLOOP=: 30	NB. limits: convert

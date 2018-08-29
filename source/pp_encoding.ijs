@@ -164,7 +164,6 @@ muv;muz return.
 cnvCunit=: 3 : 0
 pushme 'cnvCunit'
   NB. cut prefs/suffs from a cunit (eg: '/kg^3')
-  NB. replaces cnvj in NEW code
 y_uu_=: y
 z=. dltb y  NB. (,'m') for y=='m' or y==' m'
 k=. p=. 1   NB. to be overridden below
@@ -188,6 +187,16 @@ msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
 popme 'cnvCunit'
 j ; k ; z ; p return.
 )
+  NB. Scaling prefixes recognised above:
+  NB.	------------------------------------------------------------------------------
+  NB. 	deca- 	hecto- 	kilo- 	mega- 	giga- 	tera- 	peta- 	exa- 	zetta- 	yotta-
+  NB. 	da 	h 	k 	M 	G 	T 	P 	E 	Z 	Y
+  NB. 	10^1 	10^2 	10^3 	10^6 	10^9 	10^12 	10^15 	10^18 	10^21 	10^24
+  NB.	------------------------------------------------------------------------------
+  NB. 	deci- 	centi- 	milli- 	micro- 	nano- 	pico- 	femto- 	atto- 	zepto- 	yocto-
+  NB. 	d 	c 	m 	µ 	n 	p 	f 	a 	z 	y
+  NB. 	10^−1 	10^−2 	10^−3 	10^−6 	10^−9 	10^−12 	10^−15 	10^−18 	10^−21 	10^−24
+  NB.	------------------------------------------------------------------------------
 
 scale4bareunit=: 3 : 0
   NB. returns e.g. (1e9 ; 'Hz') for y=='GHz'
@@ -230,8 +239,8 @@ k ; z
 
 0 :0
 smoutput 8 1$' '
-	uuNEW '1 yd'	NB. 0.914 m	√
-'ft'	uuNEW '1 yd'	NB. 3 ft		√
+	uu '1 yd'	NB. 0.914 m	√
+'ft'	uu '1 yd'	NB. 3 ft		√
    	uu '100 degC'	NB. 373.15 K	√
    	uu '212 degF'	NB. 373.15 K	√
 ------------
@@ -250,30 +259,48 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-convertNEW=: 1&$: : (4 : 0)"1
-pushme 'convertNEW'
+compatible=: 4 : 0
+  NB. =1 iff units x,y compatible
+  NB. [*] [!] compatible with everything…
+ident=. ([: , [) -: ([: , ])
+    if. ('*' ident x) or ('*' ident y) do. 1 return.
+elseif. ('!' ident x) or ('!' ident y) do. 1 return.
+end.
+xcode=. 1 pick qtcode4anyunit x
+ycode=. 1 pick qtcode4anyunit y
+xcode -: ycode
+)
+
+compatlist=: 3 : 0
+  NB. return extract of (units) compatible with units: y
+]ycode=. 1 pick qtcode4anyunit y
+(ycode=unitc) # units
+)
+
+convert=: 1&$: : (4 : 0)"1
+pushme 'convert'
   NB. y (units) --> cu ; loop_count ; cf
   NB. x was speedup flag, but is now unused
 yb=. bris y  NB. kosher of (units) y
-msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
 'factor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
 loop=. _  NB. dummy value to act as a placeholder
-msg '--- convertNEW: EXITS'
+msg '--- convert: EXITS'
 wd'msgs'  NB. is this still needed?
-popme 'convertNEW'
+popme 'convert'
 targ ; loop ; factor return.
 )
 
-uuNEW=: '' ddefine
+uu=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
-pushme 'uuNEW'
+pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
 if. invalid val do.
-  emsg '>>> uuNEW: bad value: yf=[(yf)] y=[(y)]'
+  emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
   BADQTY return.
 end.
 if. 0<#x do.  NB. use non-empty (x) as targ...
@@ -281,26 +308,24 @@ if. 0<#x do.  NB. use non-empty (x) as targ...
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
-    emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
   coeff=. coefu % coeft
-  msg '... uuNEW: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
+  msg '... uu: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
 else.  NB. (x) is empty or invocation is monadic
   'coeff code'=. qtcode4anyunit unit
   ]codet=. codeu=. code
   ]targ=. canon expandcode code  NB. infer target units from: code
-  msg '... uuNEW: x=empty; coeff=(coeff) val=(val)'
+  msg '... uu: x=empty; coeff=(coeff) val=(val)'
 end.
-NB. THIS CODE-SWITCH NEEDS RESOLVING >>>>>>>>>>>>>>>
-NB. va=. coeff * ('_',unit) adj val  NB. adj is obsolete
 if. cannotScale unit do.
   ]va=. val  NB. formatOUT must handle (unit)
 else.
   ]va=. coeff * val
 end.
-sllog 'uuNEW__ val va coeff unit targ coefu codeu coeft codet'
+sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
   NB. Note that uniform applies ucode to its own result
 ]z=. targ formatOUT va
 ]z=. uniformD z  NB. (string) value to return

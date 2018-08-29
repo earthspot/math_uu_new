@@ -3,24 +3,34 @@
 
 cocurrent 'uu'
 
+0 :0
+CAL used to need: ucode and ucods
+but currently…
+  ucode is unused
+  ucods is called only by ct0_cal_
+  ct_cal_=: ct1_cal_
+)
+
 public=: 3 : 0
   NB. Makes aliases to UU public verbs in CLIENT locale (y)
   NB. cocurrent CLIENT locale: run this verb with (locale) y
 cocurrent y
-adj=: adj_uu_
 compatible=: compatible_uu_
 compatlist=: compatlist_uu_
 convert=: convert_uu_
-cnvj=: cnvj_uu_
-format=: format_uu_
+cnvj=: cnvCunit_uu_	NB. STILL NEEDED?
+format=: formatOUT_uu_
 scino=: scino_uu_
 selfcanc=: selfcanc_uu_
+setsci=: sci_uu_
+setsig=: sig_uu_
+set_ucase=: ucase_uu_
 sci=: sci_uu_
 sig=: sig_uu_
 startuu=: start_uu_
 ucase=: ucase_uu_
 udat=: udat_uu_
-udiv=: udiv_uu_
+udiv=: udiv_uu_		NB. STILL NEEDED?
 udumb=: udumb_uu_
 uniform=: uniform_uu_
 uurowsc=: uurowsc_uu_

@@ -3,38 +3,6 @@
 
 cocurrent 'uu'
 
-z=.     'Celsius degC Centigrade degC Fahrenheit degF'
-z=. z , ' Newton degN Roemer degRo Reamur degRe Delisle degDe'
-adjsub=: ;:z  NB. relacement template used by: adj
-
-adj=: 4 : 0
-pushme 'adj'
-msg '... adj: x=(x) y=(y)'
-  NB. Adjusts quantity: y for units: x
-  NB. Used by: format and: uu
-  NB. This mainly serves temperature units, degC degF and K
-  NB. which differ by an added constant as well as by a factor.
-  NB. Prefixing '_' to x adjusts IN THE OTHER DIRECTION.
-  NB. EXAMPLE:
-  NB.  'degC'&adj SUBTRACTS 273.15
-  NB. '_degC'&adj ADDS 273.15
-  NB. SOURCE: WIKIPEDIA Conversion_of_units_of_temperature
-if. UL={.x do. sign=. _1 else. sign=. 1 end.
-xx=. (UL -.~ x rplc '°';'deg' ; 'ø';'oe' ; 'é';'e') rplc adjsub
-select. xx
- case. 'degC'	do.	z=. y - 273.15*sign
- case. 'degF'	do.	z=. y - 459.67*sign
- case. 'degRo'	do.	z=. y - 650.762*sign
- case. 'degN'	do.	z=. y - 90.139*sign
- case. 'degDe'	do.	z=. y - 559.725*sign
- case. 'degRe'	do.	z=. y - 218.52*sign
- case.		do.	z=. y 
-end.
-msg '--- adj: EXITS: z=(z) sign=(sign) xx=(xx)'
-0 popme 'adj'
-z return.
-)
-
 bris=: unucode@unslash1@undotted@deb"1  NB. circumcises units: y
 
 canc=: 4 : 0
@@ -69,23 +37,6 @@ msg '--- canon: EXITS: z=(z)'
 z return.
 )
 
-cnvf=: 3 : 0
-pushme 'cnvf'
-	NB. expand y using units->unitv, also return the conversion factor f
-z=. (f=. INVALID) ; '' ; NOTFOUND	NB. "not-found" returned value
-t=. utoks cnvv y			NB. y is a bare (units), no SP|SL
-if. LK=NOTFOUND do.
-  popme 'cnvf'
-  z return.
-end.
-try. z=. (f=.LK{uvalu); t; LK		NB. item-value from LK: UU-row found by: cnvv
-catch.
-end.
-msg '+++ cnvf: EXITS: y=(y) f=(f) t=(linz t)'
-0 popme 'cnvf'
-z return.
-)
-
 cnvi=: 1&$: : (4 : 0)
 	NB. x=1 - invert SP <--> SL thru token-list (y)
 if. -.x do. y return. end.
@@ -97,94 +48,6 @@ for_i. i.#y do. z=. >i{y	NB. the i'th cunit of list: y
 end.
 zz return.
 )
-
-cnvj=: 3 : 0
-pushme 'cnvj'
-	NB. cut prefs/suffs from a cunit (eg: '/kg^3')
-k=. p=. 1 [ z=. y
-if. (SL~:{.z) and (any PWM E. z) do. NB. elim -ve power
-  z=. SL,z rplc PWM ; PW
-NB. y=. SL,dlb y-.'-'
-end.
-if. j=.(SL={. sp1 z) do. z=. }.z end.	NB. bool:j remembers dropped prefix: SP|SL
-if. PW e. z do.			NB. recognise a power...
-  'p z'=. (".{:z) ; (}:}:z)		NB. drop/remember suffixed power (as integer)
-end.
-msg '+++ cnvj: y=(y) j=(j) z=(z) p=(p)'
-	NB. Identify scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
-	NB. ONLY IF z is not itself in: units, eg 'knot' ...
-if. (-.iskg z) and (not validunits z) do.
-	NB. Identify a 2-CHAR ASCII scaling prefix ...
-  if.     'da'-:2{.z do.	k=. 1e1  [z=.2}.z	NB. deka-
-  elseif. z begins 'µ' do.	k=. 1e_6 [z=.z-.'µ'	NB. micro-
-  elseif. do.
-	NB. Identify a SINGLE-CHAR ASCII scaling prefix (i.e. NOT µ) ...
-    select. {.z
-     case. 'h' do. k=. 1e2	[ z=.}.z	NB. hecto-
-     case. 'k' do. k=. 1e3	[ z=.}.z	NB. kilo-
-     case. 'M' do. k=. 1e6	[ z=.}.z	NB. mega-
-     case. 'G' do. k=. 1e9	[ z=.}.z	NB. giga-
-     case. 'T' do. k=. 1e12	[ z=.}.z	NB. tera-
-     case. 'P' do. k=. 1e15	[ z=.}.z	NB. peta-
-     case. 'E' do. k=. 1e18	[ z=.}.z	NB. exa-
-     case. 'Z' do. k=. 1e21	[ z=.}.z	NB. zetta-
-     case. 'Y' do. k=. 1e24	[ z=.}.z	NB. yotta-
-     case. 'd' do. k=. 1e_1	[ z=.}.z	NB. deci-
-     case. 'c' do. k=. 1e_2	[ z=.}.z	NB. centi-
-     case. 'm' do. k=. 1e_3	[ z=.}.z	NB. milli-
-     case. 'u' do. k=. 1e_6	[ z=.}.z	NB. micro- (µ handled separately)
-     case. 'n' do. k=. 1e_9	[ z=.}.z	NB. nano-
-     case. 'p' do. k=. 1e_12	[ z=.}.z	NB. pico-
-     case. 'f' do. k=. 1e_15	[ z=.}.z	NB. femto-
-     case. 'a' do. k=. 1e_18	[ z=.}.z	NB. atto-
-     case. 'z' do. k=. 1e_21	[ z=.}.z	NB. zepto-
-     case. 'y' do. k=. 1e_24	[ z=.}.z	NB. yocto-
-    end.
-  end.
-end.
-z=. deb z
-msg '--- cnvj: j=(j) scale:k=(k) units:z=(z) power:p=(p)'
-popme 'cnvj'
-j ; k ; z ; p return.	NB. here z has NO prefixed SP (or SL)
-)
-  NB. Scaling prefixes recognised above:
-  NB.	------------------------------------------------------------------------------
-  NB. 	deca- 	hecto- 	kilo- 	mega- 	giga- 	tera- 	peta- 	exa- 	zetta- 	yotta-
-  NB. 	da 	h 	k 	M 	G 	T 	P 	E 	Z 	Y
-  NB. 	10^1 	10^2 	10^3 	10^6 	10^9 	10^12 	10^15 	10^18 	10^21 	10^24
-  NB.	------------------------------------------------------------------------------
-  NB. 	deci- 	centi- 	milli- 	micro- 	nano- 	pico- 	femto- 	atto- 	zepto- 	yocto-
-  NB. 	d 	c 	m 	µ 	n 	p 	f 	a 	z 	y
-  NB. 	10^−1 	10^−2 	10^−3 	10^−6 	10^−9 	10^−12 	10^−15 	10^−18 	10^−21 	10^−24
-  NB.	------------------------------------------------------------------------------
-
-cnvnon=: 3 : 0
-pushme 'cnvnon'
-	NB. extract 1st non-mks token
-i=. (y e. mkss)i. 0	NB. index of 1st token not in mkss
-if. i<#y do.
-  t=. >i{y		NB. the extracted token
-  y=. (i~: i.#y)# y	NB. the residue without t
-else.
-  t=. ''		NB. and y is unchanged
-end.
-msg '+++ cnvnon: next non-mks token=[(t)] leaving: (linz y)'
-0 popme 'cnvnon'
-(deb t) ; <y
-)
-
-cnvv=: 3 : 0
-unitv cnvv y
-:
-  NB. the x-(unitv/x) entry corresp to units: y
-  NB. SETS GLOBAL CACHED LOOKUP INDEX: LK <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-LKS=: ,LK=: NOTFOUND	NB. init to: "not-found" value
-if. 0=#z=. I.units=(<,y) do. '' return. end.
-LK=: {.LKS=: z
->LK{x		NB. Only the first match is returned
-)
-
-cnvx=: 3 : 'unitx cnvv y'
 
 coll=: 4 : 0
 pushme 'coll'
@@ -202,104 +65,6 @@ for_p. 4 3 2 do.	NB. 4th-power units are highest recognised
 end.
 0 popme 'coll'
 z return.
-)
-
-compatibleOLD=: 4 : 0
-pushme 'compatibleOLD'
-	NB. =1 iff units x,y compatible
-	NB. '*' is compatible with everything...
-if. ('*'= {.>x) or ('*'= {.>y) do.
-  popme 'compatibleOLD'
-  1 return.
-end.
-ux=. compat cnvv >x [ uy=. compat cnvv >y
-msg '... compatibleOLD: ux=(ux) uy=(uy)'
-if. (0<#uy) and (uy-:ux) do.
-  popme 'compatibleOLD'
-  1 return.
-end.
-a=. {.convert >x [ b=. {.convert >y
-popme 'compatibleOLD'
-a-:b	NB. match their canonical units
-)
-
-compatibleNEW=: 4 : 0
-  NB. =1 iff units x,y compatible
-  NB. [*] [!] compatible with everything…
-ident=. ([: , [) -: ([: , ])
-    if. ('*' ident x) or ('*' ident y) do. 1 return.
-elseif. ('!' ident x) or ('!' ident y) do. 1 return.
-end.
-xcode=. 1 pick qtcode4anyunit x
-ycode=. 1 pick qtcode4anyunit y
-xcode -: ycode
-)
-
-compatlistOLD=: 3 : 0
-  NB. return extract of (units) compatible with units: y
-  NB. if there's a compat-code (uy), get its mates
-  NB. else lookup its cfm in: unitx
-if. 0<#uy=. compat cnvv >y do.
-  z=. (I. uy=compat){units
-else.
-  cn=. {.convert y
-  z=. (I. cn=unitx){units
-end.
-  NB. If [m] present include [mm] [cm] [km] too
-if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
-  NB. incl uy itself and its canon
-z=. ~. (<,y),z,{.convert y
-)
-
-compatlistNEW=: 3 : 0
-  NB. return extract of (units) compatible with units: y
-]ycode=. 1 pick qtcode4anyunit y
-(ycode=unitc) # units
-)
-
-convertOLD=: 1&$: : (4 : 0)"1
-pushme 'convertOLD'
-  NB. y (units) --> cu ; loop_count ; cf
-yb=. bris y  NB. work in "kosher" form of y
-msg '... convertOLD: x=(x) y=(y) yb=(yb)'
-  NB. x=1 --use: uvalx
-if. x do.	NB. SPEEDUP: try: unitx, uvalx (if there)
-  if. 0<#z=.cnvx yb do.
-    popme 'convertOLD'
-    (z ; 1 ; LK{uvalx) return.
-  end.
-end.
-fac=. 1				NB. conversion factor init'd
-z=. utoks yb			NB. needs yb tokenised
-msg '... convertOLD: utoks=(linz z)'
-	NB. Comb repeatedly through tokenized (boxed) z, converting tokens by lookup in UUC,
-	NB. each converted token (expanded) is appended to back of z, to be combed again,
-	NB. Repeat until all tokens in z are mks (=metre-kilogram-second)
-for_i. i.MAXLOOP do.
-  loop=. i+1			NB. loop-count available on drop-thru
-  't rz'=. cnvnon z		NB. extract 1st non-mks token: t leaving residue: rz
-  if. 0=#t do. break. end.	NB. quit loop if all are mks tokens
-  if. t-:,'*' do.		NB. '*' factor always 1
-    popme 'convertOLD'
-    ('*' ; loop ; 1) return.
-  end.
-  'j k tt p'=. cnvj t		NB. separate: t -eg: '/ms^2' --> 1;0.001;'s';2
-  'f ttt lk'=. cnvf tt		NB. lookup tt in UUC --> factor(f) ; new_tt(ttt) ; UUC_line#(lk)
-  if. (isNaN f)or(lk=_1) do.	NB. SHOWS FAILURE !!
-    popme 'convertOLD'
-    (NUN ; loop ; _) return.
-  end.
-  subfac=. (f*k)^p
-	NB. accumulate subfac into fac, according to whether j specifies numerator/denominator
-  fac=. fac * subfac^(np j)
-  z=. rz,p#(j cnvi ttt)		NB. put back into z: p-replicated (inverted) ttt
-  msg '... convertOLD: [(loop)] z=(linz z) fac=(fac) j=(j) subfac=(subfac)'
-end.
-	NB. if MAXLOOP reached then must assume not all non-mks tokens have been converted
-if. loop=MAXLOOP do. loop=. 0 end. NB. signalling a suspicious result
-wd'msgs'
-popme 'convertOLD'
-(canon ;z) ; loop ; fac return.
 )
 
 curfig=: 3 : 'hy (0 j. 2)":y'
@@ -321,7 +86,7 @@ pushme 'deslash'
 r=. ''	NB. accumulates modified cunits
 for_cu. utoks y do. cunit=. >cu
   if. (x=0) or SL={.cunit do.  NB. inverse: do BOTH SP SL
-    'j k z p'=. cnvj cunit
+    'j k z p'=. cnvCunit cunit
     if. x do.
       cunit=. SP, (}. PW taketo cunit),PWM,":p
     else.
@@ -355,82 +120,6 @@ try. {.".y catch. INVALID end.
 )
 
 exrate=: exrate_exch_
-
-unhms=: 3600 %~ _ 60 60 #. 3 {. ]
-
-format_hms=: 3 : 0
-  NB. output y as: 'hh:mm:ss.sss'
-if. y-:'' do. y=. unhms 23 59 59.567 end.  NB. TEST <<<<<
-neg=. (y<0)#'-'
-NB. suf=. ' h' ; ' min' ; ' s'
-suf=. ':' ; ':' ; ''
-'h m s'=.": each _ 60 60 #: 3600*|y
-if. 10>".h do. h=. '0',h end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-h,':',m,':',s
-)
-
-formatOLD=: ''&$: : (4 : 0)
-NB. format numeral y by units: x
-NB. always returns a string
-if. undefined y do. 'UNDEFINED' return. end.
-if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do.
-NB.   if. y=__ do. uucp '-∞' return.
-if. y=__ do. '-∞' return.
-elseif. y=_ do. '∞' return.
-end.
-end.
-select. ,x
-NB. INSERT FURTHER fcase.s HERE for unicoded suffix
-case. 'asec'	do. z=. '"' upost format_sig y
-case. 'amin'	do. z=. '''' upost format_sig y
-fcase. 'degF'	do.
-case. 'degC'	do. z=. format_sci x adj y
-fcase. 'Fahrenheit'do.
-fcase. 'Centigrade'do.
-case. 'Celsius'	do. z=. 'deg' upost format_sci x adj y
-case. 'hms'	do. z=. format_hms y	NB. (hh:mm:ss.sss)
-case. 'deg'	do. z=. format_deg y	NB. (deg amin asec)
-case. 'usd'	do. z=. '$',curfig y
-case. 'cnt'	do. z=. '¢',curfig y
-case. 'gbp'	do. z=. '£',curfig y
-case. 'eur'	do. z=. '€',curfig y
-case. ,'!'	do. z=. >(y=0){'YES';'NO'
-case. 'midi'	do. z=.": rnd midino y	NB. MIDI-number
-case. 'note'	do. z=. note y	NB. musical note
-NB. INSERT FURTHER fcase.s HERE for sci-notation
-fcase. ,'c'	do.	NB. lightspeed
-fcase. 'eV'	do.	NB. electron-volt
-fcase. 'Hz'	do.	NB. frequency: Hertz
-case. 'rad'	do. z=. format_sci y
-NB. INSERT FURTHER fcase.s HERE for SIG controlled
-fcase. ,'/'	do.	NB. dimensionless
-case.  ,'*'	do. z=. format_sig y
-NB. ALL ELSE...
-case.		do. z=. format_general y
-end.
-ucode z
-)
-
-format_deg=: 3 : 0
-	NB. output y as: '360deg 0amin 30asec'
-	NB. ucode -converts this to the usual symbols
-if. y-:'' do. y=. undeg 360 0 30 end.	NB. TEST <<<<<
-neg=. (y<0)#'-'
-NB. suf=. '° ' ; ''' ' ; '"'
-suf=. 'deg ' ; 'amin ' ; 'asec'
-z=._ 60 60 #: 3600*|y
-z=. ": each <. z
-neg , ; z ,each suf
-)
-
-NB. format_general=: toupper@hy@":
-format_general=: format_sci
-format_sci=: toupper@hy@scino
-NB. format_sig=: 3 : 'hy (j. SIG)":y'
-format_sig=: format_sci
 
 getversion=: 3 : 0
 try.
@@ -632,8 +321,8 @@ udumb=: 3 : 0
 zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
 )
 
-make_unitsOLD=: 0 ddefine
-  NB. makes globals: cspel csymb mkss units unitv uvalu unitx uvalx compat
+make_units=: 0 ddefine
+  NB. makes globals: cspel csymb units unitv uvalu unitx uvalx compat
   NB. x=0: DONT adjust currency
   NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
   NB. (sspel ssymb_ -used by: ucods (ditto, omits currency symbols)
@@ -645,49 +334,7 @@ NB.     csymb=: ssymb, <;._1 '|°|''|"|€|¢|£'
 cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
   NB. mks (c/f 'm kg s') specifies the most primitive SI-units
-  NB. mkss is used by: cnvnon<--convert to identify reducible units
   NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
-mkss=: (SP,each mks),(SL,each mks),<,SL
-make_cutuuc''
-'v uv us'=. <"1 |: cutuuc UUC
-unitv=: deb each uv -.each TAB
-units=: deb each us
-uvalu=: eval >v
-  NB. Make: unitx cycs uvalx from: units
-z=. |: > 0 convert each units
-unitx=: 0{z	NB. canonical units
-cycs=. ;1{z	NB. diagnostic: loops needed by: convert
-uvalx=: ;2{z	NB. conversion ratio to canonical units
-compat=: unitx i. unitx  NB. compat-code: > earlier UUC-row#
-  NB. Make z - boolean mask for: (units)
-z=. cycs=0
-z=. z or cycs>15	NB. ARBITRARY HIGH-ISH VALUE
-z=. z or (isNaN uvalu) or (uvalu e. 0 _ __)
-z=. z or (isNaN uvalx) or (uvalx e. 0 _ __)
-NB. z=. z or 1 1 1 1 {.~ #cycs  NB. <<<<< TEST ONLY
-if. any z do.
-  t=. ;,((I.z){units) ,.(SP,~each brack each I.z)
-  wdinfo 'Addon: UU',LF,LF,'WARNING: these units convert badly:',LF,t
-end.
-i.0 0
-)
-
-make_unitsNEW=: 0 ddefine
-  NB. makes globals: cspel csymb mkss units unitv uvalu unitx uvalx compat
-  NB. x=0: DONT adjust currency
-  NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
-  NB. (sspel ssymb_ -used by: ucods (ditto, omits currency symbols)
-sspel=: <;._1 ' PI Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
-ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
-  NB. cspel,csymb converts these also...
-NB.     cspel=: sspel, <;._1 ' deg amin asec eur cnt gbp'
-NB.     csymb=: ssymb, <;._1 '|°|''|"|€|¢|£'
-cspel=: sspel, <;._1 ' deg amin asec'
-csymb=: ssymb, <;._1 '|°|''|"'
-  NB. mks (c/f 'm kg s') specifies the most primitive SI-units
-  NB. mkss is used by: cnvnon<--convert to identify reducible units
-  NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
-mkss=: (SP,each mks),(SL,each mks),<,SL
 make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
@@ -766,54 +413,6 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-
-uuOLD=: '' ddefine
-  NB. transform y (value;units) to: x (ux)
-  NB. x is target units: ux
-  NB. y is 2boxed expression, e.g. 9.5 ; 'kg'
-  NB. OR…
-  NB. y is string expression, e.g. '9.5 kg'
-  NB. returns 2boxed OR string according to y
-if. isBoxed y do. z=. x uuboxed y
-else. z=. x uustring y
-end.
-msg LF,LF,LF	NB. output spacer in term window
-z return.
-)
-
-uustring=: 4 : 0
-  NB. transform a string expression, e.g. '9.5 kg'
-]val=. eval SP taketo y
-]uns=. SP takeafter y
-'va un'=. x uuboxed val ; uns
-(ucode 8 u: un format va),SP,(ucode un)  NB. nuanced formatting
-)
-
-uuboxed=: '' ddefine
-pushme 'uuboxed'
-  NB. transform a 2boxed expression, e.g. 9.5 ; 'kg'
-'val uns'=. y
-msg '... uuboxed: x=(x) val=(val) uns=(uns)'
-'ux uy'=. bris each x;uns  NB. Make (x) (uns) kosher
-if. 0<#x do. if. -. ux compatible uy do.
-  emsg '>>> uuboxed: incompatible units: (ux) || (uy)'
-  0 popme 'uuboxed' return.
-end. end.
-'unsc c fy'=. convert uns  NB. unsc is in SI units
-if. fy = _ do.
-  emsg '>>> uuboxed: unknown units: (uns)'
-  0 popme 'uuboxed' return.
-end.
-  NB. Default x to: unsc (uns converted to SI units)
-if. 0=#x do. ]ux=. bris x=. unsc end.
-fx=. > {: convert ux  NB. get the conversion factor: fx
-qty=. (fy%fx) * ('_',uns) adj val
-uno=. uniform x  NB. units for output
-	sllog 'uuboxed__ fy fx uno ux'
-z=. (ux adj qty) ; uno
-popme 'uuboxed'
-z return.
-)
 
 uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
 uurowsc=: 3 : '(UUC ssmx y){UUC'

@@ -161,50 +161,13 @@ for_i. y do.
 end.
 )
 
-xxu=: (3 : 0)"0
-  NB. check unitc against unitx for ID: y
-UNC=: canon expandcode y{unitc
-UNX=: >y{unitx
-if. UNC -: UNX do. smoutput 'hooray!'
-else. UNC ; UNX end.
-)
-
-VALIDATE_unitc=: 3 : 0
-  NB. verify (expanded) unitc matches unitx
-notmatches=. [: -. -:
-bads=. i.0
-for_i. i.#units do. unit=. i pick units
-  iux=. i pick unitx	NB. fully resolved units
-  iuc=. i pick unitc	NB. pp-code
-  ixc=. canon expandcode iuc	NB. resolved units from pp-code
-  ivx=. i pick uvalx	NB. conversion factor to go with unitx
-  ivc=. i pick uvalc	NB. conversion factor to go with unitc
-  if. iux notmatches ixc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
-  elseif. ivx ~: ivc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
-  end.
-end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
-bads=. bads -. 11 28
-if. 0<#bads do.
-  smoutput viewtable bads
-  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
-  smoutput bads+30
-end.
-bads return.
-)
-
 tv=: 3 : 0
   NB. sets/resets TRACEVERBS
 PLUS=. '+'
 MINUS=. '-'
-verbs1=. ;: 'uuNEW formatIN formatOUT'
-verbs2=. ;: 'uuNEW'
+verbs1=. ;: 'uu formatIN formatOUT'
+verbs2=. ;: 'uu'
 verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs4=. verbs1 , ;: 'cnvj cnv2bare'
 NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS_uu_ -. ;: y-.MINUS
 select. {.y
@@ -213,7 +176,6 @@ case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
 case. 1     do. z=. TRACEVERBS_uu_=: verbs1
 case. 2     do. z=. TRACEVERBS_uu_=: verbs2
 case. 3     do. z=. TRACEVERBS_uu_=: verbs3
-case. 4     do. z=. TRACEVERBS_uu_=: verbs4
 case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y  NB. dflt: y==openlist of verbs

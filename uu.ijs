@@ -1,11 +1,12 @@
 0 :0
-2018-08-28  03:15:07
+2018-08-30  00:24:23
 -
 UU: scientific units conversion package
 )
 
 clear 'uu'
 coclass 'uu'
+AABUILT=: '2018-08-30  00:24:23'
 
 '==================== [uu] constants ===================='
 
@@ -32,7 +33,6 @@ ICE_K=: 273.15
 HD=: '·'
 INVALID=: _.j_.
 MI=: '-'
-NOTFOUND=: _1
 NUN=: '??'
 PI=: o.1
 PWM=: '^-'
@@ -346,57 +346,19 @@ for_i. y do.
 end.
 )
 
-xxu=: (3 : 0)"0
-
-UNC=: canon expandcode y{unitc
-UNX=: >y{unitx
-if. UNC -: UNX do. smoutput 'hooray!'
-else. UNC ; UNX end.
-)
-
-VALIDATE_unitc=: 3 : 0
-
-notmatches=. [: -. -:
-bads=. i.0
-for_i. i.#units do. unit=. i pick units
-  iux=. i pick unitx
-  iuc=. i pick unitc
-  ixc=. canon expandcode iuc
-  ivx=. i pick uvalx
-  ivc=. i pick uvalc
-  if. iux notmatches ixc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad unit[(unit)] iux=[(iux)] ixc=[(ixc)] iuc=(iuc)'
-  elseif. ivx ~: ivc do.
-    bads=. bads,i
-    ssw '>>> VALIDATE_unitc[(i)] bad uval[(unit)] ivx=[(ivx)] ivc=[(ivc)]'
-  end.
-end.
-ssw '--- VALIDATE_unitc: mismatches=(#bads) …but ignore 11, 28'
-bads=. bads -. 11 28
-if. 0<#bads do.
-  smoutput viewtable bads
-  smoutput '... bads+30 (to identify by line# in uuc.ijs)…'
-  smoutput bads+30
-end.
-bads return.
-)
-
 tv=: 3 : 0
 
 PLUS=. '+'
 MINUS=. '-'
-verbs1=. ;: 'uuNEW formatIN formatOUT'
-verbs2=. ;: 'uuNEW'
+verbs1=. ;: 'uu formatIN formatOUT'
+verbs2=. ;: 'uu'
 verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-verbs4=. verbs1 , ;: 'cnvj cnv2bare'
 select. {.y
 case. ' '   do. z=. TRACEVERBS_uu_  
 case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
 case. 1     do. z=. TRACEVERBS_uu_=: verbs1
 case. 2     do. z=. TRACEVERBS_uu_=: verbs2
 case. 3     do. z=. TRACEVERBS_uu_=: verbs3
-case. 4     do. z=. TRACEVERBS_uu_=: verbs4
 case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y
@@ -472,38 +434,6 @@ tpath_z_=: tpath_uu_
 
 cocurrent 'uu'
 
-z=.     'Celsius degC Centigrade degC Fahrenheit degF'
-z=. z , ' Newton degN Roemer degRo Reamur degRe Delisle degDe'
-adjsub=: ;:z
-
-adj=: 4 : 0
-pushme 'adj'
-msg '... adj: x=(x) y=(y)'
-
-
-
-
-
-
-
-
-
-if. UL={.x do. sign=. _1 else. sign=. 1 end.
-xx=. (UL -.~ x rplc '°';'deg' ; 'ø';'oe' ; 'é';'e') rplc adjsub
-select. xx
- case. 'degC'	do.	z=. y - 273.15*sign
- case. 'degF'	do.	z=. y - 459.67*sign
- case. 'degRo'	do.	z=. y - 650.762*sign
- case. 'degN'	do.	z=. y - 90.139*sign
- case. 'degDe'	do.	z=. y - 559.725*sign
- case. 'degRe'	do.	z=. y - 218.52*sign
- case.		do.	z=. y 
-end.
-msg '--- adj: EXITS: z=(z) sign=(sign) xx=(xx)'
-0 popme 'adj'
-z return.
-)
-
 bris=: unucode@unslash1@undotted@deb"1
 
 canc=: 4 : 0
@@ -538,23 +468,6 @@ msg '--- canon: EXITS: z=(z)'
 z return.
 )
 
-cnvf=: 3 : 0
-pushme 'cnvf'
-
-z=. (f=. INVALID) ; '' ; NOTFOUND
-t=. utoks cnvv y
-if. LK=NOTFOUND do.
-  popme 'cnvf'
-  z return.
-end.
-try. z=. (f=.LK{uvalu); t; LK
-catch.
-end.
-msg '+++ cnvf: EXITS: y=(y) f=(f) t=(linz t)'
-0 popme 'cnvf'
-z return.
-)
-
 cnvi=: 1&$: : (4 : 0)
 
 if. -.x do. y return. end.
@@ -566,93 +479,6 @@ for_i. i.#y do. z=. >i{y
 end.
 zz return.
 )
-
-cnvj=: 3 : 0
-pushme 'cnvj'
-
-k=. p=. 1 [ z=. y
-if. (SL~:{.z) and (any PWM E. z) do.
-  z=. SL,z rplc PWM ; PW
-end.
-if. j=.(SL={. sp1 z) do. z=. }.z end.
-if. PW e. z do.
-  'p z'=. (".{:z) ; (}:}:z)
-end.
-msg '+++ cnvj: y=(y) j=(j) z=(z) p=(p)'
-
-
-if. (-.iskg z) and (not validunits z) do.
-
-  if.     'da'-:2{.z do.	k=. 1e1  [z=.2}.z
-  elseif. z begins 'µ' do.	k=. 1e_6 [z=.z-.'µ'
-  elseif. do.
-
-    select. {.z
-     case. 'h' do. k=. 1e2	[ z=.}.z
-     case. 'k' do. k=. 1e3	[ z=.}.z
-     case. 'M' do. k=. 1e6	[ z=.}.z
-     case. 'G' do. k=. 1e9	[ z=.}.z
-     case. 'T' do. k=. 1e12	[ z=.}.z
-     case. 'P' do. k=. 1e15	[ z=.}.z
-     case. 'E' do. k=. 1e18	[ z=.}.z
-     case. 'Z' do. k=. 1e21	[ z=.}.z
-     case. 'Y' do. k=. 1e24	[ z=.}.z
-     case. 'd' do. k=. 1e_1	[ z=.}.z
-     case. 'c' do. k=. 1e_2	[ z=.}.z
-     case. 'm' do. k=. 1e_3	[ z=.}.z
-     case. 'u' do. k=. 1e_6	[ z=.}.z
-     case. 'n' do. k=. 1e_9	[ z=.}.z
-     case. 'p' do. k=. 1e_12	[ z=.}.z
-     case. 'f' do. k=. 1e_15	[ z=.}.z
-     case. 'a' do. k=. 1e_18	[ z=.}.z
-     case. 'z' do. k=. 1e_21	[ z=.}.z
-     case. 'y' do. k=. 1e_24	[ z=.}.z
-    end.
-  end.
-end.
-z=. deb z
-msg '--- cnvj: j=(j) scale:k=(k) units:z=(z) power:p=(p)'
-popme 'cnvj'
-j ; k ; z ; p return.
-)
-
-
-
-
-
-
-
-
-
-
-
-cnvnon=: 3 : 0
-pushme 'cnvnon'
-
-i=. (y e. mkss)i. 0
-if. i<#y do.
-  t=. >i{y
-  y=. (i~: i.#y)# y
-else.
-  t=. ''
-end.
-msg '+++ cnvnon: next non-mks token=[(t)] leaving: (linz y)'
-0 popme 'cnvnon'
-(deb t) ; <y
-)
-
-cnvv=: 3 : 0
-unitv cnvv y
-:
-
-
-LKS=: ,LK=: NOTFOUND
-if. 0=#z=. I.units=(<,y) do. '' return. end.
-LK=: {.LKS=: z
->LK{x
-)
-
-cnvx=: 3 : 'unitx cnvv y'
 
 coll=: 4 : 0
 pushme 'coll'
@@ -670,104 +496,6 @@ for_p. 4 3 2 do.
 end.
 0 popme 'coll'
 z return.
-)
-
-compatibleOLD=: 4 : 0
-pushme 'compatibleOLD'
-
-
-if. ('*'= {.>x) or ('*'= {.>y) do.
-  popme 'compatibleOLD'
-  1 return.
-end.
-ux=. compat cnvv >x [ uy=. compat cnvv >y
-msg '... compatibleOLD: ux=(ux) uy=(uy)'
-if. (0<#uy) and (uy-:ux) do.
-  popme 'compatibleOLD'
-  1 return.
-end.
-a=. {.convert >x [ b=. {.convert >y
-popme 'compatibleOLD'
-a-:b
-)
-
-compatibleNEW=: 4 : 0
-
-
-ident=. ([: , [) -: ([: , ])
-    if. ('*' ident x) or ('*' ident y) do. 1 return.
-elseif. ('!' ident x) or ('!' ident y) do. 1 return.
-end.
-xcode=. 1 pick qtcode4anyunit x
-ycode=. 1 pick qtcode4anyunit y
-xcode -: ycode
-)
-
-compatlistOLD=: 3 : 0
-
-
-
-if. 0<#uy=. compat cnvv >y do.
-  z=. (I. uy=compat){units
-else.
-  cn=. {.convert y
-  z=. (I. cn=unitx){units
-end.
-
-if. z e.~ <,'m' do. z=. (;:'m km cm mm'),z end.
-
-z=. ~. (<,y),z,{.convert y
-)
-
-compatlistNEW=: 3 : 0
-
-]ycode=. 1 pick qtcode4anyunit y
-(ycode=unitc) # units
-)
-
-convertOLD=: 1&$: : (4 : 0)"1
-pushme 'convertOLD'
-
-yb=. bris y
-msg '... convertOLD: x=(x) y=(y) yb=(yb)'
-
-if. x do.
-  if. 0<#z=.cnvx yb do.
-    popme 'convertOLD'
-    (z ; 1 ; LK{uvalx) return.
-  end.
-end.
-fac=. 1
-z=. utoks yb
-msg '... convertOLD: utoks=(linz z)'
-
-
-
-for_i. i.MAXLOOP do.
-  loop=. i+1
-  't rz'=. cnvnon z
-  if. 0=#t do. break. end.
-  if. t-:,'*' do.
-    popme 'convertOLD'
-    ('*' ; loop ; 1) return.
-  end.
-  'j k tt p'=. cnvj t
-  'f ttt lk'=. cnvf tt
-  if. (isNaN f)or(lk=_1) do.
-    popme 'convertOLD'
-    (NUN ; loop ; _) return.
-  end.
-  subfac=. (f*k)^p
-
-  fac=. fac * subfac^(np j)
-  z=. rz,p#(j cnvi ttt)
-  msg '... convertOLD: [(loop)] z=(linz z) fac=(fac) j=(j) subfac=(subfac)'
-end.
-
-if. loop=MAXLOOP do. loop=. 0 end.
-wd'msgs'
-popme 'convertOLD'
-(canon ;z) ; loop ; fac return.
 )
 
 curfig=: 3 : 'hy (0 j. 2)":y'
@@ -789,7 +517,7 @@ pushme 'deslash'
 r=. ''
 for_cu. utoks y do. cunit=. >cu
   if. (x=0) or SL={.cunit do.
-    'j k z p'=. cnvj cunit
+    'j k z p'=. cnvCunit cunit
     if. x do.
       cunit=. SP, (}. PW taketo cunit),PWM,":p
     else.
@@ -823,70 +551,6 @@ try. {.".y catch. INVALID end.
 )
 
 exrate=: exrate_exch_
-
-unhms=: 3600 %~ _ 60 60 #. 3 {. ]
-
-format_hms=: 3 : 0
-
-if. y-:'' do. y=. unhms 23 59 59.567 end.
-neg=. (y<0)#'-'
-suf=. ':' ; ':' ; ''
-'h m s'=.": each _ 60 60 #: 3600*|y
-if. 10>".h do. h=. '0',h end.
-if. 10>".m do. m=. '0',m end.
-if. 10>".s do. s=. '0',s end.
-h,':',m,':',s
-)
-
-formatOLD=: ''&$: : (4 : 0)
-if. undefined y do. 'UNDEFINED' return. end.
-if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do.
-if. y=__ do. '-∞' return.
-elseif. y=_ do. '∞' return.
-end.
-end.
-select. ,x
-case. 'asec'	do. z=. '"' upost format_sig y
-case. 'amin'	do. z=. '''' upost format_sig y
-fcase. 'degF'	do.
-case. 'degC'	do. z=. format_sci x adj y
-fcase. 'Fahrenheit'do.
-fcase. 'Centigrade'do.
-case. 'Celsius'	do. z=. 'deg' upost format_sci x adj y
-case. 'hms'	do. z=. format_hms y
-case. 'deg'	do. z=. format_deg y
-case. 'usd'	do. z=. '$',curfig y
-case. 'cnt'	do. z=. '¢',curfig y
-case. 'gbp'	do. z=. '£',curfig y
-case. 'eur'	do. z=. '€',curfig y
-case. ,'!'	do. z=. >(y=0){'YES';'NO'
-case. 'midi'	do. z=.": rnd midino y
-case. 'note'	do. z=. note y
-fcase. ,'c'	do.
-fcase. 'eV'	do.
-fcase. 'Hz'	do.
-case. 'rad'	do. z=. format_sci y
-fcase. ,'/'	do.
-case.  ,'*'	do. z=. format_sig y
-case.		do. z=. format_general y
-end.
-ucode z
-)
-
-format_deg=: 3 : 0
-
-
-if. y-:'' do. y=. undeg 360 0 30 end.
-neg=. (y<0)#'-'
-suf=. 'deg ' ; 'amin ' ; 'asec'
-z=._ 60 60 #: 3600*|y
-z=. ": each <. z
-neg , ; z ,each suf
-)
-format_general=: format_sci
-format_sci=: toupper@hy@scino
-format_sig=: format_sci
 
 getversion=: 3 : 0
 try.
@@ -1084,7 +748,7 @@ udumb=: 3 : 0
 zdesc; znits; 1
 )
 
-make_unitsOLD=: 0 ddefine
+make_units=: 0 ddefine
 
 
 
@@ -1096,45 +760,6 @@ cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
 
 
-
-mkss=: (SP,each mks),(SL,each mks),<,SL
-make_cutuuc''
-'v uv us'=. <"1 |: cutuuc UUC
-unitv=: deb each uv -.each TAB
-units=: deb each us
-uvalu=: eval >v
-
-z=. |: > 0 convert each units
-unitx=: 0{z
-cycs=. ;1{z
-uvalx=: ;2{z
-compat=: unitx i. unitx
-
-z=. cycs=0
-z=. z or cycs>15
-z=. z or (isNaN uvalu) or (uvalu e. 0 _ __)
-z=. z or (isNaN uvalx) or (uvalx e. 0 _ __)
-if. any z do.
-  t=. ;,((I.z){units) ,.(SP,~each brack each I.z)
-  wdinfo 'Addon: UU',LF,LF,'WARNING: these units convert badly:',LF,t
-end.
-i.0 0
-)
-
-make_unitsNEW=: 0 ddefine
-
-
-
-
-sspel=: <;._1 ' PI Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
-ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
-
-cspel=: sspel, <;._1 ' deg amin asec'
-csymb=: ssymb, <;._1 '|°|''|"'
-
-
-
-mkss=: (SP,each mks),(SL,each mks),<,SL
 make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
@@ -1206,54 +831,6 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-
-uuOLD=: '' ddefine
-
-
-
-
-
-
-if. isBoxed y do. z=. x uuboxed y
-else. z=. x uustring y
-end.
-msg LF,LF,LF
-z return.
-)
-
-uustring=: 4 : 0
-
-]val=. eval SP taketo y
-]uns=. SP takeafter y
-'va un'=. x uuboxed val ; uns
-(ucode 8 u: un format va),SP,(ucode un)
-)
-
-uuboxed=: '' ddefine
-pushme 'uuboxed'
-
-'val uns'=. y
-msg '... uuboxed: x=(x) val=(val) uns=(uns)'
-'ux uy'=. bris each x;uns
-if. 0<#x do. if. -. ux compatible uy do.
-  emsg '>>> uuboxed: incompatible units: (ux) || (uy)'
-  0 popme 'uuboxed' return.
-end. end.
-'unsc c fy'=. convert uns
-if. fy = _ do.
-  emsg '>>> uuboxed: unknown units: (uns)'
-  0 popme 'uuboxed' return.
-end.
-
-if. 0=#x do. ]ux=. bris x=. unsc end.
-fx=. > {: convert ux
-qty=. (fy%fx) * ('_',uns) adj val
-uno=. uniform x
-	sllog 'uuboxed__ fy fx uno ux'
-z=. (ux adj qty) ; uno
-popme 'uuboxed'
-z return.
-)
 
 uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
 uurowsc=: 3 : '(UUC ssmx y){UUC'
@@ -1414,7 +991,6 @@ muv;muz return.
 cnvCunit=: 3 : 0
 pushme 'cnvCunit'
 
-
 y_uu_=: y
 z=. dltb y
 k=. p=. 1
@@ -1438,6 +1014,16 @@ msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
 popme 'cnvCunit'
 j ; k ; z ; p return.
 )
+
+
+
+
+
+
+
+
+
+
 
 scale4bareunit=: 3 : 0
 
@@ -1480,8 +1066,8 @@ k ; z
 
 0 :0
 smoutput 8 1$' '
-	uuNEW '1 yd'
-'ft'	uuNEW '1 yd'
+	uu '1 yd'
+'ft'	uu '1 yd'
    	uu '100 degC'
    	uu '212 degF'
 ------------
@@ -1500,30 +1086,48 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-convertNEW=: 1&$: : (4 : 0)"1
-pushme 'convertNEW'
+compatible=: 4 : 0
+
+
+ident=. ([: , [) -: ([: , ])
+    if. ('*' ident x) or ('*' ident y) do. 1 return.
+elseif. ('!' ident x) or ('!' ident y) do. 1 return.
+end.
+xcode=. 1 pick qtcode4anyunit x
+ycode=. 1 pick qtcode4anyunit y
+xcode -: ycode
+)
+
+compatlist=: 3 : 0
+
+]ycode=. 1 pick qtcode4anyunit y
+(ycode=unitc) # units
+)
+
+convert=: 1&$: : (4 : 0)"1
+pushme 'convert'
 
 
 yb=. bris y
-msg '+++ convertNEW: ENTERED: x=(x) y=(y) yb=(yb)'
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
 'factor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
 loop=. _
-msg '--- convertNEW: EXITS'
+msg '--- convert: EXITS'
 wd'msgs'
-popme 'convertNEW'
+popme 'convert'
 targ ; loop ; factor return.
 )
 
-uuNEW=: '' ddefine
+uu=: '' ddefine
 
-pushme 'uuNEW'
+pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
 if. invalid val do.
-  emsg '>>> uuNEW: bad value: yf=[(yf)] y=[(y)]'
+  emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
   BADQTY return.
 end.
 if. 0<#x do.
@@ -1531,24 +1135,24 @@ if. 0<#x do.
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
   if. codet ~: codeu do.
-    emsg '>>> uuNEW: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
   coeff=. coefu % coeft
-  msg '... uuNEW: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
+  msg '... uu: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
 else.
   'coeff code'=. qtcode4anyunit unit
   ]codet=. codeu=. code
   ]targ=. canon expandcode code
-  msg '... uuNEW: x=empty; coeff=(coeff) val=(val)'
+  msg '... uu: x=empty; coeff=(coeff) val=(val)'
 end.
 if. cannotScale unit do.
   ]va=. val
 else.
   ]va=. coeff * val
 end.
-sllog 'uuNEW__ val va coeff unit targ coefu codeu coeft codet'
+sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
 
 ]z=. targ formatOUT va
 ]z=. uniformD z
@@ -1588,9 +1192,22 @@ end.
 cocurrent 'uu'
 
 0 :0
-Thursday 23 August 2018  02:45:20
+Wednesday 29 August 2018  03:45:10
 -
-ot 18
+New format verb based on daisychain
+Tries each give (give_* verb) in turn until one exits normally,
+ or giverr (the last one) is reached.
+If a give fails, the next give gets tried.
+If a give knows it's inappropriate, it calls: errif
+ to force an error.
+If it simply crashes, the same thing happens.
+-
+This arrangement allows ad-hoc 'give_' and 'take_' verbs
+to be defined in the t-table itself (which is a J script).
+-
+x-arg is a units, e.g. 'gbp'
+ and y is the value to be formatted, e.g. to become: '£1.00'.
+giverr is only called if no "give-" verbs chime with: x.
 )
 
 register=: 3 : 0
@@ -1812,9 +1429,9 @@ STRATEGY: hedge bets by simply converting string--> string, e.g...
    '100 degC' --> '373.15 K'
    '212 degF' --> '373.15 K'
 -
-       uuNEW	'373.15 K'
-'degC' uuNEW	'373.15 K'
-'degF' uuNEW	'373.15 K'
+       uu	'373.15 K'
+'degC' uu	'373.15 K'
+'degF' uu	'373.15 K'
 'degF' formatIN	'373.15 K'
 	...NOT formatIN's biz to use [x] EXCEPT to disambiguate.
 'degF' take_deg	'373.15 K'
@@ -1994,18 +1611,28 @@ make_daisychainIN''
 
 cocurrent 'uu'
 
+0 :0
+CAL used to need: ucode and ucods
+but currently…
+  ucode is unused
+  ucods is called only by ct0_cal_
+  ct_cal_=: ct1_cal_
+)
+
 public=: 3 : 0
 
 
 cocurrent y
-adj=: adj_uu_
 compatible=: compatible_uu_
 compatlist=: compatlist_uu_
 convert=: convert_uu_
-cnvj=: cnvj_uu_
-format=: format_uu_
+cnvj=: cnvCunit_uu_
+format=: formatOUT_uu_
 scino=: scino_uu_
 selfcanc=: selfcanc_uu_
+setsci=: sci_uu_
+setsig=: sig_uu_
+set_ucase=: ucase_uu_
 sci=: sci_uu_
 sig=: sig_uu_
 startuu=: start_uu_
@@ -2040,38 +1667,15 @@ uum=: 3 : 'open TPATH_UUM'
 
 cocurrent 'uu'
 
-setverbs=: 3 : 0
-
-if. y-:'NEW' do.
-  compatible=: compatibleNEW
-  compatlist=: compatlistNEW
-  convert=: convertNEW
-  make_units=: make_unitsNEW
-  format=: formatOUT
-  uu=: uuNEW
-  VALIDATE_unitc=: empty
-else.
-  compatible=: compatibleOLD
-  compatlist=: compatlistOLD
-  convert=: convertOLD
-  format=: formatOLD
-  make_units=: make_unitsOLD
-  uu=: uuOLD
-end.
-i.0 0
-)
-
 start=: 3 : 0
 
 
 
 
 
-  setverbs 'NEW'
 make_msg 1
 tv 0
 tv '+start'
-pushme 'start'
 wd'msgs'
 0 make_msg 0
 if. -.fexist TPATH_UUC do.
@@ -2095,7 +1699,6 @@ STARTED=: 1
 
 make_msg 1
 wd'msgs'
-popme 'start'
 )
 
 start''
