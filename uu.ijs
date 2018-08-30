@@ -1,12 +1,12 @@
 0 :0
-2018-08-30  00:24:23
+2018-08-30  17:57:19
 -
 UU: scientific units conversion package
 )
 
 clear 'uu'
 coclass 'uu'
-AABUILT=: '2018-08-30  00:24:23'
+AABUILT=: '2018-08-30  17:57:19'
 
 '==================== [uu] constants ===================='
 
@@ -428,7 +428,23 @@ for_tboxed. tt do. t=. >tboxed
 end.
 smoutput'———————————————————————————'
 )
+
+tpaths=: 3 : 0
+
+]z=. 'TPATH' nl_z_ 0
+]p=. ".each z
+]e=. (;fexist each p) { <"0'? '
+smoutput e ,. z ,. p
+for_t. z do.
+
+  smoutput 'shell' c (quote'open ') c CM c >t
+end.
+i.0 0
+)
+
+
 tpath_z_=: tpath_uu_
+tpaths_z_=: tpaths_uu_
 
 '==================== [uu] main ===================='
 
@@ -637,8 +653,6 @@ if. 0=#y do. SIG
 else. SIG_z_=: {.y
 end.
 )
-
-sl=: 4 : '(x,SL,y) rplc ''///'';SL;''//'';SL'
 
 slash1=: 1&$: : (4 : 0)
 
@@ -1655,13 +1669,32 @@ uu_z_=: uu_uu_
 '==================== [z] paths.ijs ===================='
 
 cocurrent 'z'
+
+sl=: 4 : 0
+
+
+SL=. '/'
+if. SL={:x do. x=. }:x end.
+if. SL={.y do. x=. }.y end.
+x,SL,y
+)
+
+tpaths_validate=: 3 : 0
+assert. fexist TPATH_UU
+assert. fexist TPATH_UUC
+assert. fexist TPATH_UUF
+assert. fexist TPATH_UUM
+i.0 0
+)
 ]TPATH_UU=: jpath'~Gituu'
 ]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
 ]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
 ]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
-uuc=: 3 : 'open TPATH_UUC'
-uuf=: 3 : 'open TPATH_UUF'
-uum=: 3 : 'open TPATH_UUM'
+uuc=: 3 : 'openFolder TPATH_UUC'
+uuf=: 3 : 'openFolder TPATH_UUF'
+uum=: 3 : 'openFolder TPATH_UUM'
+
+tpaths_validate''
 
 '==================== [uu] start ===================='
 

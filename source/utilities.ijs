@@ -3,6 +3,9 @@
 
 cocurrent 'uu'
 
+NB. sl has been withdrawn from THIS SCRIPT.
+NB. It is now defined in: paths.ijs
+
 NB. from handy, post-analoc
 isLit=: 2 2048 e.~ 3!:0
 ifdefined=: 0 <: [: 4!:0 <
@@ -247,4 +250,20 @@ for_tboxed. tt do. t=. >tboxed
 end.
 smoutput'———————————————————————————'
 )
+
+tpaths=: 3 : 0
+  NB. list of TPATH* nouns in _z_ and their contents
+]z=. 'TPATH' nl_z_ 0
+]p=. ".each z
+]e=. (;fexist each p) { <"0'? '
+smoutput e ,. z ,. p
+for_t. z do.
+  NB. generate phrases to show Finder windows...
+  smoutput 'shell' c (quote'open ') c CM c >t
+end.
+i.0 0
+)
+
+  NB. Have BOTH these utilities shadowed in _z_ ...
 tpath_z_=: tpath_uu_
+tpaths_z_=: tpaths_uu_

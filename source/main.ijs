@@ -207,8 +207,6 @@ else. SIG_z_=: {.y  NB. actually resides in z-locale
 end.
 )
 
-sl=: 4 : '(x,SL,y) rplc ''///'';SL;''//'';SL'
-
 slash1=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) single-slash convention
   NB. cf: dotted
