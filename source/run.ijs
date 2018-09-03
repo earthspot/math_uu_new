@@ -20,14 +20,13 @@ load BUILTFILE
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
 load TESTFILE
-smoutput '--- run.ijs: TESTFILE completed without discrepancies: ',TESTFILE
+smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
 
 NB. ---------------------------------------------------------
 
 smoutput 0 : 0
 >>> To view existing TPATH_* settings:
   tpath''
-
 >>> To force good working TPATH_* settings:
   load temp 6
 )

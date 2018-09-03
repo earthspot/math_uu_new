@@ -12,7 +12,7 @@ ot 5	NB. uunicode 3
 
 smoutput PLS,'+++ test1.ijs - entered',PLS
 
-tv 0  NB. turn off ALL trace messages --which redux will gag at
+trv 0  NB. turn off ALL trace messages --which redux will gag at
 
 SUCCESS=: <,:'no difference'
 

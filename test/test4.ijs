@@ -185,8 +185,8 @@ dip uvalx ~: uvalc
 )
 
 0 :0
-tv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit
-tv '+cnvCunit'
+trv 1  NB. trace: qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit
+trv '+cnvCunit'
 -
 qtcode4bareunit 'acre'    NB. │4046.86│4│
 -

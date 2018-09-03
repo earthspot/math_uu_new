@@ -6,6 +6,10 @@ cocurrent 'uu'
 NB. sl has been withdrawn from THIS SCRIPT.
 NB. It is now defined in: paths.ijs
 
+NB. boxed substrings in x at the stars of pattern: y
+cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
+cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
+
 NB. from handy, post-analoc
 isLit=: 2 2048 e.~ 3!:0
 ifdefined=: 0 <: [: 4!:0 <
@@ -164,7 +168,7 @@ for_i. y do.
 end.
 )
 
-tv=: 3 : 0
+trv=: 3 : 0
   NB. sets/resets TRACEVERBS
 PLUS=. '+'
 MINUS=. '-'
@@ -183,10 +187,10 @@ case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y  NB. dflt: y==openlist of verbs
 end.
-ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
+ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
-tv_z_=: tv_uu_  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+trv_z_=: trv_uu_  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 clearme=: 3 : 0
   NB. clear the register of currently running verbs
@@ -232,7 +236,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-tv 0	NB. to suppress any traced verbs
+trv 0	NB. to reset existing verb tracing
 require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab

@@ -47,22 +47,23 @@ factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
   NB. ONLY SCI and SIG reside in z-locale
 ME=: ''		NB. used by tracing: pushme popme etc
-SIG_z_=: 3	NB. used by: scino_z_
-SCI_z_=: 5	NB. used by: scino_z_
+SIG=: 3		NB. used by: scino
+SCI=: 5		NB. used by: scino
 UNICODE=: 1	NB. Used chiefly by: ucode
-MAXLOOP=: 30	NB. limits: convert
+MAXLOOP=: 30	NB. limits: convert (heritage)
 UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
 )
 
 TEMPERATURE_SCALES=: b4f }: noun define
 K
 Kelvin
-Newton
 C
 Centigrade
 Celsius
 F
 Fahrenheit
+Ne
+Newton
 Re
 Ré
 Reaumur

@@ -196,14 +196,18 @@ z return.
 sci=: 3 : 0
   NB. get/set SCI (sci notation threshold)
 if. 0=#y do. SCI
-else. SCI_z_=: {.y  NB. actually resides in z-locale
+else.
+  SCI_uu_=: {.y  NB. local constant
+NB.   smoutput '--- sci: SCI_uu_=',":SCI_uu_
 end.
 )
 
 sig=: 3 : 0
   NB. get/set SIG (decimal places for: format)
 if. 0=#y do. SIG
-else. SIG_z_=: {.y  NB. actually resides in z-locale
+else.
+  SIG_uu_=: {.y  NB. local constant
+NB.   smoutput '--- sig: SIG_uu_=',":SIG_uu_
 end.
 )
 
@@ -412,7 +416,17 @@ unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
 
-uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
+NB. uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
+
+uunicode=: 3 : 0
+  NB. get/set UNICODE (SI-conformance level)
+if. 0=#y do. UNICODE
+else.
+  UNICODE_uu_=: {.y  NB. local constant
+NB.   smoutput '--- uunicode: UNICODE_uu_=',":UNICODE_uu_
+end.
+)
+
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'

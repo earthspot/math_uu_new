@@ -1,12 +1,22 @@
 0 :0
-2018-08-30  17:57:19
+Monday 3 September 2018  00:51:33
 -
 UU: scientific units conversion package
 )
 
 clear 'uu'
 coclass 'uu'
-AABUILT=: '2018-08-30  17:57:19'
+AABUILT=: '2018-09-01  16:46:05'
+
+AABUILT=: '2018-09-03  13:11:46'
+AABUILT=: '2018-09-03  13:16:11'
+AABUILT=: '2018-09-03  13:37:41'
+AABUILT=: '2018-09-03  17:02:28'
+AABUILT=: '2018-09-03  17:06:49'
+AABUILT=: '2018-09-03  17:14:59'
+AABUILT=: '2018-09-03  17:28:23'
+AABUILT=: '2018-09-03  17:40:16'
+AABUILT=: '2018-09-03  17:44:22'
 
 '==================== [uu] constants ===================='
 
@@ -56,8 +66,8 @@ factory=: 3 : 0
 
 
 ME=: ''
-SIG_z_=: 3
-SCI_z_=: 5
+SIG=: 3
+SCI=: 5
 UNICODE=: 1
 MAXLOOP=: 30
 UCASE=: 0
@@ -66,12 +76,13 @@ UCASE=: 0
 TEMPERATURE_SCALES=: b4f }: noun define
 K
 Kelvin
-Newton
 C
 Centigrade
 Celsius
 F
 Fahrenheit
+Ne
+Newton
 Re
 Ré
 Reaumur
@@ -196,6 +207,8 @@ blink 'red'
 '==================== [uu] utilities ===================='
 
 cocurrent 'uu'
+cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
+cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
 isLit=: 2 2048 e.~ 3!:0
 ifdefined=: 0 <: [: 4!:0 <
 isNum=: 1 4 8 64 128 e.~ 3!:0
@@ -346,7 +359,7 @@ for_i. y do.
 end.
 )
 
-tv=: 3 : 0
+trv=: 3 : 0
 
 PLUS=. '+'
 MINUS=. '-'
@@ -363,10 +376,10 @@ case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
 case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS_uu_=: ~. ;: y
 end.
-ssw '+++ tv: #:(#z) (LF)TRACEVERBS: (linz z)'
+ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
-tv_z_=: tv_uu_
+trv_z_=: trv_uu_
 
 clearme=: 3 : 0
 
@@ -411,7 +424,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-tv 0
+trv 0
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
@@ -643,14 +656,16 @@ z return.
 sci=: 3 : 0
 
 if. 0=#y do. SCI
-else. SCI_z_=: {.y
+else.
+  SCI_uu_=: {.y
 end.
 )
 
 sig=: 3 : 0
 
 if. 0=#y do. SIG
-else. SIG_z_=: {.y
+else.
+  SIG_uu_=: {.y
 end.
 )
 
@@ -845,8 +860,14 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
+uunicode=: 3 : 0
 
-uunicode=: 3 : 'if. 0=#y do. UNICODE else. UNICODE=: {.y end.'
+if. 0=#y do. UNICODE
+else.
+  UNICODE_uu_=: {.y
+end.
+)
+
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
@@ -1631,6 +1652,41 @@ but currently…
   ucode is unused
   ucods is called only by ct0_cal_
   ct_cal_=: ct1_cal_
+-
+---USE OF PUBLIC WORDS BY CAL Sunday 2 September 2018...
+compatible	NOTUSED
+compatlist	docompatlist compare incompat(combine) compat compat_i
+convert		changeunits fexp1 fexp_nominal ttadl ttafl ttappend ttload
+cnvj (cnvCunit)	scaleunits
+format (formatOUT)	nfx
+scino		NOTUSED
+selfcanc		combine
+setsci (sci)	NOTUSED	
+setsig (sig)	NOTUSED
+set_ucase		NOTUSED
+sci		califace[QSCI,psci] (local sci uses SCI)
+sig		califace[QSIG,prec] (local sig uses SIG) ttsav
+startuu		NOTUSED
+ucase		NOTUSED …is TABULA accessing UU directly?
+udat		ttauc ttauf
+udiv		combine fnline
+udumb		ttauc
+uniform		ct1 docompatlist
+uurowsc		NOTUSED
+uurowsf		NOTUSED
+UUC_uu_		califace[VUUC]
+UUF_uu_		califace[VUUF]
+ucods_uu_		ct0
+adj (placeholder)	getvalue setvalue
+  getvalue	califace[VALU] plotv
+  setvalue	califace[...] plotxSwift plotx plotz setvunits
+---TO DO:
+	suffix all these with: _uu ?
+	elim NOTUSED from UU
+	elim direct use of _uu_
+	see if any can be avoided
+	consider a keyhole: uuengine (adverb if any dyadic)
+	restore adj_uu_ -but base it on format*
 )
 
 public=: 3 : 0
@@ -1658,6 +1714,56 @@ uniform=: uniform_uu_
 uurowsc=: uurowsc_uu_
 uurowsf=: uurowsf_uu_
 i.0 0
+)
+
+chop=: SP ddefine
+
+
+aa=. dltb x taketo y
+bb=. dltb x takeafter y
+aa ; bb
+)
+
+isQty=: 0:
+
+uuengine=: 3 : 0
+
+
+if. isQty y do.
+  cmnd=. 'uuuu'
+  arg=. ": narg=. 1 pick y
+else.
+  narg=. {.0". arg=. 4}.y
+  cmnd=. 4{.y
+end.
+select. cmnd
+case. 'QSCI' do.
+		sci''
+case. 'QSIC' do.
+		uunicode''
+case. 'QSIG' do.
+		sig''
+case. 'VUUC' do.
+		x2f UUC
+case. 'VUUF' do.
+		x2f UUF
+case. 'VUUM' do.
+		x2f UUM
+case. 'ssci' do.
+		sci narg
+fcase.'sicl' do.
+case. 'ssic' do.
+		uunicode narg
+case. 'ssig' do.
+		sig narg
+case. 'uuuu' do.
+		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
+case.        do. '>>> uuengine: bad y-arg';y
+end.
+)
+
+0 :0
+smoutput   uuengine 'uuuu 88 ft/s > mi/h'
 )
 
 
@@ -1707,8 +1813,8 @@ start=: 3 : 0
 
 
 make_msg 1
-tv 0
-tv '+start'
+trv 0
+trv '+start'
 wd'msgs'
 0 make_msg 0
 if. -.fexist TPATH_UUC do.

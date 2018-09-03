@@ -10,8 +10,8 @@ start=: 3 : 0
   NB. whenever constants library (UUC) has been changed.
   NB. (start'' not needed when the functions library (UUF) changed)
 make_msg 1	NB. enable diagnostics
-tv 0
-tv '+start'
+trv 0
+trv '+start'
 wd'msgs'
 0 make_msg 0	NB. disable diagnostics while caches are being built
 if. -.fexist TPATH_UUC do.

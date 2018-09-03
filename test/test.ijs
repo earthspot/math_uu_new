@@ -8,7 +8,7 @@ PLS_z_=: LF,~LF,60$'+'
 smoutput PLS,'+++ test.ijs - entered',PLS
 
 NB. trace these verbs…
-NB. tv 'start qty4i qty4anyunit qty4bareunit'
+NB. trv 'start qty4i qty4anyunit qty4bareunit'
 
 load '~Gituu/test/test4.ijs'
 load '~Gituu/test/test2.ijs'
@@ -19,7 +19,7 @@ redux 14  NB. test flag: UNICODE with a sufficiently complex definition
 redux 19  NB. test: convert
 redux 21  NB. test: temperature scales
 
-NB. tv 0  NB. turn trace off
+NB. trv 0  NB. turn trace off
 
 NB. ---------------------------------------------------------
 0 :0
