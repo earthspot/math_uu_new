@@ -23,6 +23,7 @@ ICE_C=: 0 	NB. water freezes [°C]
 ICE_K=: 273.15	NB. water freezes [K]
 HD=: '·'		NB. hi-dot, optional SI convention
 INVALID=: _.j_.
+ME=: ''		NB. used by tracing: pushme popme etc
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PI=: o.1		NB. π
@@ -46,12 +47,12 @@ UNDEFINED=: _.	NB. should propagate in a formula
 factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
   NB. ONLY SCI and SIG reside in z-locale
+DIAGNOSTICS=: 0	NB. 0-->msg=:sllog=:sessuu=:empty
 ME=: ''		NB. used by tracing: pushme popme etc
 SIG=: 3		NB. used by: scino
 SCI=: 5		NB. used by: scino
-UNICODE=: 1	NB. Used chiefly by: ucode
-MAXLOOP=: 30	NB. limits: convert (heritage)
 UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
+UNICODE=: 1	NB. Used chiefly by: ucode
 )
 
 TEMPERATURE_SCALES=: b4f }: noun define

@@ -6,17 +6,17 @@ UU: scientific units conversion package
 
 clear 'uu'
 coclass 'uu'
-AABUILT=: '2018-09-01  16:46:05'
 
-AABUILT=: '2018-09-03  13:11:46'
-AABUILT=: '2018-09-03  13:16:11'
-AABUILT=: '2018-09-03  13:37:41'
-AABUILT=: '2018-09-03  17:02:28'
-AABUILT=: '2018-09-03  17:06:49'
-AABUILT=: '2018-09-03  17:14:59'
-AABUILT=: '2018-09-03  17:28:23'
-AABUILT=: '2018-09-03  17:40:16'
-AABUILT=: '2018-09-03  17:44:22'
+AABUILT=: '2018-09-04  16:07:02'
+AABUILT=: '2018-09-04  17:40:16'
+AABUILT=: '2018-09-04  17:42:57'
+AABUILT=: '2018-09-04  17:43:34'
+AABUILT=: '2018-09-04  17:48:54'
+AABUILT=: '2018-09-04  17:54:50'
+AABUILT=: '2018-09-04  18:04:29'
+AABUILT=: '2018-09-04  18:07:44'
+AABUILT=: '2018-09-04  18:12:26'
+AABUILT=: '2018-09-04  18:14:05'
 
 '==================== [uu] constants ===================='
 
@@ -42,6 +42,7 @@ ICE_C=: 0
 ICE_K=: 273.15
 HD=: '·'
 INVALID=: _.j_.
+ME=: ''
 MI=: '-'
 NUN=: '??'
 PI=: o.1
@@ -65,12 +66,12 @@ UNDEFINED=: _.
 factory=: 3 : 0
 
 
+DIAGNOSTICS=: 0
 ME=: ''
 SIG=: 3
 SCI=: 5
-UNICODE=: 1
-MAXLOOP=: 30
 UCASE=: 0
+UNICODE=: 1
 )
 
 TEMPERATURE_SCALES=: b4f }: noun define
@@ -580,14 +581,13 @@ try. {.".y catch. INVALID end.
 )
 
 exrate=: exrate_exch_
-
 getversion=: 3 : 0
-try.
-bad=. fread''
-assert. -. bad -: z=. fread y sl 'manifest.ijs'
-assert. 0< # z=. LF taketo 'VERSION' dropto z
-".z 
-catch. end.
+
+VERSION=: 'v.v.v'
+assert. fexist y
+load y sl 'manifest.ijs'
+assert. -. absent 'VERSION'
+empty erase 'FILES RELEASE LABCATEGORY PLATFORMS'
 )
 
 hy=: '_-' charsub ]
@@ -657,7 +657,7 @@ sci=: 3 : 0
 
 if. 0=#y do. SCI
 else.
-  SCI_uu_=: {.y
+  SCI=: {.y
 end.
 )
 
@@ -665,7 +665,15 @@ sig=: 3 : 0
 
 if. 0=#y do. SIG
 else.
-  SIG_uu_=: {.y
+  SIG=: {.y
+end.
+)
+
+sic=: uunicode=: 3 : 0
+
+if. 0=#y do. UNICODE
+else.
+  UNICODE=: {.y
 end.
 )
 
@@ -860,14 +868,6 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-uunicode=: 3 : 0
-
-if. 0=#y do. UNICODE
-else.
-  UNICODE_uu_=: {.y
-end.
-)
-
 uurowsc=: 3 : '(UUC ssmx y){UUC'
 uurowsf=: 3 : '(UUF ssmx y){UUF'
 validunits=: 3 : 'units e.~ <,y'
@@ -1156,6 +1156,7 @@ targ ; loop ; factor return.
 
 uu=: '' ddefine
 
+if. ST={.y do. uuengine }.y return. end.
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y
@@ -1688,42 +1689,6 @@ adj (placeholder)	getvalue setvalue
 	consider a keyhole: uuengine (adverb if any dyadic)
 	restore adj_uu_ -but base it on format*
 )
-
-public=: 3 : 0
-
-
-cocurrent y
-compatible=: compatible_uu_
-compatlist=: compatlist_uu_
-convert=: convert_uu_
-cnvj=: cnvCunit_uu_
-format=: formatOUT_uu_
-scino=: scino_uu_
-selfcanc=: selfcanc_uu_
-setsci=: sci_uu_
-setsig=: sig_uu_
-set_ucase=: ucase_uu_
-sci=: sci_uu_
-sig=: sig_uu_
-startuu=: start_uu_
-ucase=: ucase_uu_
-udat=: udat_uu_
-udiv=: udiv_uu_
-udumb=: udumb_uu_
-uniform=: uniform_uu_
-uurowsc=: uurowsc_uu_
-uurowsf=: uurowsf_uu_
-i.0 0
-)
-
-chop=: SP ddefine
-
-
-aa=. dltb x taketo y
-bb=. dltb x takeafter y
-aa ; bb
-)
-
 isQty=: 0:
 
 uuengine=: 3 : 0
@@ -1740,7 +1705,7 @@ select. cmnd
 case. 'QSCI' do.
 		sci''
 case. 'QSIC' do.
-		uunicode''
+		sic''
 case. 'QSIG' do.
 		sig''
 case. 'VUUC' do.
@@ -1753,24 +1718,16 @@ case. 'ssci' do.
 		sci narg
 fcase.'sicl' do.
 case. 'ssic' do.
-		uunicode narg
+		sic narg
 case. 'ssig' do.
 		sig narg
+case. 'suuz' do.
+		uu_z_=: uu
 case. 'uuuu' do.
 		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
 case.        do. '>>> uuengine: bad y-arg';y
 end.
 )
-
-0 :0
-smoutput   uuengine 'uuuu 88 ft/s > mi/h'
-)
-
-
-
-uunicode_z_=: uunicode_uu_
-uu_z_=: uu_uu_
-
 
 '==================== [z] paths.ijs ===================='
 
@@ -1800,8 +1757,6 @@ uuc=: 3 : 'openFolder TPATH_UUC'
 uuf=: 3 : 'openFolder TPATH_UUF'
 uum=: 3 : 'openFolder TPATH_UUM'
 
-tpaths_validate''
-
 '==================== [uu] start ===================='
 
 cocurrent 'uu'
@@ -1812,32 +1767,26 @@ start=: 3 : 0
 
 
 
-make_msg 1
-trv 0
-trv '+start'
-wd'msgs'
+ssw '+++ start: ENTERED. y=(y)'
+if. isNo y do. UNICODE=: y end.
 0 make_msg 0
-if. -.fexist TPATH_UUC do.
-  smoutput z=.'>>> start: file not found: ',TPATH_UUC
-  z return.
-end.
 factory''
-badversion=. 'v.v.v'"_
-]VERSION=: getversion :: ('v.v.v'"_) TPATH_UU
-load :: 0: TPATH_UUC
-load :: 0: TPATH_UUF
-load :: 0: TPATH_UUM
-
+tpaths_validate''
+VERSION=: getversion TPATH_UU
+load TPATH_UUC
+load TPATH_UUF
+load TPATH_UUM
 make_units''
 
 make_unitc''
+
 report_complex_nouns''
-
-STARTED=: 1
-
-
-make_msg 1
-wd'msgs'
+make_msg DIAGNOSTICS
 )
 
-start''
+create=: start
+destroy=: codestroy
+
+uuinit_z_=: 3 : 0
+UU_LOC_z_=: y conew 'uu'
+)

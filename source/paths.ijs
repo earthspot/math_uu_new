@@ -32,5 +32,3 @@ NB. TEST ONLY: utilities
 uuc=: 3 : 'openFolder TPATH_UUC'		NB. view constants
 uuf=: 3 : 'openFolder TPATH_UUF'		NB. view functions
 uum=: 3 : 'openFolder TPATH_UUM'		NB. view conversns
-
-tpaths_validate''

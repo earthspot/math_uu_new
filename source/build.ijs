@@ -1,6 +1,6 @@
 NB. uu - build
 0 :0
-Monday 3 September 2018  00:44:42
+Tuesday 4 September 2018  15:41:57
 -
 open BUILTFILE
 )
@@ -10,14 +10,12 @@ NB. DITTO THEN RUN:		fnF9
 
 smoutput '--- UU build: started'
 
-NOW=: date''
 HEADERFILE_z_=: '~Gituu/source/header.ijs'
-BUILTFILE_z_=: 1!:1 <jpath'~Gituu/builtfile'	NB. '~Gituu/uu.ijs'
-
-RB=: ')'
+BUILTFILE_z_=:  '~Gituu/uu.ijs'
+NB. BUILTFILE_z_=: 1!:1 <jpath'~Gituu/builtfile'
 
   NB. Modify header.ijs with current date written into it
-HEADERFILE fappend~ LF,'AABUILT=: ',quote NOW
+HEADERFILE fappend~ LF,'AABUILT=: ',quote date''
 
   NB. build BUILTFILE
 writesourcex_jp_ '~Gituu/source';BUILTFILE

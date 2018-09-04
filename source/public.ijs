@@ -46,40 +46,32 @@ adj (placeholder)	getvalue setvalue
 	restore adj_uu_ -but base it on format*
 )
 
-public=: 3 : 0
-  NB. Makes aliases to UU public verbs in CLIENT locale (y)
-  NB. cocurrent CLIENT locale: run this verb with (locale) y
-cocurrent y
-compatible=: compatible_uu_
-compatlist=: compatlist_uu_
-convert=: convert_uu_
-cnvj=: cnvCunit_uu_	NB. STILL NEEDED?
-format=: formatOUT_uu_
-scino=: scino_uu_
-selfcanc=: selfcanc_uu_
-setsci=: sci_uu_
-setsig=: sig_uu_
-set_ucase=: ucase_uu_
-sci=: sci_uu_
-sig=: sig_uu_
-startuu=: start_uu_
-ucase=: ucase_uu_
-udat=: udat_uu_
-udiv=: udiv_uu_		NB. STILL NEEDED?
-udumb=: udumb_uu_
-uniform=: uniform_uu_
-uurowsc=: uurowsc_uu_
-uurowsf=: uurowsf_uu_
-i.0 0
-)
-
-chop=: SP ddefine
-  NB. cut y at char/string x
-  NB. LOOK FOR stdlib replacement !!!!!!!!!!!!!
-aa=. dltb x taketo y
-bb=. dltb x takeafter y
-aa ; bb
-)
+NB. public=: 3 : 0
+NB.   NB. Makes aliases to UU public verbs in CLIENT locale (y)
+NB.   NB. cocurrent CLIENT locale: run this verb with (locale) y
+NB. cocurrent y
+NB. compatible=: compatible_uu_
+NB. compatlist=: compatlist_uu_
+NB. convert=: convert_uu_
+NB. cnvj=: cnvCunit_uu_	NB. STILL NEEDED?
+NB. format=: formatOUT_uu_
+NB. scino=: scino_uu_
+NB. selfcanc=: selfcanc_uu_
+NB. setsci=: sci_uu_
+NB. setsig=: sig_uu_
+NB. set_ucase=: ucase_uu_
+NB. sci=: sci_uu_
+NB. sig=: sig_uu_
+NB. startuu=: start_uu_
+NB. ucase=: ucase_uu_
+NB. udat=: udat_uu_
+NB. udiv=: udiv_uu_		NB. STILL NEEDED?
+NB. udumb=: udumb_uu_
+NB. uniform=: uniform_uu_
+NB. uurowsc=: uurowsc_uu_
+NB. uurowsf=: uurowsf_uu_
+NB. i.0 0
+NB. )
 
 isQty=: 0:	NB. DUMMY FOR NOW <<<<<<<<<<<<<<<<<<<<<<<
 
@@ -97,7 +89,7 @@ select. cmnd
 case. 'QSCI' do. NB. query scientific notation threshold
 		sci''
 case. 'QSIC' do. NB. query SI-conformance level
-		uunicode''
+		sic''
 case. 'QSIG' do. NB. query significant figures
 		sig''
 case. 'VUUC' do. NB. LF-separated contents of UUC
@@ -110,22 +102,14 @@ case. 'ssci' do. NB. set scientific notation threshold
 		sci narg
 fcase.'sicl' do. NB. set SI-conformance level (heritage)
 case. 'ssic' do. NB. set SI-conformance level
-		uunicode narg
+		sic narg
 case. 'ssig' do. NB. set significant figures
 		sig narg
+case. 'suuz' do. NB. create uu_z_ from uu in THIS (numbered) locale
+		uu_z_=: uu
 case. 'uuuu' do. NB. call: uu_uu_
 		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
 NB. 		;/arg cutByPattern '* > *' NB.WONT WORK!
 case.        do. '>>> uuengine: bad y-arg';y
 end.
 )
-
-0 :0
-smoutput   uuengine 'uuuu 88 ft/s > mi/h'
-)
-
-  NB. public_uu_ -is not intended for making aliases in _z_
-  NB. Of all _uu_ verbs, only these should have aliases in _z_
-uunicode_z_=: uunicode_uu_		NB. test/set unicode level for UU output
-uu_z_=: uu_uu_			NB. the "keyhole" (for manual use)
-

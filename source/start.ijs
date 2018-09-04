@@ -5,36 +5,36 @@ cocurrent 'uu'
 
 start=: 3 : 0
   NB. start the locale: _uu_
-  NB. Not only intended to be called on loading,
-  NB. but can be called by apps using UU
-  NB. whenever constants library (UUC) has been changed.
-  NB. (start'' not needed when the functions library (UUF) changed)
-make_msg 1	NB. enable diagnostics
-trv 0
-trv '+start'
-wd'msgs'
-0 make_msg 0	NB. disable diagnostics while caches are being built
-if. -.fexist TPATH_UUC do.
-  smoutput z=.'>>> start: file not found: ',TPATH_UUC
-  z return.
-end.
-factory''
-badversion=. 'v.v.v'"_
-]VERSION=: getversion :: ('v.v.v'"_) TPATH_UU
-load :: 0: TPATH_UUC
-load :: 0: TPATH_UUF
-load :: 0: TPATH_UUM
-  NB. Make the NOMINAL UNITS table: units
+  NB. Not only to be called on loading,
+  NB. but should be called by apps using UU
+  NB. whenever constants library (UUC) has been changed
+  NB. but not needed if only UUF (the functions library) changed
+ssw '+++ start: ENTERED. y=(y)'
+if. isNo y do. UNICODE=: y end.
+NB. make_msg 1  NB. enable diagnostics
+NB. trv 0
+NB. trv '+start'
+NB. wd'msgs'
+0 make_msg 0  NB. disable diagnostics while caches are being built
+factory''  NB. assigns: DIAGNOSTICS ME SCI SIG UCASE UNICODE 
+tpaths_validate''
+VERSION=: getversion TPATH_UU
+load TPATH_UUC
+load TPATH_UUF
+load TPATH_UUM
 make_units''
-  NB. Make unitc based on pp_encoding
-make_unitc''  NB. 1st pass -inits uvalc and unitc
+  NB. …makes globals: cspel csymb units unitv uvalu unitx uvalx compat
+make_unitc''
+  NB. …makes global: unitc --based on pp_encoding
 report_complex_nouns''  NB. NO NOUNS should be complex
-  NB. Enable inline test-verbs (in main.ijs)…
-STARTED=: 1
-  NB. …such verbs only act if the script is loaded
-  NB. once verb: start has been run.
-make_msg 1	NB. enable diagnostics
-wd'msgs'
+make_msg DIAGNOSTICS  NB. enable diagnostics
+NB. wd'msgs'
 )
 
-start''
+create=: start
+destroy=: codestroy
+
+uuinit_z_=: 3 : 0
+UU_LOC_z_=: y conew 'uu'
+NB. uu_z_=: uu__UU_LOC
+)

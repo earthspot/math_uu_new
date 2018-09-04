@@ -30,8 +30,8 @@ ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 make_msg=: 1 ddefine
   NB. USED BY: start -and diagnostics for given IDs
   NB. These diagnostics get switched off/on by: start
-clearme''	NB. cleardown ME (in all modes)
-talks=. x	NB. Boolean: x==1 -- output to sess
+clearme''  NB. cleardown ME (in all modes)
+talks=. x  NB. Boolean: x==1 -- output to sess
 if. y do.
   sessuu=: sessuu1
   msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS

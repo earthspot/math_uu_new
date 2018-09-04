@@ -294,6 +294,7 @@ targ ; loop ; factor return.
 
 uu=: '' ddefine
   NB. convert str: y (e.g. '212 degF') to target units (x)
+if. ST={.y do. uuengine }.y return. end.
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
