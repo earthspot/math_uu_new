@@ -25,8 +25,9 @@ end.
 smclear''
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
-NB. load TESTFILE
-NB. smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
+uuinitTest''  NB. create an instance for testing...
+load TESTFILE
+smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
 
 NB. ---------------------------------------------------------
 
@@ -35,6 +36,9 @@ smoutput 0 : 0
    tpath''
 >>> To force good working TPATH_* settings:
    load temp 6
+)
+
+0 :0 NB. SUPERSEDED....................
 >>> To launch an instance of class'uu'...
    u0=: uuinit''  NB. localizer is: UU_LOC_z_
    u1=: uuinit 1  NB. runs: start 1 --> UNICODE__uu1 -: 1

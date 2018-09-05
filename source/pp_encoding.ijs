@@ -161,10 +161,9 @@ popme 'qtcode4anyunit'
 muv;muz return.
 )
 
-cnvCunit=: 3 : 0
+cnvj=: cnvCunit=: 3 : 0
 pushme 'cnvCunit'
   NB. cut prefs/suffs from a cunit (eg: '/kg^3')
-y_uu_=: y
 z=. dltb y  NB. (,'m') for y=='m' or y==' m'
 k=. p=. 1   NB. to be overridden below
    NB. elim a NEGATIVE power in all forms
@@ -259,7 +258,7 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-compatible=: 4 : 0
+compat=: compatible=: 4 : 0
   NB. =1 iff units x,y compatible
   NB. [*] [!] compatible with everything…
 ident=. ([: , [) -: ([: , ])

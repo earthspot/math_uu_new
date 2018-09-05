@@ -4,11 +4,11 @@
 cocurrent 'uu'
 
 start=: 3 : 0
-  NB. start the locale: _uu_
+  NB. start the UU locale - which may be a numbered one.
   NB. Not only to be called on loading,
-  NB. but should be called by apps using UU
-  NB. whenever constants library (UUC) has been changed
-  NB. but not needed if only UUF (the functions library) changed
+  NB.  but should be called by apps using UU whenever
+  NB.  the constants library (UUC) has been changed.
+  NB. But not needed if only the functions library (UUF) changed
 ssw '+++ start: ENTERED. y=(y)'
 if. isNo y do. UNICODE=: y end.
 NB. make_msg 1  NB. enable diagnostics
@@ -35,6 +35,14 @@ create=: start
 destroy=: codestroy
 
 uuinit_z_=: 3 : 0
-UU_LOC_z_=: y conew 'uu'
-NB. uu_z_=: uu__UU_LOC
+ulo=. y conew 'uu'
+)
+
+uuinitTest_z_=: 3 : 0
+  NB. Create instance of class UU for casual testing of UU
+  NB. Have uu and uuengine visible from _z_
+uloc_z_=: uuinit y
+uu_z_=: uu__uloc
+uuengine_z_=: uuengine__uloc
+i.0 0
 )

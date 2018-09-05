@@ -136,8 +136,9 @@ VERSION=: 'v.v.v'
 assert. fexist y  NB. y operationally is TPATH_UU
 load y sl 'manifest.ijs'
 assert. -. absent 'VERSION'
-empty erase 'FILES RELEASE LABCATEGORY PLATFORMS'
+erase 'FILES RELEASE LABCATEGORY PLATFORMS'
 NB. empty erase 'CAPTION DESCRIPTION FOLDER'
+VERSION return.
 )
 
 hy=: '_-' charsub ]
@@ -237,7 +238,7 @@ z=. deb y
 if. x do.  NB. apply convention
   if. UNICODE>:2 do. y return. end.  NB. convention n/a
   if. ')'={:z do. y return. end.  NB. convention already applied
-  z=. canon_uu_ z
+  z=. canon z
   a=. '/' taketo z
   b=. '/' dropto z  NB. all sub-units should be slashed
   z=. a,'/',paren deb b rplc SL;SP  NB. crudely invert b

@@ -144,18 +144,6 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-test_z_=: 3 : 0
-  NB. handles F5 for quick testing
-NB. smclear''
-sm        uu '100 degC'
-sm        uu '212 degF'
-sm        uu '373.15 K'
-sm 'degF' uu '100 degC'
-sm 'degC' uu '212 degF'
-sm 'degF' uu '212 degF'
-sm 'degC' uu '100 degC'
-)
-
 utab=: 3 : 0
 	NB. TEST diagnostics table of caches
 smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
@@ -175,32 +163,30 @@ MINUS=. '-'
 verbs1=. ;: 'uu formatIN formatOUT'
 verbs2=. ;: 'uu'
 verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
-NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS_uu_ -. ;: y-.MINUS
+NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS ,~ ;: y-.PLUS
+NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS -. ;: y-.MINUS
 select. {.y
-case. ' '   do. z=. TRACEVERBS_uu_  
-case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
-case. 1     do. z=. TRACEVERBS_uu_=: verbs1
-case. 2     do. z=. TRACEVERBS_uu_=: verbs2
-case. 3     do. z=. TRACEVERBS_uu_=: verbs3
-case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
-case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
-case.       do. z=. TRACEVERBS_uu_=: ~. ;: y  NB. dflt: y==openlist of verbs
+case. ' '   do. z=. TRACEVERBS  
+case. 0     do. z=. TRACEVERBS=: 0$a:
+case. 1     do. z=. TRACEVERBS=: verbs1
+case. 2     do. z=. TRACEVERBS=: verbs2
+case. 3     do. z=. TRACEVERBS=: verbs3
+case. PLUS  do. z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.PLUS
+case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
+case.       do. z=. TRACEVERBS=: ~. ;: y  NB. dflt: y==openlist of verbs
 end.
 ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
-trv_z_=: trv_uu_  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 clearme=: 3 : 0
   NB. clear the register of currently running verbs
-ME_uu_=: ''  NB. cleardown ME
+ME=: ''  NB. cleardown ME
 i.0 0
 )
 
 pushme=: 1 ddefine
   NB. register (y) as the currently running verb
-ME_uu_=: ~. ME_uu_ ,~ ;:y
+ME=: ~. ME ,~ ;:y
 if. x do. msg '+++ (y): ENTERED' end.
 i.0 0
 )
@@ -208,7 +194,7 @@ i.0 0
 popme=: 1 ddefine
   NB. de-register (y) as the currently running verb
 if. x do. msg '--- (y): EXITS' end.
-ME_uu_=: ME_uu_ -. ;:y
+ME=: ME -. ;:y
 i.0 0
 )
 
@@ -241,8 +227,6 @@ require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab
 )
-runlab_z_=: runlab_uu_
-
 
 tpath=: 3 : 0
   NB. queries TPATH_ settings
@@ -268,6 +252,3 @@ end.
 i.0 0
 )
 
-  NB. Have BOTH these utilities shadowed in _z_ ...
-tpath_z_=: tpath_uu_
-tpaths_z_=: tpaths_uu_

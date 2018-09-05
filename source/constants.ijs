@@ -38,7 +38,7 @@ UNDEFINED=: _.	NB. should propagate in a formula
 
   NB. UNICODE
   NB. controls SI-compliance via utf-8 chars
-  NB. get/set value externally via: ucode_uu_
+  NB. get/set value externally via: sic or uunicode
   NB. UNICODE=0	units expressed entirely in ASCII
   NB. UNICODE=1	utf-8s e.g. Å but inverse shown as: /Å
   NB. UNICODE=2	utf-8, no '/'

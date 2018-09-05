@@ -17,6 +17,15 @@ AABUILT=: '2018-09-04  18:04:29'
 AABUILT=: '2018-09-04  18:07:44'
 AABUILT=: '2018-09-04  18:12:26'
 AABUILT=: '2018-09-04  18:14:05'
+AABUILT=: '2018-09-05  01:57:13'
+AABUILT=: '2018-09-05  12:20:47'
+AABUILT=: '2018-09-05  16:49:07'
+AABUILT=: '2018-09-05  17:01:23'
+AABUILT=: '2018-09-05  17:01:56'
+AABUILT=: '2018-09-05  17:20:04'
+AABUILT=: '2018-09-05  17:32:27'
+AABUILT=: '2018-09-05  17:42:04'
+AABUILT=: '2018-09-05  17:52:57'
 
 '==================== [uu] constants ===================='
 
@@ -337,17 +346,6 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-test_z_=: 3 : 0
-
-sm        uu '100 degC'
-sm        uu '212 degF'
-sm        uu '373.15 K'
-sm 'degF' uu '100 degC'
-sm 'degC' uu '212 degF'
-sm 'degF' uu '212 degF'
-sm 'degC' uu '100 degC'
-)
-
 utab=: 3 : 0
 
 smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
@@ -368,29 +366,27 @@ verbs1=. ;: 'uu formatIN formatOUT'
 verbs2=. ;: 'uu'
 verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
 select. {.y
-case. ' '   do. z=. TRACEVERBS_uu_  
-case. 0     do. z=. TRACEVERBS_uu_=: 0$a:
-case. 1     do. z=. TRACEVERBS_uu_=: verbs1
-case. 2     do. z=. TRACEVERBS_uu_=: verbs2
-case. 3     do. z=. TRACEVERBS_uu_=: verbs3
-case. PLUS  do. z=. TRACEVERBS_uu_=: ~. TRACEVERBS_uu_ ,~ ;: y-.PLUS
-case. MINUS do. z=. TRACEVERBS_uu_=: TRACEVERBS_uu_ -. ;: y-.MINUS
-case.       do. z=. TRACEVERBS_uu_=: ~. ;: y
+case. ' '   do. z=. TRACEVERBS  
+case. 0     do. z=. TRACEVERBS=: 0$a:
+case. 1     do. z=. TRACEVERBS=: verbs1
+case. 2     do. z=. TRACEVERBS=: verbs2
+case. 3     do. z=. TRACEVERBS=: verbs3
+case. PLUS  do. z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.PLUS
+case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
+case.       do. z=. TRACEVERBS=: ~. ;: y
 end.
 ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
 )
 
-trv_z_=: trv_uu_
-
 clearme=: 3 : 0
 
-ME_uu_=: ''
+ME=: ''
 i.0 0
 )
 
 pushme=: 1 ddefine
 
-ME_uu_=: ~. ME_uu_ ,~ ;:y
+ME=: ~. ME ,~ ;:y
 if. x do. msg '+++ (y): ENTERED' end.
 i.0 0
 )
@@ -398,7 +394,7 @@ i.0 0
 popme=: 1 ddefine
 
 if. x do. msg '--- (y): EXITS' end.
-ME_uu_=: ME_uu_ -. ;:y
+ME=: ME -. ;:y
 i.0 0
 )
 
@@ -429,8 +425,6 @@ trv 0
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
-runlab_z_=: runlab_uu_
-
 
 tpath=: 3 : 0
 
@@ -455,10 +449,6 @@ for_t. z do.
 end.
 i.0 0
 )
-
-
-tpath_z_=: tpath_uu_
-tpaths_z_=: tpaths_uu_
 
 '==================== [uu] main ===================='
 
@@ -587,7 +577,8 @@ VERSION=: 'v.v.v'
 assert. fexist y
 load y sl 'manifest.ijs'
 assert. -. absent 'VERSION'
-empty erase 'FILES RELEASE LABCATEGORY PLATFORMS'
+erase 'FILES RELEASE LABCATEGORY PLATFORMS'
+VERSION return.
 )
 
 hy=: '_-' charsub ]
@@ -684,7 +675,7 @@ z=. deb y
 if. x do.
   if. UNICODE>:2 do. y return. end.
   if. ')'={:z do. y return. end.
-  z=. canon_uu_ z
+  z=. canon z
   a=. '/' taketo z
   b=. '/' dropto z
   z=. a,'/',paren deb b rplc SL;SP
@@ -1023,10 +1014,9 @@ popme 'qtcode4anyunit'
 muv;muz return.
 )
 
-cnvCunit=: 3 : 0
+cnvj=: cnvCunit=: 3 : 0
 pushme 'cnvCunit'
 
-y_uu_=: y
 z=. dltb y
 k=. p=. 1
 
@@ -1121,7 +1111,7 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-compatible=: 4 : 0
+compat=: compatible=: 4 : 0
 
 
 ident=. ([: , [) -: ([: , ])
@@ -1252,7 +1242,7 @@ register=: 3 : 0
 VEX=: y
 )
 
-formatOUT=: ''&$: :(4 : 0)
+format=: formatOUT=: '' ddefine
 0 pushme'formatOUT'
 msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
 NO_UNITS_NEEDED=: 0
@@ -1687,7 +1677,7 @@ adj (placeholder)	getvalue setvalue
 	elim direct use of _uu_
 	see if any can be avoided
 	consider a keyhole: uuengine (adverb if any dyadic)
-	restore adj_uu_ -but base it on format*
+	restore adj_uu_ -but base it on format* or its ancillaries
 )
 isQty=: 0:
 
@@ -1723,8 +1713,10 @@ case. 'ssig' do.
 		sig narg
 case. 'suuz' do.
 		uu_z_=: uu
+		uuengine_z_=: uuengine
 case. 'uuuu' do.
 		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
+
 case.        do. '>>> uuengine: bad y-arg';y
 end.
 )
@@ -1788,5 +1780,14 @@ create=: start
 destroy=: codestroy
 
 uuinit_z_=: 3 : 0
-UU_LOC_z_=: y conew 'uu'
+ulo=. y conew 'uu'
+)
+
+uuinitTest_z_=: 3 : 0
+
+
+uloc_z_=: uuinit y
+uu_z_=: uu__uloc
+uuengine_z_=: uuengine__uloc
+i.0 0
 )

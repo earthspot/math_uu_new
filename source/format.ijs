@@ -28,7 +28,7 @@ register=: 3 : 0
 VEX=: y
 )
 
-formatOUT=: ''&$: :(4 : 0)
+format=: formatOUT=: '' ddefine
 0 pushme'formatOUT'
 msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
 NO_UNITS_NEEDED=: 0

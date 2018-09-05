@@ -7,6 +7,8 @@ PLS_z_=: LF,~LF,60$'+'
 
 smoutput PLS,'+++ test.ijs - entered',PLS
 
+uunicode_z_=: 3 : 'uu ''*ssic '',":y'
+
 NB. trace these verbs…
 NB. trv 'start qty4i qty4anyunit qty4bareunit'
 

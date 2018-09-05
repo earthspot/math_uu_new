@@ -43,7 +43,7 @@ adj (placeholder)	getvalue setvalue
 	elim direct use of _uu_
 	see if any can be avoided
 	consider a keyhole: uuengine (adverb if any dyadic)
-	restore adj_uu_ -but base it on format*
+	restore adj_uu_ -but base it on format* or its ancillaries
 )
 
 NB. public=: 3 : 0
@@ -105,11 +105,12 @@ case. 'ssic' do. NB. set SI-conformance level
 		sic narg
 case. 'ssig' do. NB. set significant figures
 		sig narg
-case. 'suuz' do. NB. create uu_z_ from uu in THIS (numbered) locale
+case. 'suuz' do. NB. reset uu_z_ and uuengine_z_ to LOCAL uu
 		uu_z_=: uu
-case. 'uuuu' do. NB. call: uu_uu_
+		uuengine_z_=: uuengine
+case. 'uuuu' do. NB. call LOCAL uu via a uuengine-instruction
 		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
-NB. 		;/arg cutByPattern '* > *' NB.WONT WORK!
+		NB. ;/arg cutByPattern '* > *' NB.WONT WORK!
 case.        do. '>>> uuengine: bad y-arg';y
 end.
 )

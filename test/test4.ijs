@@ -4,13 +4,14 @@ NB. (from temp 18)
 NB. component tests of: format compatible ucode uniform
 NB. plus a lot of misc tests as 0:0 inserts
 0 :0
-Saturday 25 August 2018  23:58:24
+Wednesday 5 September 2018  17:25:32
 )
 smoutput PLS,'+++ test4.ijs - entered',PLS
 
-cocurrent 'uu'
+cocurrent 'base'
 
 format_test=: 3 : 0
+formatOUT=. formatOUT__uloc
 smoutput '+++ format_test: ENTER'
 smoutput 'PI rad-->dms' ; 'dms' formatOUT PI
 smoutput 'VEX=',VEX
@@ -22,7 +23,7 @@ smoutput '--- format_test: EXIT'
 format_test''
 
 compatible_test=: 3 : 0
-  NB. TEST ONLY -- try out verb: compatible
+compatible=. compatible__uloc
 smoutput '+++ compatible_test: ENTER'
 assert. '*' compatible ,'m'
 assert. '*' compatible 'kg'
@@ -41,7 +42,7 @@ compatible_test''
 
 ucode_test=: 3 :0
   NB. TEST ONLY -- try out verb: ucode
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
+ucode=. ucode__uloc
 smoutput '+++ ucode_test: ENTER'
 assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
 assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
@@ -54,15 +55,15 @@ smoutput '--- ucode_test: EXIT'
 ucode_test''
 
 uuniform=: 4 : 0
-  NB. sets temporary value in UNICODE then does: uniform
-RESTORED=. UNICODE
-z=. uniform_uu_ y [UNICODE=: x
-z [UNICODE=: RESTORED
+  NB. calls: uniform with TEMPORARY value of UNICODE (x)
+uniform=. uniform__uloc
+RESTORED=. UNICODE__uloc
+z=: uniform y [UNICODE__uloc=: x
+z [UNICODE__uloc=: RESTORED
 )
 
 uniform_test=: 3 : 0
-  NB. TEST ONLY -- try out verb: uniform
-if. -.zeroifabsent'STARTED' do. i.0 0 return. end.
+  NB. TEST ONLY -- try out verb: uniform via cover verb: uuniform
 smoutput '+++ uniform_test: ENTER'
 assert. 'm m/(K s s)'	-: 0 uuniform 'm m/(K s s)'
 assert. 'm m/(K s s)'	-: 1 uuniform 'm m/(K s s)'

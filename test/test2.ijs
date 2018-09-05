@@ -1,6 +1,6 @@
 NB. UU: scientific units conversion package - test2
 0 :0
-Tuesday 28 August 2018  01:27:04
+Wednesday 5 September 2018  17:26:00
 -
 Sample statements to test verbs:
  expandcode upp4utok pp4xunit code4xunit encoded decoded
