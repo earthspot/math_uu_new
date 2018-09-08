@@ -26,6 +26,11 @@ AABUILT=: '2018-09-05  17:20:04'
 AABUILT=: '2018-09-05  17:32:27'
 AABUILT=: '2018-09-05  17:42:04'
 AABUILT=: '2018-09-05  17:52:57'
+AABUILT=: '2018-09-08  16:28:51'
+AABUILT=: '2018-09-08  16:58:10'
+AABUILT=: '2018-09-08  17:09:10'
+AABUILT=: '2018-09-08  17:18:18'
+AABUILT=: '2018-09-08  17:34:26'
 
 '==================== [uu] constants ===================='
 
@@ -358,7 +363,7 @@ for_i. y do.
 end.
 )
 
-trv=: 3 : 0
+trv_z_=: trv=: 3 : 0
 
 PLUS=. '+'
 MINUS=. '-'
@@ -376,6 +381,13 @@ case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS=: ~. ;: y
 end.
 ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
+)
+
+
+linz_z_=: linz=: 3 : 0
+
+z=. }: ; (>y) ,. '|'
+brack z -. SP
 )
 
 clearme=: 3 : 0
@@ -449,6 +461,7 @@ for_t. z do.
 end.
 i.0 0
 )
+
 
 '==================== [uu] main ===================='
 
@@ -592,12 +605,6 @@ if. not 'kg' -: 2{.y do. 0 return. end.
 
 if. any 'kg^' E. y do. 0 return. end.
 1
-)
-
-linz=: 3 : 0
-
-z=. }: ; (>y) ,. '|'
-brack z -. SP
 )
 
 midino=: midi4Hz=: 69 + 12 * 2 ^. 440 %~ ]
@@ -888,7 +895,7 @@ decoded=: decodedx :: decodedr
 
 expandcode=: (0 ddefine)"0
 
-if. y=0 do. '' return. end.
+if. y=0 do. ,ST return. end.
 asTokens=. x
 for_p. decoded y[z=.'' do.
   unit=. p_index pick mks
@@ -992,8 +999,8 @@ pushme 'qtcode4anyunit'
 
 msg '+++ qtcode4anyunit: y=[(y)]'
 if. 0=#y    do. 1;TRIVIALCODE return. end.
-if. SL-: >y do. 1;TRIVIALCODE return. end.
-if. ST-: >y do. 1;KILLERCODE return. end.
+if. (,SL)-: ,y do. 1;TRIVIALCODE return. end.
+if. (,ST)-: ,y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t

@@ -154,12 +154,6 @@ if. any 'kg^' E. y do. 0 return. end.	NB. cannot accept powers of [kg]
 1	NB. return true with no more tests
 )
 
-linz=: 3 : 0
-	NB. linearize a boxed string of tokens for sm-output
-z=. }: ; (>y) ,. '|'
-brack z -. SP
-)
-
 midino=: midi4Hz=: 69 + 12 * 2 ^. 440 %~ ]	NB. "midi number" of freq: y (Hz)
 
 note=: note4Hz=: 3 : 0

@@ -156,7 +156,7 @@ for_i. y do.
 end.
 )
 
-trv=: 3 : 0
+trv_z_=: trv=: 3 : 0
   NB. sets/resets TRACEVERBS
 PLUS=. '+'
 MINUS=. '-'
@@ -176,6 +176,13 @@ case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
 case.       do. z=. TRACEVERBS=: ~. ;: y  NB. dflt: y==openlist of verbs
 end.
 ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
+)
+
+
+linz_z_=: linz=: 3 : 0
+	NB. linearize a boxed string of tokens for sm-output
+z=. }: ; (>y) ,. '|'
+brack z -. SP
 )
 
 clearme=: 3 : 0

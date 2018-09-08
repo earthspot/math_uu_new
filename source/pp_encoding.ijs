@@ -32,7 +32,8 @@ decoded=: decodedx :: decodedr
 
 expandcode=: (0 ddefine)"0
   NB. the canonical expansion (xunit) of code: y
-if. y=0 do. '' return. end.  NB. AVOIDS J HANGING <<<<<<<<<<<<<
+NB. if. y=0 do. '' return. end.  NB. AVOIDS J HANGING <<<<<<<<<<<<<
+if. y=0 do. ,ST return. end.  NB. code 0 is KILLERCODE --> '*'
 asTokens=. x  NB. (bool): x=1 -return list of boxed tokens (not string)
 for_p. decoded y[z=.'' do.
   unit=. p_index pick mks  NB. the mks unit, e.g. 'mol'
@@ -138,8 +139,8 @@ pushme 'qtcode4anyunit'
   NB. multiply the codes for each (powered)token
 msg '+++ qtcode4anyunit: y=[(y)]'
 if. 0=#y    do. 1;TRIVIALCODE return. end.
-if. SL-: >y do. 1;TRIVIALCODE return. end.
-if. ST-: >y do. 1;KILLERCODE return. end.
+if. (,SL)-: ,y do. 1;TRIVIALCODE return. end.
+if. (,ST)-: ,y do. 1;KILLERCODE return. end.
 v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t
