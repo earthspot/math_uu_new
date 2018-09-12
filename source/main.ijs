@@ -338,7 +338,7 @@ zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
 )
 
 make_units=: 0 ddefine
-  NB. makes globals: cspel csymb units unitv uvalu unitx uvalx compat
+  NB. makes globals: cspel csymb units unitv uvalu unitx uvalx
   NB. x=0: DONT adjust currency
   NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
   NB. (sspel ssymb_ -used by: ucods (ditto, omits currency symbols)
@@ -359,7 +359,6 @@ uvalu=: eval >v
   NB. Make DUMMY: unitx cycs uvalx from: units
 uvalx=: cycs=: (#UUC)$0
 unitx=: (#UUC)$<'??'
-compat=: unitc i. unitc  NB. compat-code: > earlier UUC-row#
 i.0 0
 )
 

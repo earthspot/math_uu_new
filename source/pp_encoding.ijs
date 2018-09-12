@@ -259,7 +259,7 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-compat=: compatible=: 4 : 0
+compatible=: 4 : 0
   NB. =1 iff units x,y compatible
   NB. [*] [!] compatible with everything…
 ident=. ([: , [) -: ([: , ])

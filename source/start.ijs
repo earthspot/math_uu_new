@@ -23,7 +23,7 @@ load TPATH_UUC
 load TPATH_UUF
 load TPATH_UUM
 make_units''
-  NB. …makes globals: cspel csymb units unitv uvalu unitx uvalx compat
+  NB. …makes globals: cspel csymb units unitv uvalu unitx uvalx
 make_unitc''
   NB. …makes global: unitc --based on pp_encoding
 report_complex_nouns''  NB. NO NOUNS should be complex

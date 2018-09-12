@@ -31,6 +31,8 @@ AABUILT=: '2018-09-08  16:58:10'
 AABUILT=: '2018-09-08  17:09:10'
 AABUILT=: '2018-09-08  17:18:18'
 AABUILT=: '2018-09-08  17:34:26'
+AABUILT=: '2018-09-12  02:59:21'
+AABUILT=: '2018-09-12  04:51:50'
 
 '==================== [uu] constants ===================='
 
@@ -803,7 +805,6 @@ uvalu=: eval >v
 
 uvalx=: cycs=: (#UUC)$0
 unitx=: (#UUC)$<'??'
-compat=: unitc i. unitc
 i.0 0
 )
 
@@ -1118,7 +1119,7 @@ smoutput 8 1$' '
    '°C' 	uu '100°C'
 )
 
-compat=: compatible=: 4 : 0
+compatible=: 4 : 0
 
 
 ident=. ([: , [) -: ([: , ])
@@ -1652,7 +1653,7 @@ but currently…
   ct_cal_=: ct1_cal_
 -
 ---USE OF PUBLIC WORDS BY CAL Sunday 2 September 2018...
-compatible	NOTUSED
+compatible	incompat(combine) compat
 compatlist	docompatlist compare incompat(combine) compat compat_i
 convert		changeunits fexp1 fexp_nominal ttadl ttafl ttappend ttload
 cnvj (cnvCunit)	scaleunits
@@ -1695,7 +1696,7 @@ if. isQty y do.
   cmnd=. 'uuuu'
   arg=. ": narg=. 1 pick y
 else.
-  narg=. {.0". arg=. 4}.y
+  narg=. {.0". arg=. dltb 4}.y
   cmnd=. 4{.y
 end.
 select. cmnd
@@ -1706,9 +1707,9 @@ case. 'QSIC' do.
 case. 'QSIG' do.
 		sig''
 case. 'VUUC' do.
-		x2f UUC
+		x2f uurowsc arg
 case. 'VUUF' do.
-		x2f UUF
+		x2f uurowsf arg
 case. 'VUUM' do.
 		x2f UUM
 case. 'ssci' do.

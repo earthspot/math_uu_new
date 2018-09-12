@@ -11,7 +11,7 @@ but currently…
   ct_cal_=: ct1_cal_
 -
 ---USE OF PUBLIC WORDS BY CAL Sunday 2 September 2018...
-compatible	NOTUSED
+compatible	incompat(combine) compat
 compatlist	docompatlist compare incompat(combine) compat compat_i
 convert		changeunits fexp1 fexp_nominal ttadl ttafl ttappend ttload
 cnvj (cnvCunit)	scaleunits
@@ -82,7 +82,7 @@ if. isQty y do.  NB. DEVELOP THIS <<<<<<<<<<<<<<<<<<<<<<<
   cmnd=. 'uuuu'
   arg=. ": narg=. 1 pick y
 else.
-  narg=. {.0". arg=. 4}.y
+  narg=. {.0". arg=. dltb 4}.y
   cmnd=. 4{.y
 end.
 select. cmnd
@@ -93,9 +93,9 @@ case. 'QSIC' do. NB. query SI-conformance level
 case. 'QSIG' do. NB. query significant figures
 		sig''
 case. 'VUUC' do. NB. LF-separated contents of UUC
-		x2f UUC
+		x2f uurowsc arg
 case. 'VUUF' do. NB. LF-separated contents of UUF
-		x2f UUF
+		x2f uurowsf arg
 case. 'VUUM' do. NB. LF-separated contents of UUM
 		x2f UUM
 case. 'ssci' do. NB. set scientific notation threshold
