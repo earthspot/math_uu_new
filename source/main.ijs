@@ -428,6 +428,6 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-uurowsc=: 3 : '(UUC ssmx y){UUC'
-uurowsf=: 3 : '(UUF ssmx y){UUF'
+uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
+uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'

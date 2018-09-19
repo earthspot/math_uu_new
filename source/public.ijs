@@ -93,10 +93,16 @@ case. 'QSIC' do. NB. query SI-conformance level
 case. 'QSIG' do. NB. query significant figures
 		sig''
 case. 'VUUC' do. NB. LF-separated contents of UUC
-		x2f uurowsc arg
+		x2f 0 uurowsc arg
 case. 'VUUF' do. NB. LF-separated contents of UUF
-		x2f uurowsf arg
+		x2f 0 uurowsf arg
 case. 'VUUM' do. NB. LF-separated contents of UUM
+		x2f UUM
+case. 'WUUC' do. NB. LF-separated contents of UUC
+		x2f 1 uurowsc arg
+case. 'WUUF' do. NB. LF-separated contents of UUF
+		x2f 1 uurowsf arg
+case. 'WUUM' do. NB. LF-separated contents of UUM
 		x2f UUM
 case. 'ssci' do. NB. set scientific notation threshold
 		sci narg

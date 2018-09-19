@@ -33,6 +33,7 @@ AABUILT=: '2018-09-08  17:18:18'
 AABUILT=: '2018-09-08  17:34:26'
 AABUILT=: '2018-09-12  02:59:21'
 AABUILT=: '2018-09-12  04:51:50'
+AABUILT=: '2018-09-18  23:14:14'
 
 '==================== [uu] constants ===================='
 
@@ -867,8 +868,8 @@ undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*UNICODE)'
-uurowsc=: 3 : '(UUC ssmx y){UUC'
-uurowsf=: 3 : '(UUF ssmx y){UUF'
+uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
+uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'
 
 '==================== [uu] pp_encoding.ijs ===================='
@@ -1707,10 +1708,16 @@ case. 'QSIC' do.
 case. 'QSIG' do.
 		sig''
 case. 'VUUC' do.
-		x2f uurowsc arg
+		x2f 0 uurowsc arg
 case. 'VUUF' do.
-		x2f uurowsf arg
+		x2f 0 uurowsf arg
 case. 'VUUM' do.
+		x2f UUM
+case. 'WUUC' do.
+		x2f 1 uurowsc arg
+case. 'WUUF' do.
+		x2f 1 uurowsf arg
+case. 'WUUM' do.
 		x2f UUM
 case. 'ssci' do.
 		sci narg
