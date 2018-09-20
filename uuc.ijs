@@ -21,13 +21,13 @@ NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
 NB.	--e.g '1 C.dgr' is equivalent to a rise in temperature of 1 K
 NB.	--but '1 degC' is equivalent to a temperature (absol) of 274.16 K
 NB.	Temperatures in [degC] [degF] [Celsius] [Centigrade] and [Fahrenheit]
-NB.	have their converted values decremented at display-time, to deduct the
-NB.	absolute temperature of their zero-points.
+NB.	are straight reformattings of [K].
+NB.	Their "true" values are not SCALED nor DISPLACED.
 
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Sunday 19 August 2018  13:16:59
+1 /	[saved]	Wednesday 19 September 2018  07:44:28
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -49,18 +49,18 @@ UUC=: cmx 0 : 0
 220 yd	[fu]	furlong
 1760 yd	[mi]	mile
 0.001 kg	[g]	gram (based on kg)
-1 s		[sec]	second (time)
+1 s	[sec]	second (time)
 60 s	[min]	minute
-60 min	[h]		hour
-24 h	[d]		day
-1 h		[hms] h as h:min:s
-30.4375 d		[mo]	average month
+60 min	[h]	hour
+24 h	[d]	day
+1 h	[hms] h as h:min:s
+30.4375 d [mo]	average month
 0.01 /	[%]	Percent
 1 *	[!]	YES-NO
 1 /s	[Hz]	Frequency; Hertz
 1 Hz	[midi]	"midi" number
 1 Hz	[note]	Musical note
-1 kg m/s/s	[N]	Force; Newton
+1 kg m/s/s [N]	Force; Newton
 1 N/m/m	[Pa]	Pressure; Pascal
 1 N m	[J]	Energy; Joule
 1 J/s	[W]	Power; Watt
@@ -157,13 +157,18 @@ UUC=: cmx 0 : 0
 9.80665e_3 N	[gf]	gram-force
 373.16 K	[boil.w]	Water boils; Kelvin
 273.16 K	[frez.w]	Water freezes; Kelvin
-5/9 K	[F.dgr]	temperature range
-5/9 K	[degF]	temperature
-5/9 K	[Fahrenheit] temperature
 1 K	[C.dgr]	temperature range
-1 K	[degC]	temperature
-1 K	[Celsius]	temperature
-1 K	[Centigrade]	temperature
+5/9 K	[F.dgr]	temperature range
+1 K	[degC]	temperature; Celsius
+1 K	[Celsius]	temperature; Celsius
+1 K	[Centigrade] temperature; Celsius
+1 K	[degF]	temperature; Fahrenheit
+1 K	[Fahrenheit] temperature; Fahrenheit
+1 K	[degRo]	temperature; Roemer
+1 K	[degN]	temperature; Newton
+1 K	[degDe]	temperature; Delisle
+1 K	[degRa]	temperature; Rankine
+1 K	[degRe]	temperature; Reaumur
 1 kcal/kg/K [sht.w]	Specific heat of water
 1852 m	[naut]	nautical mile
 9.454e15 m	[li.yr]	light year
