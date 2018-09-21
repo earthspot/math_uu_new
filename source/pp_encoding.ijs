@@ -292,7 +292,7 @@ popme 'convert'
 targ ; loop ; factor return.
 )
 
-uu=: '' ddefine
+uu=: ('' ddefine)"1
   NB. convert str: y (e.g. '212 degF') to target units (x)
 if. ST={.y do. uuengine }.y return. end.
 pushme 'uu'

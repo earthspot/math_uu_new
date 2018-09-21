@@ -34,6 +34,8 @@ AABUILT=: '2018-09-08  17:34:26'
 AABUILT=: '2018-09-12  02:59:21'
 AABUILT=: '2018-09-12  04:51:50'
 AABUILT=: '2018-09-18  23:14:14'
+AABUILT=: '2018-09-20  14:06:34'
+AABUILT=: '2018-09-20  14:07:05'
 
 '==================== [uu] constants ===================='
 
@@ -1153,7 +1155,7 @@ popme 'convert'
 targ ; loop ; factor return.
 )
 
-uu=: '' ddefine
+uu=: ('' ddefine)"1
 
 if. ST={.y do. uuengine }.y return. end.
 pushme 'uu'
