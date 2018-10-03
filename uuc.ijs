@@ -58,7 +58,7 @@ UUC=: cmx 0 : 0
 0.01 /	[%]	Percent
 1 *	[!]	YES-NO
 1 /s	[Hz]	Frequency; Hertz
-1 Hz	[midi]	"midi" number
+1 Hz	[midi]	Musical midi number
 1 Hz	[note]	Musical note
 1 kg m/s/s [N]	Force; Newton
 1 N/m/m	[Pa]	Pressure; Pascal
@@ -98,7 +98,7 @@ UUC=: cmx 0 : 0
 1/360 cyc	[deg]	degree of arc
 1/60 deg	[amin]	minute of arc
 1/60 amin	[asec]	second of arc
-1 deg	[dms]	degrees as deg° min' sec"
+1 deg	[dms]	degrees as deg min sec
 1 cyc/s	[r.p.s]	rev per sec
 1 cyc/min	[r.p.m]	rev per min
 1 cyc/h	[r.p.h]	rev per hour

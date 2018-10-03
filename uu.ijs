@@ -36,6 +36,9 @@ AABUILT=: '2018-09-12  04:51:50'
 AABUILT=: '2018-09-18  23:14:14'
 AABUILT=: '2018-09-20  14:06:34'
 AABUILT=: '2018-09-20  14:07:05'
+AABUILT=: '2018-10-03  22:48:54'
+AABUILT=: '2018-10-03  22:49:21'
+AABUILT=: '2018-10-03  23:00:33'
 
 '==================== [uu] constants ===================='
 
@@ -1229,7 +1232,7 @@ end.
 cocurrent 'uu'
 
 0 :0
-Wednesday 29 August 2018  03:45:10
+Wednesday 3 October 2018  22:33:44
 -
 New format verb based on daisychain
 Tries each give (give_* verb) in turn until one exits normally,
@@ -1332,11 +1335,20 @@ catch. INVALID end.
 give_0_deg=: 4 : 0
 register'give_0_deg'
 
+assert. x -: 'deg'
+ds=. deg_symbol''
+d=. scino y
+sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
+)
+
+give_1_deg=: 4 : 0
+register'give_1_deg'
+
 unit=. ,x
 assert. isTemperature unit
 T=. shorT unit
 z=. T fromKelvin y
-msg '... give_0_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+msg '... give_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'
@@ -1419,6 +1431,8 @@ x-: 'deg'
 d4dms=: 1296000x %~ 360 60 60 #. 3 {. ]
 
 deg4rad=: 13 : '180 * y%o.1'
+amin4deg=: 13 : '60 * y'
+asec4deg=: 13 : '3600 * y'
 amin4rad=: 13 : '60 * deg4rad y'
 asec4rad=: 13 : '3600 * deg4rad y'
 rad4deg=: 13 : '(o.|y) % 180'
@@ -1429,27 +1443,27 @@ give_0_dms=: 4 : 0
 register'give_0_dms'
 
 assert. x -: 'dms'
-'d m s'=.":each <.each 360 60 60 #: asec4rad |y
+'d m s'=.":each <.each 360 60 60 #: asec4deg |y
 ds=. deg_symbol''
-sw'(d)(ds) (m)(QT) (s)"'
+sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
 )
 
-give_1_note=: 4 : 0
-register'give_1_note'
+give_2_note=: 4 : 0
+register'give_2_note'
 assert. x -: 'note'
 sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 )
 
-give_1_sci=: 4 : 0
-register'give_1_sci'
+give_2_sci=: 4 : 0
+register'give_2_sci'
 
 z=. (toupper@hy@scino) y
 unit=. x
-msg '... give_1_sci: x=(x) y=(y) z=(z) unit=(unit)'
+msg '... give_2_sci: x=(x) y=(y) z=(z) unit=(unit)'
 z return.
 )
 
-give_1_sig=: give_1_sci
+give_2_sig=: give_2_sci
 
 make_daisychain''
 

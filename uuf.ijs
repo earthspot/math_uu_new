@@ -24,6 +24,19 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
+__ [/] Wednesday 3 October 2018  20:36:34
+999	<<<<< test only
+PI	<<<<< test only
+_.	<<<<< test only
+9j1	<<<<< test only
+UNDEFINED_CONSTANT	<<<<< test only
+9999 [/]	<<<<< test only
+PI [/]	<<<<< test only
+_. [/]	<<<<< test only
+9j1 [/]	<<<<< test only
+32.2 [ft/s]	<<<<< test only
+UNDEFINED_CONSTANT [/]	<<<<< test only
+BAD_EXE_VALUE [/]	<<<<< test only
 a/b^2 : a(kg),b(m)	[/]	body mass index
 ((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[+]
 ((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[-]
@@ -104,8 +117,10 @@ u+(f*t) : u(m/s),t(s),f(m/s^2)		[m/s]	final speed
 T-(T mod 3600) : T(s)			[h]	hours portion
 (T mod 3600)-(T mod 60) : T(s)		[min]	minutes portion
 T mod 60 : T(s)				[s]	seconds portion
-d^3 : d(m)		[m^3]	volume of cube
-4*PIb3*r^3 : r(m)	[m^3]	volume of sphere
-PIb3*h*r^2 : r(m),h(m)	[m^3]	volume of cone
-PI*h*r^2 : r(m),h(m)	[m^3]	volume of cylinder
+d^3 : d(m)                  [m^3]  volume of cube
+4*PIb3*r^3 : r(m)           [m^3]  volume of sphere
+PIb3*h*r^2 : r(m),h(m)      [m^3]  volume of cone
+PI*h*r^2 : r(m),h(m)        [m^3]  volume of cylinder
+a-273.15 ; a(K)             [/]  Kelvin to Celsius
+32+(9/5)*(a-273.15) ; a(K)  [/]  Kelvin to Fahrenheit
 )

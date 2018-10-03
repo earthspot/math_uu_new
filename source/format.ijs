@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Wednesday 29 August 2018  03:45:10
+Wednesday 3 October 2018  22:33:44
 -
 New format verb based on daisychain
 Tries each give (give_* verb) in turn until one exits normally,
@@ -132,6 +132,15 @@ catch. INVALID end.
 
 give_0_deg=: 4 : 0
 register'give_0_deg'
+  NB. outputs radians y [rad] as degrees of angle
+assert. x -: 'deg'  NB. force error if wrong verb
+ds=. deg_symbol''
+d=. scino y  NB. rad-->deg conversion specd already in UUC
+sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
+)
+
+give_1_deg=: 4 : 0
+register'give_1_deg'
   NB. outputs (Kelvin) y [K] converted to scale (x)
 unit=. ,x
 assert. isTemperature unit
@@ -139,7 +148,7 @@ T=. shorT unit
 NB. T=: {.dedeg unit  NB. the identifying temperature scale letter
 NB. if. T e. 'RD' do. T=. 2{.dedeg unit end. NB. take leading 2 letters
 z=. T fromKelvin y
-msg '... give_0_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
+msg '... give_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'	NB. [K] qty does not have deg_symbol
@@ -223,6 +232,8 @@ x-: 'deg'
 d4dms=: 1296000x %~ 360 60 60 #. 3 {. ]
 
 deg4rad=: 13 : '180 * y%o.1'
+amin4deg=: 13 : '60 * y'
+asec4deg=: 13 : '3600 * y'
 amin4rad=: 13 : '60 * deg4rad y'
 asec4rad=: 13 : '3600 * deg4rad y'
 rad4deg=: 13 : '(o.|y) % 180'
@@ -234,26 +245,26 @@ register'give_0_dms'
   NB. converts radians [rad] to d° m' s"
 assert. x -: 'dms'  NB. force error if wrong verb
 NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
-'d m s'=.":each <.each 360 60 60 #: asec4rad |y
+'d m s'=.":each <.each 360 60 60 #: asec4deg |y
 ds=. deg_symbol''
-sw'(d)(ds) (m)(QT) (s)"'
+sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
 )
 
-give_1_note=: 4 : 0
-register'give_1_note'
+give_2_note=: 4 : 0
+register'give_2_note'
 assert. x -: 'note'  NB. force error if wrong verb
 sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 )
 
-give_1_sci=: 4 : 0
-register'give_1_sci'
+give_2_sci=: 4 : 0
+register'give_2_sci'
   NB. force error if wrong verb
 z=. (toupper@hy@scino) y  NB. scientific notation (conventional)
 unit=. x
-msg '... give_1_sci: x=(x) y=(y) z=(z) unit=(unit)'
+msg '... give_2_sci: x=(x) y=(y) z=(z) unit=(unit)'
 z return.
 )
 
-give_1_sig=: give_1_sci
+give_2_sig=: give_2_sci
 
 make_daisychain''
