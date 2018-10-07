@@ -9,6 +9,8 @@ PLS_z_=: LF,~LF,60$'+'
 
 smoutput PLS,'+++ test.ijs - entered',PLS
 
+blink_uu_=: empty
+
 uunicode_z_=: 3 : 'uu_z_ ''*ssic '',":y'
   NB. ...preceding '*' tells verb: uu it's a uuengine instruction
 

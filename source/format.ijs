@@ -196,7 +196,6 @@ give_0_misc=: 4 : 0
 register'give_0_misc'
   NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
-if. invalid y do. 'INVALID' return. end.
 if. SIC>0 do. infinity=. '∞'
 else. infinity=. 'infinity'
 end.

@@ -43,7 +43,8 @@ else.
   sllog=: empty
   if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
 end.
-y return.
+NB. y return.
+i.0 0
 )
 
 all=: *./
@@ -61,7 +62,7 @@ report_complex_nouns=: 3 : 0
   NB. check for complex nouns in given locale
 loc=. >coname''
 nocomplex=. 1
-for_no. (nl 0) -. <'INVALID' do.  val=. ".nom=. >no
+for_no. nl 0 do.  val=. ".nom=. >no
   if. 16=3!:0 val do.
     smoutput nb 'cx:' ; nom ; 'is complex'
     nocomplex=. 0
@@ -76,12 +77,6 @@ undefined=: (3 : 0)"0
   NB. test for presence of UNDEFINED
 if. -. 128!:5 y do. 0 return. end.
 '_.' -: 5!:6 <'y'
-)
-
-invalid=: (3 : 0)"0
-  NB. test for presence of INVALID
-if. -. 128!:5 y do. 0 return. end.
-'_.j_.' -: 5!:6 <'y'
 )
 
 quoted=: 3 : 0

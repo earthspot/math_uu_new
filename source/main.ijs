@@ -116,9 +116,8 @@ end.
 eval=: 3 : 0 "1
   NB. used to evaluate numeric exprns in UUC
   NB. c/f valueOf, strValueOf
-  NB. >>> FORMERLY could return: INVALID
 y=. '/%-_Ee'charsub ;y
-try. {.".y catch. _. end.
+try. {.".y catch. UNDEFINED end.
 )
 
 exrate=: exrate_exch_
@@ -171,7 +170,14 @@ NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
 130.81  NB. [Hz] for C3	-- TEST ONLY. (WHOLE TABLE NEEDED!]
 )
 
-np=: [: <: 2 * -.
+qty4str=: 3 : 0
+  NB. return qty represented by (string) y
+  NB. >>> CONSIDER implementing this like: make_units
+val=. eval strValueOf y
+uni=. dltb SP takeafter y
+val ; uni
+)
+
 rnd=: [: <. 0.5 + ]
 
 scino=: 3 : 0
@@ -230,12 +236,6 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
-
-ucase=: 3 : 0
-if. 0=#y do. UCASE
-else. UCASE=: {.y
-end.
-)
 
 hasutf=: [: +./ 127 < a. i. ]  NB. y has utf8 chars (not pure ASCII)
 isascii=: [: *./ 128 > a. i. ]  NB. y is pure ASCII (no utf8s)

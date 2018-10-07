@@ -16,7 +16,7 @@ NB. trv 0
 NB. trv '+start'
 NB. wd'msgs'
 0 make_msg 0  NB. disable diagnostics while caches are being built
-factory''  NB. assigns: DIAGNOSTICS ME SCI SIC SIG UCASE 
+factory''  NB. assigns: DIAGNOSTICS ME SCI SIC SIG SIZ
 tpaths_validate''
 VERSION=: getversion TPATH_UU
 load TPATH_UUC

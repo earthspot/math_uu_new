@@ -49,10 +49,22 @@ AABUILT=: '2018-10-07  01:48:00'
 AABUILT=: '2018-10-07  01:55:49'
 AABUILT=: '2018-10-07  02:18:28'
 AABUILT=: '2018-10-07  02:28:21'
+AABUILT=: '2018-10-07  11:31:02'
+AABUILT=: '2018-10-07  11:59:01'
+AABUILT=: '2018-10-07  12:02:52'
+AABUILT=: '2018-10-07  13:39:16'
+AABUILT=: '2018-10-07  13:40:21'
+AABUILT=: '2018-10-07  13:59:41'
+AABUILT=: '2018-10-07  14:27:28'
+AABUILT=: '2018-10-07  14:30:14'
+AABUILT=: '2018-10-07  15:12:09'
+AABUILT=: '2018-10-07  15:13:39'
 
 '==================== [uu] constants ===================='
 
 cocurrent 'uu'
+
+
 
 
 
@@ -73,7 +85,6 @@ ICE_F=: 32
 ICE_C=: 0
 ICE_K=: 273.15
 HD=: '·'
-INVALID=: _.j_.
 ME=: ''
 MI=: '-'
 NUN=: '??'
@@ -87,14 +98,6 @@ ST=: '*'
 UL=: '_'
 UNDEFINED=: _.
 
-
-
-
-
-
-
-
-
 factory=: 3 : 0
 
 
@@ -103,8 +106,8 @@ ME=: ''
 SIC=: 1
 SIG=: 3
 SCI=: 5
-SIZ=: 1e_11
-UCASE=: 0
+SIZ=: 1e_9
+i.0 0
 )
 
 TEMPERATURE_SCALES=: b4f }: 0 : 0
@@ -150,7 +153,7 @@ UUM=: ''
 
 mks=: ;:'m kg s A K cd mol rad eur'
 0 :0
-Friday 24 August 2018  21:11:03
+Sunday 7 October 2018  12:48:11
 -
 Used by: formatin.ijs -for testing take_1_ verbs
 )
@@ -159,7 +162,7 @@ cocurrent 'uu'
 
 BLINK=: '##'
 
-blink=: 4 ddefine
+blink1=: 4 ddefine
 
 
 
@@ -174,7 +177,9 @@ r=. 255
 g=. '0x66'
 b=. 0
 rgbWhite=. 'ff8844'
+rgbWhite=. 'ff8855'
 rgbFlame=. 'ff9900'
+rgbFlame=. 'ff8800'
 rgbYellow=. 'ff6600'
 rgb=. rgbFlame
 s=. 3
@@ -186,14 +191,6 @@ t4=. '(f) -m (fade) --rgb (r),(g),(b) --blink (s) &'
 t=. ".'t',":x
 select. y
 case. '?' do. smoutput '+++ blink: shell cmd was: ',BLINK return.
-case. 'take_0_deg'     do. z=. sw '(f) --red &'
-case. 'take_0_dms'     do. z=. sw '(f) --green &'
-case. 'take_0_hms'     do. z=. sw '(f) --blue &'
-case. 'take_9_general' do. z=. sw '(f) --rgb=(rgbYellow) &'
-case. 'take_8_misc'    do. z=. sw '(f) --magenta &'
-case. 'take_1_note'    do. z=. sw '(f) --cyan &'
-case. 'take_1_sci'     do. z=. sw '(f) --rgb=(rgbWhite) &'
-case. 'take_1_sig'     do. z=. sw '(f) --white &'
 case. 0 do. z=. sw '(f) --off -m 0 &'
 case. 1 do. z=. sw '(f) --red &'
 case. 2 do. z=. sw '(f) --green &'
@@ -201,26 +198,35 @@ case. 3 do. z=. sw '(f) --blue &'
 case. 4 do. z=. sw t
 case. 5 do. z=. sw '(f) --rgb (r),(g),(b) -m (fade) &'
 case. 6 do. z=. sw '(f) --rgb (r),(g),(b) &'
+case. 'white'  do. z=. sw '(f) -m 0 --rgb=(rgbWhite) &'
+case. 'yellow' do. z=. sw '(f) -m 0 --rgb=(rgbYellow) &'
+case. 'flame'  do. z=. sw '(f) -m 0 --rgb=(rgbFlame) &'
 
-case. 'white'          do. z=. sw '(f) --rgb=(rgbWhite) &'
-fcase. 'yellow' do.
 fcase. 'magenta' do.
 fcase. 'cyan' do.
 fcase. 'red' do.
 fcase. 'green' do.
-case. 'blue' do. z=. sw'(f) --(y) &'
+case. 'blue' do. z=. sw'(f) -m 0 --(y) &'
 case.        do. z=. sw'(f) (y) &'
 end.
 2!:1 BLINK=:z
 )
 
-blink 0
+blink1 0
 
+blink=: blink1
 0 :0
 blink '?'
-blink 'take_9_general'
-blink 'take_1_sci'
-blink 'take_1_sig'
+-
+blink 'red'
+blink 'green'
+blink 'blue'
+blink 'magenta'
+blink 'cyan'
+blink 'yellow'
+blink 'white'
+blink 'flame'
+-
 blink 0
 blink 1
 blink 2
@@ -235,7 +241,6 @@ blink 'cyan'
 2!:1 '~/sh/blink1-tool --rgb=ff6600 -m 0 &'
 blink 4
 3 blink 1
-blink 'red'
 )
 
 '==================== [uu] utilities ===================='
@@ -275,7 +280,7 @@ else.
   sllog=: empty
   if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
 end.
-y return.
+i.0 0
 )
 
 all=: *./
@@ -293,7 +298,7 @@ report_complex_nouns=: 3 : 0
 
 loc=. >coname''
 nocomplex=. 1
-for_no. (nl 0) -. <'INVALID' do.  val=. ".nom=. >no
+for_no. nl 0 do.  val=. ".nom=. >no
   if. 16=3!:0 val do.
     smoutput nb 'cx:' ; nom ; 'is complex'
     nocomplex=. 0
@@ -307,12 +312,6 @@ undefined=: (3 : 0)"0
 
 if. -. 128!:5 y do. 0 return. end.
 '_.' -: 5!:6 <'y'
-)
-
-invalid=: (3 : 0)"0
-
-if. -. 128!:5 y do. 0 return. end.
-'_.j_.' -: 5!:6 <'y'
 )
 
 quoted=: 3 : 0
@@ -599,9 +598,8 @@ end.
 eval=: 3 : 0 "1
 
 
-
 y=. '/%-_Ee'charsub ;y
-try. {.".y catch. _. end.
+try. {.".y catch. UNDEFINED end.
 )
 
 exrate=: exrate_exch_
@@ -643,7 +641,14 @@ NOTE=. <;._1 ' C C# D D# E F F# G G# A A# B C'
 130.81
 )
 
-np=: [: <: 2 * -.
+qty4str=: 3 : 0
+
+
+val=. eval strValueOf y
+uni=. dltb SP takeafter y
+val ; uni
+)
+
 rnd=: [: <. 0.5 + ]
 
 scino=: 3 : 0
@@ -702,12 +707,6 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
-
-ucase=: 3 : 0
-if. 0=#y do. UCASE
-else. UCASE=: {.y
-end.
-)
 
 hasutf=: [: +./ 127 < a. i. ]
 isascii=: [: *./ 128 > a. i. ]
@@ -964,7 +963,7 @@ if. -. code e. UNSETCODE,BADCODE do.
   msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
 else.
-  msg '--- qtcode4i: INVALID code=(crex code)'
+  msg '--- qtcode4i: invalid-code=(crex code)'
   0;BADCODE
 end.
 )
@@ -1150,10 +1149,6 @@ NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
-if. invalid val do.
-  emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
-  BADQTY return.
-end.
 if. 0<#x do.
   targ=. bris x
   'coeft codet'=. qtcode4anyunit targ
@@ -1380,7 +1375,6 @@ give_0_misc=: 4 : 0
 register'give_0_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
-if. invalid y do. 'INVALID' return. end.
 if. SIC>0 do. infinity=. '∞'
 else. infinity=. 'infinity'
 end.
@@ -1469,23 +1463,9 @@ make_daisychain''
 
 '==================== [uu] formatin.ijs =================='
 0 :0
-Friday 24 August 2018  21:40:43
+Sunday 7 October 2018  15:11:37
 -
 formatIN -- input-counterpart to: format
-ot 17
-	...but style of programming so alien that it isn't much use.
-ot 18
--
-STRATEGY: hedge bets by simply converting string--> string, e.g...
-   '100 degC' --> '373.15 K'
-   '212 degF' --> '373.15 K'
--
-       uu	'373.15 K'
-'degC' uu	'373.15 K'
-'degF' uu	'373.15 K'
-'degF' formatIN	'373.15 K'
-	...NOT formatIN's biz to use [x] EXCEPT to disambiguate.
-'degF' take_deg	'373.15 K'
 )
 
 cocurrent 'uu'
@@ -1494,11 +1474,10 @@ registerIN=: 3 : 0
 
 
 VEXIN=: y
-blink y
 )
 
 0 :0
-'degC' formatIN '100 °C'
+formatIN '100 °C'
 )
 
 formatIN=: 3 : 0
@@ -1506,6 +1485,7 @@ formatIN=: 3 : 0
 msg '+++ formatIN: ENTERED, y=[(y)]'
 
 blink 0
+VEXIN=: '<UNSET>'
 z=. daisychainIN y
 msg '--- formatIN: EXITS, last take_ verb: (VEXIN) kuy=(kuy) -returns z=(z)'
 0 popme'formatIN'
@@ -1576,52 +1556,73 @@ deEuroName 'Réaumur'
 brack shorT 'Reaumur'
 )
 
-take_0_deg=: 3 : 0
-registerIN 'take_0_deg'
+take_0_angle=: 3 : 0
+registerIN 'take_0_angle'
+blink'green'
 
 
-unit=. deb (bris unitsOf y) rplc 'deg' ; ' deg'
+
+yb=. (bris y) rplc 'deg' ; ' deg'
+]unit=. deb unitsOf yb
+assert. (unit-:'deg')or(unit-:'rad')
+yb return.
+)
+
+0 :0
+foo=: uu
+foo=: take_0_angle
+foo '180°'
+foo '180 °'
+foo '180deg'
+foo '180 deg'
+foo '1 rad'
+foo 'PI rad'
+foo 'π rad'
+'deg' uu 'PI rad'
+'°' uu 'PI rad'
+'deg' uu 'π rad'
+uu 'π rad'
+'°' uu 'π rad'
+)
+
+take_1_deg=: 3 : 0
+registerIN 'take_1_deg'
+blink'red'
+
+
+y=. y rplc 'deg' ; ' deg'
+]unit=. deb bris unitsOf y
 assert. isTemperature unit
-T=. shorT unit
-msg '... take_0_deg: unit=[(unit)] T=(T)'
-assert. -.invalid vy=. valueOf y
+]T=. shorT unit
+msg '... take_1_deg: unit=[(unit)] T=(T)'
+assert. -.undefined vy=. valueOf y
 ]z=. T toKelvin vy
-msg '... take_0_deg: y=[(y)] unit=(unit) T=(T) z=(z)'
+msg '... take_1_deg: y=[(y)] unit=(unit) T=(T) z=(z)'
 sw'(z) K'
 )
 
 0 :0
 uu '100 degC'
-'degC' 	uu '100 degC'
-
-       take_0_deg '100 degC'
-'degC' take_0_deg '373.15 K'
-
-uu '100 degC'
-   'degC' 	uu '100 degC'
-100°C
-   'degF' 	uu '100 degC'
-   'degF' 	uu '100 °C'
-212°F
-   'degC' 	uu '212 degF'
-100°C
-   'degC' 	uu '373.16 K'
-100.01°C
-   'degF' 	uu '373.16 K'
-212.018°F
-   'Fahrenheit'	uu '373.16 K'
-212.018° Fahrenheit
-   'Centigrade'	uu '373.16 K'
-100.01° Centigrade
-   'Celsius'	uu '373.16 K'
-100.01° Celsius
+'degC' uu '100 degC'
+'degC' uu '212 degF'
+take_1_deg '100 degC'
+take_1_deg '212 degF'
+take_1_deg '212degF'
+take_1_deg '212 °F'
+take_1_deg '212°F'
+-
+REMAINING BLINKS...
+blink 'magenta'
+blink 'cyan'
+blink 'yellow'
+blink 'flame'
 )
 
 take_8_misc=: 3 : 0
 registerIN'take_8_misc'
+blink 'blue'
 
 if. undefined y do. 'UNDEFINED' return. end.
-if. invalid y do. 'INVALID' return. end.
 if. SIC>0 do. infinity=. '∞' else. infinity=. 'infinity' end.
 if. y=__ do. '-',infinity return.
 elseif. y=_ do. infinity return.
@@ -1631,6 +1632,7 @@ assert. 0
 
 take_9_general=: 3 : 0
 registerIN'take_9_general'
+blink'white'
 
 
 z=. y
@@ -1658,53 +1660,12 @@ val ; unit
 
 make_daisychainIN''
 
-'==================== [uu] public ===================='
+'==================== [uu] uu_interface ===================='
 
 cocurrent 'uu'
 
-0 :0
-========================================================
->>> REPLACE ALL THESE WITH CALLS OF: uuengine (below)...
-========================================================
-CAL used to need: ucode and ucods
-but currently…
-  ucode is unused
-  ucods is called only by ct0_cal_
-  ct_cal_=: ct1_cal_
--
----USE OF PUBLIC WORDS BY CAL Sunday 2 September 2018...
-compatible	incompat(combine) compat
-compatlist	docompatlist compare incompat(combine) compat compat_i
-convert		changeunits fexp1 fexp_nominal ttadl ttafl ttappend ttload
-cnvj (cnvCunit)	scaleunits
-format (formatOUT)	nfx
-scino		NOTUSED
-selfcanc		combine
-startuu		NOTUSED
-ucase		NOTUSED …is TABULA accessing UU directly?
-udat		ttauc ttauf
-udiv		combine fnline
-udumb		ttauc
-uniform		ct1 docompatlist
-uurowsc		NOTUSED
-uurowsf		NOTUSED
-UUC_uu_		califace[VUUC]
-UUF_uu_		califace[VUUF]
-ucods_uu_		ct0
-adj (placeholder)	getvalue setvalue
-  getvalue	califace[VALU] plotv
-  setvalue	califace[...] plotxSwift plotx plotz setvunits
----TO DO:
-	suffix all these with: _uu ?
-	elim NOTUSED from UU
-	elim direct use of _uu_
-	see if any can be avoided
-	consider a keyhole: uuengine (adverb if any dyadic)
-	restore adj_uu_ -but base it on format* or its ancillaries
-)
-
-
 uuengine=: 3 : 0
+
 
 
 
@@ -1714,8 +1675,22 @@ numarg=. {.0". arg
 select. 4{.y
 case. 'CPAT' do.
 		targ compatible arg
-case. 'CPTU' do.
+case. 'CPLI' do.
 		compatlist arg
+case. 'CNVJ' do.
+		cnvj arg
+case. 'CONV' do.
+		targ convert 1;arg
+case. 'CONS' do.
+		0&udat arg
+case. 'DUMB' do.
+		udumb arg
+case. 'FUNC' do.
+		1&udat arg
+case. 'FMTI' do.
+		formatIN arg
+case. 'FMTO' do.
+		formatOUT qty4str arg
 case. 'QSCI' do.
 		SCI
 case. 'QSIC' do.
@@ -1724,6 +1699,22 @@ case. 'QSIG' do.
 		SIG
 case. 'QSIZ' do.
 		SIZ
+case. 'SCIN' do.
+		scino numarg
+case. 'SELF' do.
+		selfcanc arg
+case. 'UCOD' do.
+		ucode arg
+case. 'UCOS' do.
+		ucods arg
+case. 'UNUC' do.
+		0&ucode arg
+case. 'UDIV' do.
+		targ udiv arg
+case. 'UNIF' do.
+		uniform arg
+case. 'UUUU' do.
+		targ uu arg
 case. 'VUUC' do.
 		x2f 0 uurowsc arg
 case. 'VUUF' do.
@@ -1736,24 +1727,8 @@ case. 'WUUF' do.
 		x2f 1 uurowsf arg
 case. 'WUUM' do.
 		x2f UUM
-case. 'conv' do.
-		targ convert 1;arg
-case. 'cons' do.
-		0&udat arg
-case. 'dumb' do.
-		udumb arg
-case. 'func' do.
-		1&udat arg
 case. 'fcty' do.
 		factory''
-case. 'fmtI' do.
-		formatIN arg
-case. 'fmtO' do.
-		formatOUT qty4str arg
-case. 'scin' do.
-		scino numarg
-case. 'self' do.
-		selfcanc arg
 case. 'ssci' do.
 		SCI=: numarg
 case. 'ssic' do.
@@ -1764,28 +1739,8 @@ case. 'ssiz' do.
 		SIZ=: numarg
 case. 'strt' do.
 		start''
-case. 'ucod' do.
-		ucode arg
-case. 'ucos' do.
-		ucods arg
-case. 'unuc' do.
-		0&ucode arg
-case. 'udiv' do.
-		targ udiv arg
-case. 'unif' do.
-		uniform arg
-case. 'uuuu' do.
-		targ uu arg
 case.        do. '>>> uuengine: bad y-arg';y
 end.
-)
-
-qty4str=: 3 : 0
-
-
-val=. eval strValueOf y
-uni=. dltb SP takeafter y
-val ; uni
 )
 
 '==================== [z] paths.ijs ===================='

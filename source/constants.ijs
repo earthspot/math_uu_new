@@ -3,14 +3,16 @@
 
 cocurrent 'uu'
 
-  NB. ONLY SCI and SIG reside in z-locale
-  NB. Addon uu owns SCI_z_ and SIG_z_
-  NB. Other addons shouldn't access these globals directly
-  NB. (---then why are they in z-locale???)
-
   NB. currency exchange-rate tables, used by: quoted
   NB. quoted currencies are expressed in terms of the Euro.
   NB. if net is accessible, CUTAB to be updated from Eurobank figures
+
+  NB. SIC -- controls SI-compliance via utf-8 chars
+  NB. SIC=0	units expressed entirely in ASCII
+  NB. SIC=1	utf-8s e.g. Å but inverse shown as: /Å
+  NB. SIC=2	utf-8, no '/'
+  NB. SIC=3	utf-8, no '/', uses '·'
+
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
 CUTAB=: CUTAB0			NB. pre-start value
 
@@ -22,7 +24,6 @@ ICE_F=: 32	NB. water freezes [°F]
 ICE_C=: 0 	NB. water freezes [°C]
 ICE_K=: 273.15	NB. water freezes [K]
 HD=: '·'		NB. hi-dot, optional SI convention
-INVALID=: _.j_.
 ME=: ''		NB. used by tracing: pushme popme etc
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
@@ -36,24 +37,16 @@ ST=: '*'
 UL=: '_'
 UNDEFINED=: _.	NB. should propagate in a formula
 
-  NB. SIC
-  NB. controls SI-compliance via utf-8 chars
-  NB. get/set value externally via: sic or uunicode
-  NB. SIC=0	units expressed entirely in ASCII
-  NB. SIC=1	utf-8s e.g. Å but inverse shown as: /Å
-  NB. SIC=2	utf-8, no '/'
-  NB. SIC=3	utf-8, no '/', uses '·'
-
 factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
   NB. ONLY SCI and SIG reside in z-locale
-DIAGNOSTICS=: 0	NB. 0-->msg=:sllog=:sessuu=:empty
+DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:sessuu=:empty
 ME=: ''		NB. used by tracing: pushme popme etc
 SIC=: 1		NB. Used chiefly by: ucode, uniform
 SIG=: 3		NB. used by: scino
 SCI=: 5		NB. used by: scino
-SIZ=: 1e_11	NB. used by: scino
-UCASE=: 0  	NB. Used only by set_ucase, ssmx for case-insensitive UUC/F search
+SIZ=: 1e_9	NB. used by: scino
+i.0 0
 )
 
 TEMPERATURE_SCALES=: b4f }: 0 : 0

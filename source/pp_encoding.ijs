@@ -113,7 +113,7 @@ if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<<
   msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
   val;code
 else.
-  msg '--- qtcode4i: INVALID code=(crex code)'
+  msg '--- qtcode4i: invalid-code=(crex code)'
   0;BADCODE
 end.
 )
@@ -300,10 +300,10 @@ NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
-if. invalid val do.
-  emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
-  BADQTY return.
-end.
+NB. if. invalid val do.
+NB.   emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
+NB.   BADQTY return.
+NB. end.
 if. 0<#x do.  NB. use non-empty (x) as targ...
   targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
