@@ -10,13 +10,13 @@ start=: 3 : 0
   NB.  the constants library (UUC) has been changed.
   NB. But not needed if only the functions library (UUF) changed
 ssw '+++ start: ENTERED. y=(y)'
-if. isNo y do. UNICODE=: y end.
+if. isNo y do. SIC=: y end.
 NB. make_msg 1  NB. enable diagnostics
 NB. trv 0
 NB. trv '+start'
 NB. wd'msgs'
 0 make_msg 0  NB. disable diagnostics while caches are being built
-factory''  NB. assigns: DIAGNOSTICS ME SCI SIG UCASE UNICODE 
+factory''  NB. assigns: DIAGNOSTICS ME SCI SIC SIG UCASE 
 tpaths_validate''
 VERSION=: getversion TPATH_UU
 load TPATH_UUC
@@ -34,15 +34,8 @@ NB. wd'msgs'
 create=: start
 destroy=: codestroy
 
-uuinit_z_=: 3 : 0
-ulo=. y conew 'uu'
-)
+NB. uuinit_z_=: 3 : 0
+NB. ulo=. y conew 'uu'
+NB. )
 
-uuinitTest_z_=: 3 : 0
-  NB. Create instance of class UU for casual testing of UU
-  NB. Have uu and uuengine visible from _z_
-uloc_z_=: uuinit y
-uu_z_=: uu__uloc
-uuengine_z_=: uuengine__uloc
-i.0 0
-)
+start''  NB. (FOR TESTS:) start _uu_ itself as its own instantiation.

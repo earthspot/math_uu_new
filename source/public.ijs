@@ -4,6 +4,9 @@
 cocurrent 'uu'
 
 0 :0
+========================================================
+>>> REPLACE ALL THESE WITH CALLS OF: uuengine (below)...
+========================================================
 CAL used to need: ucode and ucods
 but currently…
   ucode is unused
@@ -18,11 +21,6 @@ cnvj (cnvCunit)	scaleunits
 format (formatOUT)	nfx
 scino		NOTUSED
 selfcanc		combine
-setsci (sci)	NOTUSED	
-setsig (sig)	NOTUSED
-set_ucase		NOTUSED
-sci		califace[QSCI,psci] (local sci uses SCI)
-sig		califace[QSIG,prec] (local sig uses SIG) ttsav
 startuu		NOTUSED
 ucase		NOTUSED …is TABULA accessing UU directly?
 udat		ttauc ttauf
@@ -46,52 +44,27 @@ adj (placeholder)	getvalue setvalue
 	restore adj_uu_ -but base it on format* or its ancillaries
 )
 
-NB. public=: 3 : 0
-NB.   NB. Makes aliases to UU public verbs in CLIENT locale (y)
-NB.   NB. cocurrent CLIENT locale: run this verb with (locale) y
-NB. cocurrent y
-NB. compatible=: compatible_uu_
-NB. compatlist=: compatlist_uu_
-NB. convert=: convert_uu_
-NB. cnvj=: cnvCunit_uu_	NB. STILL NEEDED?
-NB. format=: formatOUT_uu_
-NB. scino=: scino_uu_
-NB. selfcanc=: selfcanc_uu_
-NB. setsci=: sci_uu_
-NB. setsig=: sig_uu_
-NB. set_ucase=: ucase_uu_
-NB. sci=: sci_uu_
-NB. sig=: sig_uu_
-NB. startuu=: start_uu_
-NB. ucase=: ucase_uu_
-NB. udat=: udat_uu_
-NB. udiv=: udiv_uu_		NB. STILL NEEDED?
-NB. udumb=: udumb_uu_
-NB. uniform=: uniform_uu_
-NB. uurowsc=: uurowsc_uu_
-NB. uurowsf=: uurowsf_uu_
-NB. i.0 0
-NB. )
-
-isQty=: 0:	NB. DUMMY FOR NOW <<<<<<<<<<<<<<<<<<<<<<<
 
 uuengine=: 3 : 0
   NB. keyhole interface to UU, (string) y is instruction
+  NB. BUT… can y be a "quantity" (for: uuuu)? <<<<<<<<<<<
   NB. pass-thru CAL instructions are identical
-if. isQty y do.  NB. DEVELOP THIS <<<<<<<<<<<<<<<<<<<<<<<
-  cmnd=. 'uuuu'
-  arg=. ": narg=. 1 pick y
-else.
-  narg=. {.0". arg=. dltb 4}.y
-  cmnd=. 4{.y
-end.
-select. cmnd
+arg=. dltb '>' taketo 4}.y
+targ=. dltb '>' takeafter y
+numarg=. {.0". arg
+select. 4{.y
+case. 'CPAT' do. NB. are 2 units compatible?
+		targ compatible arg
+case. 'CPTU' do. NB. list of compatible units
+		compatlist arg
 case. 'QSCI' do. NB. query scientific notation threshold
-		sci''
+		SCI
 case. 'QSIC' do. NB. query SI-conformance level
-		sic''
+		SIC
 case. 'QSIG' do. NB. query significant figures
-		sig''
+		SIG
+case. 'QSIZ' do. NB. query zero attraction threshold
+		SIZ
 case. 'VUUC' do. NB. LF-separated contents of UUC
 		x2f 0 uurowsc arg
 case. 'VUUF' do. NB. LF-separated contents of UUF
@@ -104,19 +77,58 @@ case. 'WUUF' do. NB. LF-separated contents of UUF
 		x2f 1 uurowsf arg
 case. 'WUUM' do. NB. LF-separated contents of UUM
 		x2f UUM
+case. 'conv' do. NB. convert
+		targ convert 1;arg
+case. 'cons' do. NB. cut "cons" formatted string (c/f UUC)
+		0&udat arg
+case. 'dumb' do. NB. cut "dumb" formatted string (c/f UUC)
+		udumb arg
+case. 'func' do. NB. cut "func" formatted string (c/f UUC)
+		1&udat arg
+case. 'fcty' do. NB. factory settings of alterable globals
+		factory''
+case. 'fmtI' do. NB. format input string as qty
+		formatIN arg
+case. 'fmtO' do. NB. format qty as output string
+		formatOUT qty4str arg
+case. 'scin' do. NB. numarg --> (string) scientific notation
+		scino numarg
+case. 'self' do. NB. self-cancel arg
+		selfcanc arg
 case. 'ssci' do. NB. set scientific notation threshold
-		sci narg
-fcase.'sicl' do. NB. set SI-conformance level (heritage)
+		SCI=: numarg
 case. 'ssic' do. NB. set SI-conformance level
-		sic narg
+		SIC=: numarg
 case. 'ssig' do. NB. set significant figures
-		sig narg
-case. 'suuz' do. NB. reset uu_z_ and uuengine_z_ to LOCAL uu
-		uu_z_=: uu
-		uuengine_z_=: uuengine
+		SIG=: numarg
+case. 'ssiz' do. NB. set zero attraction threshold
+		SIZ=: numarg
+case. 'strt' do. NB. restart this instance of UU
+		start''
+NB. case. 'suuz' do. NB. reset uu_z_ and uuengine_z_ to LOCAL uu
+NB. 		uu_z_=: uu
+NB. 		uuengine_z_=: uuengine
+case. 'ucod' do. NB. convert special symbols --> "goy"
+		ucode arg
+case. 'ucos' do. NB. convert special symbols --> "goy" (not currency)
+		ucods arg
+case. 'unuc' do. NB. un-convert "goy" special symbols --> "kosher"
+		0&ucode arg
+case. 'udiv' do. NB. divide two units symbolically
+		targ udiv arg
+case. 'unif' do. NB. convert special symbols wrto SI-compliance level
+		uniform arg
 case. 'uuuu' do. NB. call LOCAL uu via a uuengine-instruction
-		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
-		NB. ;/arg cutByPattern '* > *' NB.WONT WORK!
+		targ uu arg
 case.        do. '>>> uuengine: bad y-arg';y
 end.
+NB. >>>>> NO CODE PAST THIS POINT: return values are waiting
+)
+
+qty4str=: 3 : 0
+  NB. return qty represented by (string) y
+  NB. >>> CONSIDER making this like: make_units
+val=. eval strValueOf y
+uni=. dltb SP takeafter y
+val ; uni
 )

@@ -60,12 +60,14 @@ sw'(y) [???]'
 
 valueOf=: 3 : 0
   NB. extract the (numeric) value of (qty-string) y
+  NB. c/f eval
 try. val=. ". strValueOf y
-catch. INVALID end.
+catch. _. end.
 )
 
 strValueOf=: 3 : 0
   NB. extract the (numeral-string) value of (qty-string) y
+  NB. c/f eval
 SP taketo y rplc (deg_symbol 0) ; SP
 )
 
@@ -154,9 +156,7 @@ registerIN'take_8_misc'
 	NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do. infinity=. '∞'
-else. infinity=. 'infinity'
-end.
+if. SIC>0 do. infinity=. '∞' else. infinity=. 'infinity' end.
 if. y=__ do. '-',infinity return.
 elseif. y=_ do. infinity return.
 end.

@@ -28,6 +28,15 @@ register=: 3 : 0
 VEX=: y
 )
 
+testf=: 3 : 0
+  NB. test: format (and friends) with special-needs units
+if. 0=#y do. y=. 123.4567 end.
+for_no. ;:'eur gbp usd deg ! c eV Hz rad / *' do.
+  nom=. ,>no
+  smoutput nb nom ; TAB ; nom format y
+end.
+)
+
 format=: formatOUT=: '' ddefine
 0 pushme'formatOUT'
 msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
@@ -53,7 +62,7 @@ sw'(y) [??]'
 )
 
 deg_symbol=: 3 : 0
-if. UNICODE>0 do. '°' else. 'deg' end.
+if. SIC>0 do. '°' else. 'deg' end.
 )
 
 deEuroName=: 3 : 0
@@ -117,17 +126,17 @@ toKelvin=: 'F' ddefine
   NB. convert y [x-units] into Kelvin
   NB. e.g. 'C'toKelvin 0 --> 273.15
 try. z=. y toK~ <boil_freeze x
-     if. z<0 do. INVALID return. end.
-catch. INVALID end.
+     if. z<0 do. _. return. end.
+catch. _. end.
 )
 
 fromKelvin=: 'F' ddefine
   NB. convert (Kelvin) y [K] into temperature scale (lit) x
   NB. e.g. 'C'fromKelvin 273.15 --> 0
 NB. ssw '+++ fromKelvin: T=x=(x) y=(y)'
-if. y<0 do. INVALID return. end.
+if. y<0 do. _. return. end.
 try. y fromK~ <boil_freeze x
-catch. INVALID end.
+catch. _. end.
 )
 
 give_0_deg=: 4 : 0
@@ -152,7 +161,10 @@ msg '... give_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'	NB. [K] qty does not have deg_symbol
-else.
+elseif. (<unit) e. ;:'Fahrenheit Centigrade Celsius' do.
+  NO_UNITS_NEEDED=: 1
+  sw'(z) (unit)'	NB. [K] qty does not have deg_symbol
+elseif. do.
   NO_UNITS_NEEDED=: 1
   sw'(z)(deg_symbol 0)(T)'  NB. (T) not (unit) - use short-form after °
 end.
@@ -180,12 +192,12 @@ uu '100 degC'
 100.01° Celsius
 )
 
-give_8_misc=: 4 : 0
-register'give_8_misc'
+give_0_misc=: 4 : 0
+register'give_0_misc'
   NB. picks up miscellaneous forms
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do. infinity=. '∞'
+if. SIC>0 do. infinity=. '∞'
 else. infinity=. 'infinity'
 end.
 if. y=__ do. '-',infinity return.
@@ -245,9 +257,13 @@ register'give_0_dms'
   NB. converts radians [rad] to d° m' s"
 assert. x -: 'dms'  NB. force error if wrong verb
 NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
-'d m s'=.":each <.each 360 60 60 #: asec4deg |y
+'d m s'=.":each <.each 360 60 60 #: asec4rad |y
 ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
+)
+
+0 :0
+'dms' give_0_dms 1
 )
 
 give_2_note=: 4 : 0

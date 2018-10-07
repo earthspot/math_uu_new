@@ -39,6 +39,16 @@ AABUILT=: '2018-09-20  14:07:05'
 AABUILT=: '2018-10-03  22:48:54'
 AABUILT=: '2018-10-03  22:49:21'
 AABUILT=: '2018-10-03  23:00:33'
+AABUILT=: '2018-10-06  21:34:40'
+AABUILT=: '2018-10-06  23:21:10'
+AABUILT=: '2018-10-06  23:32:44'
+AABUILT=: '2018-10-07  01:21:24'
+AABUILT=: '2018-10-07  01:24:09'
+AABUILT=: '2018-10-07  01:43:49'
+AABUILT=: '2018-10-07  01:48:00'
+AABUILT=: '2018-10-07  01:55:49'
+AABUILT=: '2018-10-07  02:18:28'
+AABUILT=: '2018-10-07  02:28:21'
 
 '==================== [uu] constants ===================='
 
@@ -90,13 +100,14 @@ factory=: 3 : 0
 
 DIAGNOSTICS=: 0
 ME=: ''
+SIC=: 1
 SIG=: 3
 SCI=: 5
+SIZ=: 1e_11
 UCASE=: 0
-UNICODE=: 1
 )
 
-TEMPERATURE_SCALES=: b4f }: noun define
+TEMPERATURE_SCALES=: b4f }: 0 : 0
 K
 Kelvin
 C
@@ -121,7 +132,7 @@ De
 
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Saturday 9 June 2018  05:16:54
+1 /	[saved]	BASIC TESTING ONLY
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -587,8 +598,10 @@ end.
 
 eval=: 3 : 0 "1
 
+
+
 y=. '/%-_Ee'charsub ;y
-try. {.".y catch. INVALID end.
+try. {.".y catch. _. end.
 )
 
 exrate=: exrate_exch_
@@ -638,7 +651,9 @@ scino=: 3 : 0
 
 
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
-if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ": y end.
+if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ":y end.
+if. SIZ>|y do. z=.'0',~ '- +'{~ 1+*y end.
+z return.
 )
 
 selfcanc=: 3 : 0
@@ -659,36 +674,12 @@ msg '--- selfcanc: EXITS: z=(z)'
 z return.
 )
 
-sci=: 3 : 0
-
-if. 0=#y do. SCI
-else.
-  SCI=: {.y
-end.
-)
-
-sig=: 3 : 0
-
-if. 0=#y do. SIG
-else.
-  SIG=: {.y
-end.
-)
-
-sic=: uunicode=: 3 : 0
-
-if. 0=#y do. UNICODE
-else.
-  UNICODE=: {.y
-end.
-)
-
 slash1=: 1&$: : (4 : 0)
 
 
 z=. deb y
 if. x do.
-  if. UNICODE>:2 do. y return. end.
+  if. SIC>:2 do. y return. end.
   if. ')'={:z do. y return. end.
   z=. canon z
   a=. '/' taketo z
@@ -711,15 +702,6 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
-
-testf=: 3 : 0
-
-if. 0=#y do. y=. 123.4567 end.
-for_no. ;:'eur gbp usd deg ! c eV Hz rad / *' do.
-	nom=. ,>no
-	smoutput nb nom ; TAB ; nom format y
-end.
-)
 
 ucase=: 3 : 0
 if. 0=#y do. UCASE
@@ -777,7 +759,6 @@ end.
 )
 
 udiv=: 4 : 0
-
 
 
 if. (1=#y) and (y=SL) do. x return. end.
@@ -839,12 +820,15 @@ x=. 0;sj;mj
 cutuuc=: x&;: "1
 i.0 0
 )
-uniform=: 3 : 0
+uniform=: '' ddefine
 0 pushme 'uniform'
-msg '+++ uniform: ENTERED: y=(y)'
+
+savedSIC=. SIC
+if. -. x-:'' do. SIC=: x end.
+msg '+++ uniform: ENTERED: x=(x) y=(y)'
 
 y=. utf8 deb y
-select. UNICODE
+select. SIC
  case. 0 do.
   z=. unucode undotted y
  case. 1 do.
@@ -858,21 +842,21 @@ fcase. 2 do.
   if. y-: ,SL do.
     msg '--- uniform: y=SL returns NIL'
     0 popme 'uniform'
-    '' return.
+    '' [SIC=: savedSIC return.
   end.
   ]z=. unucode undotted y
   ]z=. ucode deslash unslash1 z
-  if. UNICODE=3 do. z=. dotted z end.
+  if. SIC=3 do. z=. dotted z end.
 end.
 popme 'uniform'
-z return.
+z [SIC=: savedSIC return.
 )
 
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
 undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
-upost=: 4 : 'y,(x#~*UNICODE)'
+upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'
@@ -1160,7 +1144,7 @@ targ ; loop ; factor return.
 
 uu=: ('' ddefine)"1
 
-if. ST={.y do. uuengine }.y return. end.
+if. '*'={.y do. uuengine }.y return. end.
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y
@@ -1195,7 +1179,7 @@ end.
 sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
 
 ]z=. targ formatOUT va
-]z=. uniformD z
+
 
 if. NO_UNITS_NEEDED do. z return.
 else. deb z,SP,uniform targ return. end.
@@ -1219,7 +1203,7 @@ if. unsc e.~ <y do. 1 return. end.
 isTemperature=: 3 : 0
 
 by=. <deb y
-if. y beginsWith 'deg' do. 1 return.
+if. y beginsWith 'deg' do. -.(y-:'deg') return.
 elseif. by e. TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
@@ -1256,6 +1240,15 @@ register=: 3 : 0
 VEX=: y
 )
 
+testf=: 3 : 0
+
+if. 0=#y do. y=. 123.4567 end.
+for_no. ;:'eur gbp usd deg ! c eV Hz rad / *' do.
+  nom=. ,>no
+  smoutput nb nom ; TAB ; nom format y
+end.
+)
+
 format=: formatOUT=: '' ddefine
 0 pushme'formatOUT'
 msg '+++ formatOUT: ENTERED, x=[(x)] y=[(y)]'
@@ -1281,7 +1274,7 @@ sw'(y) [??]'
 )
 
 deg_symbol=: 3 : 0
-if. UNICODE>0 do. '°' else. 'deg' end.
+if. SIC>0 do. '°' else. 'deg' end.
 )
 
 deEuroName=: 3 : 0
@@ -1320,16 +1313,16 @@ toKelvin=: 'F' ddefine
 
 
 try. z=. y toK~ <boil_freeze x
-     if. z<0 do. INVALID return. end.
-catch. INVALID end.
+     if. z<0 do. _. return. end.
+catch. _. end.
 )
 
 fromKelvin=: 'F' ddefine
 
 
-if. y<0 do. INVALID return. end.
+if. y<0 do. _. return. end.
 try. y fromK~ <boil_freeze x
-catch. INVALID end.
+catch. _. end.
 )
 
 give_0_deg=: 4 : 0
@@ -1352,7 +1345,10 @@ msg '... give_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
 if. T-:'K' do.
   NO_UNITS_NEEDED=: 1
   sw'(z) K'
-else.
+elseif. (<unit) e. ;:'Fahrenheit Centigrade Celsius' do.
+  NO_UNITS_NEEDED=: 1
+  sw'(z) (unit)'
+elseif. do.
   NO_UNITS_NEEDED=: 1
   sw'(z)(deg_symbol 0)(T)'
 end.
@@ -1380,12 +1376,12 @@ uu '100 degC'
 100.01° Celsius
 )
 
-give_8_misc=: 4 : 0
-register'give_8_misc'
+give_0_misc=: 4 : 0
+register'give_0_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do. infinity=. '∞'
+if. SIC>0 do. infinity=. '∞'
 else. infinity=. 'infinity'
 end.
 if. y=__ do. '-',infinity return.
@@ -1443,9 +1439,13 @@ give_0_dms=: 4 : 0
 register'give_0_dms'
 
 assert. x -: 'dms'
-'d m s'=.":each <.each 360 60 60 #: asec4deg |y
+'d m s'=.":each <.each 360 60 60 #: asec4rad |y
 ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
+)
+
+0 :0
+'dms' give_0_dms 1
 )
 
 give_2_note=: 4 : 0
@@ -1528,11 +1528,13 @@ sw'(y) [???]'
 
 valueOf=: 3 : 0
 
+
 try. val=. ". strValueOf y
-catch. INVALID end.
+catch. _. end.
 )
 
 strValueOf=: 3 : 0
+
 
 SP taketo y rplc (deg_symbol 0) ; SP
 )
@@ -1620,9 +1622,7 @@ registerIN'take_8_misc'
 
 if. undefined y do. 'UNDEFINED' return. end.
 if. invalid y do. 'INVALID' return. end.
-if. UNICODE>0 do. infinity=. '∞'
-else. infinity=. 'infinity'
-end.
+if. SIC>0 do. infinity=. '∞' else. infinity=. 'infinity' end.
 if. y=__ do. '-',infinity return.
 elseif. y=_ do. infinity return.
 end.
@@ -1663,6 +1663,9 @@ make_daisychainIN''
 cocurrent 'uu'
 
 0 :0
+========================================================
+>>> REPLACE ALL THESE WITH CALLS OF: uuengine (below)...
+========================================================
 CAL used to need: ucode and ucods
 but currently…
   ucode is unused
@@ -1677,11 +1680,6 @@ cnvj (cnvCunit)	scaleunits
 format (formatOUT)	nfx
 scino		NOTUSED
 selfcanc		combine
-setsci (sci)	NOTUSED	
-setsig (sig)	NOTUSED
-set_ucase		NOTUSED
-sci		califace[QSCI,psci] (local sci uses SCI)
-sig		califace[QSIG,prec] (local sig uses SIG) ttsav
 startuu		NOTUSED
 ucase		NOTUSED …is TABULA accessing UU directly?
 udat		ttauc ttauf
@@ -1704,25 +1702,28 @@ adj (placeholder)	getvalue setvalue
 	consider a keyhole: uuengine (adverb if any dyadic)
 	restore adj_uu_ -but base it on format* or its ancillaries
 )
-isQty=: 0:
+
 
 uuengine=: 3 : 0
 
 
-if. isQty y do.
-  cmnd=. 'uuuu'
-  arg=. ": narg=. 1 pick y
-else.
-  narg=. {.0". arg=. dltb 4}.y
-  cmnd=. 4{.y
-end.
-select. cmnd
+
+arg=. dltb '>' taketo 4}.y
+targ=. dltb '>' takeafter y
+numarg=. {.0". arg
+select. 4{.y
+case. 'CPAT' do.
+		targ compatible arg
+case. 'CPTU' do.
+		compatlist arg
 case. 'QSCI' do.
-		sci''
+		SCI
 case. 'QSIC' do.
-		sic''
+		SIC
 case. 'QSIG' do.
-		sig''
+		SIG
+case. 'QSIZ' do.
+		SIZ
 case. 'VUUC' do.
 		x2f 0 uurowsc arg
 case. 'VUUF' do.
@@ -1735,21 +1736,56 @@ case. 'WUUF' do.
 		x2f 1 uurowsf arg
 case. 'WUUM' do.
 		x2f UUM
+case. 'conv' do.
+		targ convert 1;arg
+case. 'cons' do.
+		0&udat arg
+case. 'dumb' do.
+		udumb arg
+case. 'func' do.
+		1&udat arg
+case. 'fcty' do.
+		factory''
+case. 'fmtI' do.
+		formatIN arg
+case. 'fmtO' do.
+		formatOUT qty4str arg
+case. 'scin' do.
+		scino numarg
+case. 'self' do.
+		selfcanc arg
 case. 'ssci' do.
-		sci narg
-fcase.'sicl' do.
+		SCI=: numarg
 case. 'ssic' do.
-		sic narg
+		SIC=: numarg
 case. 'ssig' do.
-		sig narg
-case. 'suuz' do.
-		uu_z_=: uu
-		uuengine_z_=: uuengine
+		SIG=: numarg
+case. 'ssiz' do.
+		SIZ=: numarg
+case. 'strt' do.
+		start''
+case. 'ucod' do.
+		ucode arg
+case. 'ucos' do.
+		ucods arg
+case. 'unuc' do.
+		0&ucode arg
+case. 'udiv' do.
+		targ udiv arg
+case. 'unif' do.
+		uniform arg
 case. 'uuuu' do.
-		(dltb '>' takeafter arg) uu (dltb '>' taketo arg)
-
+		targ uu arg
 case.        do. '>>> uuengine: bad y-arg';y
 end.
+)
+
+qty4str=: 3 : 0
+
+
+val=. eval strValueOf y
+uni=. dltb SP takeafter y
+val ; uni
 )
 
 '==================== [z] paths.ijs ===================='
@@ -1791,7 +1827,7 @@ start=: 3 : 0
 
 
 ssw '+++ start: ENTERED. y=(y)'
-if. isNo y do. UNICODE=: y end.
+if. isNo y do. SIC=: y end.
 0 make_msg 0
 factory''
 tpaths_validate''
@@ -1809,16 +1845,4 @@ make_msg DIAGNOSTICS
 
 create=: start
 destroy=: codestroy
-
-uuinit_z_=: 3 : 0
-ulo=. y conew 'uu'
-)
-
-uuinitTest_z_=: 3 : 0
-
-
-uloc_z_=: uuinit y
-uu_z_=: uu__uloc
-uuengine_z_=: uuengine__uloc
-i.0 0
-)
+start''

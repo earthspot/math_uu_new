@@ -18,14 +18,11 @@ trv 0  NB. turn off ALL trace messages --which redux will gag at
 
 SUCCESS=: <,:'no difference'
 
-load '~proj/redux.ijs'  NB. provides: redux
-
+require '~proj/redux.ijs'
 smoutput r5=. redux 5  NB. uunicode 3
 assert r5 -: SUCCESS
-
 smoutput r4=. redux 4  NB. uunicode 2
 assert r4 -: SUCCESS
-
 smoutput r3=. redux 3  NB. uunicode 1
 assert r3 -: SUCCESS
 

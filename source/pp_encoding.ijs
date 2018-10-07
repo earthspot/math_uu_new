@@ -204,7 +204,7 @@ scale4bareunit=: 3 : 0
   NB. ...AVOID CALLING WITH y if y is listed in (units) !!!
 z=. ,y  NB. (,'m') for y=='m'
 k=. 1   NB. to be overridden below
-  NB. Identify a MULTI-CHAR ASCII OR UNICODE scaling prefix
+  NB. Identify a multibyte ascii or unicoded scaling prefix...
 dalen=. #da=. 'da'  NB. deka-
 mulen=. #mu=. 'µ'   NB. micro-
 if.     z beginsWith da do.	k=. 1e1  [ z=. dalen}.z
@@ -294,7 +294,7 @@ targ ; loop ; factor return.
 
 uu=: ('' ddefine)"1
   NB. convert str: y (e.g. '212 degF') to target units (x)
-if. ST={.y do. uuengine }.y return. end.
+if. '*'={.y do. uuengine }.y return. end.
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
 ]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
@@ -329,14 +329,15 @@ end.
 sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
   NB. Note that uniform applies ucode to its own result
 ]z=. targ formatOUT va
-]z=. uniformD z  NB. (string) value to return
+NB. ]z=. uniformD z  NB. (string) value to return
+	NB. WRONG--munges: '180°'
   NB. NO_UNITS_NEEDED gets set by formatOUT when appropriate
 if. NO_UNITS_NEEDED do. z return.
 else. deb z,SP,uniform targ return. end.
 )
 
 uniformD=: 3 : 0
-  NB. apply verb: uniform to units ONLY in (qty) y
+  NB. apply verb: uniform to UNITS ONLY in (qty) y
 brack sval=: strValueOf y
 brack unit=: uniform unitsOf y
 ]sval,SP,unit
@@ -353,7 +354,7 @@ if. unsc e.~ <y do. 1 return. end.
 isTemperature=: 3 : 0
   NB. (kosher unit) y is a temperature scale
 by=. <deb y
-if. y beginsWith 'deg' do. 1 return.
+if. y beginsWith 'deg' do. -.(y-:'deg') return.
 elseif. by e. TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.

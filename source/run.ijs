@@ -25,7 +25,12 @@ end.
 smclear''
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
-uuinitTest''  NB. create an instance for testing...
+NB. create an instance of class UU for testing...
+NB. (----at present, start locale: uu as its own instance)
+uu_z_=: uu_uu_
+uuengine_z_=: uuengine_uu_
+uuengine_z_'strt'
+
 load TESTFILE
 smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
 
@@ -36,22 +41,4 @@ smoutput 0 : 0
    tpath''
 >>> To force good working TPATH_* settings:
    load temp 6
-)
-
-0 :0 NB. SUPERSEDED....................
->>> To launch an instance of class'uu'...
-   u0=: uuinit''  NB. localizer is: UU_LOC_z_
-   u1=: uuinit 1  NB. runs: start 1 --> UNICODE__uu1 -: 1
-   destroy__u0''
-   destroy__u1''
->>> To test...
-   uuengine__u1 'ssic 2'
-   uuengine__u1 'uuuu 3 ft'
-   uu__u1 '3 ft'
-   uuengine__u1 'uuuu 3 ft > yd'
-   'yd' uu__u1 '3 ft'
-   'yd' uuengine__u1 '3 ft'
-   uu__u1 '10 N'
-   uu__u2 '10 N'
-   uu__u1 '*ssic 3'   
 )

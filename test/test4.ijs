@@ -4,14 +4,14 @@ NB. (from temp 18)
 NB. component tests of: format compatible ucode uniform
 NB. plus a lot of misc tests as 0:0 inserts
 0 :0
-Wednesday 5 September 2018  17:25:32
+Saturday 6 October 2018  22:50:17
 )
 smoutput PLS,'+++ test4.ijs - entered',PLS
 
 cocurrent 'base'
 
-format_test=: 3 : 0
-formatOUT=. formatOUT__uloc
+format_test=: 3 : 0 ''
+formatOUT=. formatOUT_uu_
 smoutput '+++ format_test: ENTER'
 smoutput 'PI rad-->dms' ; 'dms' formatOUT PI
 smoutput 'VEX=',VEX
@@ -20,10 +20,8 @@ smoutput 'VEX=',VEX
 smoutput '--- format_test: EXIT'
 )
 
-format_test''
-
-compatible_test=: 3 : 0
-compatible=. compatible__uloc
+compatible_test=: 3 : 0 ''
+compatible=. compatible_uu_
 smoutput '+++ compatible_test: ENTER'
 assert. '*' compatible ,'m'
 assert. '*' compatible 'kg'
@@ -38,11 +36,8 @@ assert. (,'J') compatible 'kcal'
 smoutput '--- compatible_test: EXIT'
 )
 
-compatible_test''
-
-ucode_test=: 3 :0
-  NB. TEST ONLY -- try out verb: ucode
-ucode=. ucode__uloc
+ucode_test=: 3 :0 ''
+ucode=. ucode_uu_
 smoutput '+++ ucode_test: ENTER'
 assert. 'm^2/K/s^2'	-: 0 ucode 'm² K⁻¹ s⁻²'  NB. SL not: ⁻¹
 assert. 'm² K⁻¹ s⁻²'	-: 1 ucode 'm² K⁻¹ s⁻²'
@@ -52,47 +47,42 @@ assert. 'm²/K/s²'		-:   ucode 'm^2/K/s^2'
 smoutput '--- ucode_test: EXIT'
 )
 
-ucode_test''
-
-uuniform=: 4 : 0
-  NB. calls: uniform with TEMPORARY value of UNICODE (x)
-uniform=. uniform__uloc
-RESTORED=. UNICODE__uloc
-z=: uniform y [UNICODE__uloc=: x
-z [UNICODE__uloc=: RESTORED
-)
-
-uniform_test=: 3 : 0
-  NB. TEST ONLY -- try out verb: uniform via cover verb: uuniform
+uniform_test=: 3 : 0 ''
+uniform=. uniform_uu_
 smoutput '+++ uniform_test: ENTER'
-assert. 'm m/(K s s)'	-: 0 uuniform 'm m/(K s s)'
-assert. 'm m/(K s s)'	-: 1 uuniform 'm m/(K s s)'
-assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uuniform 'm m/(K s s)'
-assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uuniform 'm m/(K s s)'
-assert. 'm^2/K/s^2'	-: 0 uuniform 'm^2/K/s^2'
-assert. 'm²/(K s²)'	-: 1 uuniform 'm^2/K/s^2'
-assert. 'm² K⁻¹ s⁻²'	-: 2 uuniform 'm^2/K/s^2'
-assert. 'm²·K⁻¹·s⁻²'	-: 3 uuniform 'm^2/K/s^2'
-assert. 'ft/s^2'		-: 0 uuniform 'ft/s^2'
-assert. 'ft/s²'		-: 1 uuniform 'ft/s^2'
-assert. 'ft s⁻²'		-: 2 uuniform 'ft/s^2'
-assert. 'ft·s⁻²'		-: 3 uuniform 'ft/s^2'
+assert. 'm m/(K s s)'	-: 0 uniform 'm m/(K s s)'
+assert. 'm m/(K s s)'	-: 1 uniform 'm m/(K s s)'
+assert. 'm m K⁻¹ s⁻¹ s⁻¹'	-: 2 uniform 'm m/(K s s)'
+assert. 'm·m·K⁻¹·s⁻¹·s⁻¹'	-: 3 uniform 'm m/(K s s)'
+assert. 'm^2/K/s^2'	-: 0 uniform 'm^2/K/s^2'
+assert. 'm²/(K s²)'	-: 1 uniform 'm^2/K/s^2'
+assert. 'm² K⁻¹ s⁻²'	-: 2 uniform 'm^2/K/s^2'
+assert. 'm²·K⁻¹·s⁻²'	-: 3 uniform 'm^2/K/s^2'
+assert. 'ft/s^2'		-: 0 uniform 'ft/s^2'
+assert. 'ft/s²'		-: 1 uniform 'ft/s^2'
+assert. 'ft s⁻²'		-: 2 uniform 'ft/s^2'
+assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
 smoutput '--- uniform_test: EXIT'
 )
 
-uniform_test''
+NB. >>> COVERED BY redux 21 ...
+fromKelvin_test=: 3 : 0 ''
+fromKelvin=. fromKelvin_uu_
+smoutput '+++ fromKelvin_test: ENTER'
+assert. 0 100		-: 'C' fromKelvin 273.15 373.15
+assert. 32 212		-: 'F' fromKelvin 273.15 373.15
+assert. 7.5 60		-: 'Ro'fromKelvin 273.15 373.15
+assert. 0 33		-: 'N' fromKelvin 273.15 373.15
+assert. 150 0		-: 'De'fromKelvin 273.15 373.15
+assert. 0 80		-: 'Re'fromKelvin 273.15 373.15
+assert. 273.15 373.15	-: 'K' fromKelvin 273.15 373.15
+assert. 			128!:5 'Ab' fromKelvin 273.15 373.15
+  NB. (no such scale)
+smoutput '--- fromKelvin_test: EXIT'
+)
 
 
 0 :0
-'C' fromKelvin 273.15 373.15
-'F' fromKelvin 273.15 373.15
-'Ro'fromKelvin 273.15 373.15
-'N' fromKelvin 273.15 373.15
-'De'fromKelvin 273.15 373.15
-'Re'fromKelvin 273.15 373.15
-'K' fromKelvin 273.15 373.15
-'Ab' fromKelvin 273.15 373.15  NB. INVALID (no such scale)
--
 'C' toKelvin 0 100
 'F' toKelvin 32 212
 'Ro'toKelvin 7.5 60
@@ -100,7 +90,7 @@ uniform_test''
 'De'toKelvin 150 0
 'Re'toKelvin 0 80
 'K' toKelvin 273.15 373.15
-'Ab' toKelvin 273.15 373.15  NB. INVALID (no such scale)
+'Ab' toKelvin 273.15 373.15  NB. _. (no such scale)
 )
 
 0 :0
@@ -121,8 +111,8 @@ uniform_test''
 'Re' give_deg 373.15
 'K' give_deg 273.15
 'K' give_deg 373.15
-'Ab' give_deg 273.15  NB. INVALID (no such scale)
-'Ab' give_deg 373.15  NB. INVALID (no such scale)
+'Ab' give_deg 273.15  NB. _. (no such scale)
+'Ab' give_deg 373.15  NB. _. (no such scale)
 )
 
 0 :0
@@ -154,8 +144,8 @@ deslash'ft/s^2'
 )
 
 0 :0
-note 440		NB. A (concert-pitch is 440 Hz)
-note 194.18	NB. G (earth-rotation musical note)
+note 440           NB. A (concert-pitch is 440 Hz)
+note 194.18        NB. G (earth-rotation musical note)
 )
 
 NB. pp_encoding.ijs
@@ -200,7 +190,7 @@ redux 10  NB. foo_z_=: cnvCunit_uu_
 redux 11  NB. foo_z_=: qtcode4anyunit_uu_
 redux 12  NB. foo_z_=: [: uuOLD '1 ' , ]
 redux 13  NB. foo_z_=: convert_uu_
-redux 14  NB. (test of UNICODE levels)
+redux 14  NB. (test of SI-conformance levels)
 redux 15  NB. foo_z_=: [: uuNEW '1 ' , ]
 )
 

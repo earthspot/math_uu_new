@@ -115,8 +115,10 @@ end.
 
 eval=: 3 : 0 "1
   NB. used to evaluate numeric exprns in UUC
+  NB. c/f valueOf, strValueOf
+  NB. >>> FORMERLY could return: INVALID
 y=. '/%-_Ee'charsub ;y
-try. {.".y catch. INVALID end.
+try. {.".y catch. _. end.
 )
 
 exrate=: exrate_exch_
@@ -177,7 +179,9 @@ scino=: 3 : 0
   NB. but returns ordinary integer for integer (y)
   NB. Uses current values of SIG and SCI (they can change)
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
-if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ": y end.
+if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ":y end.
+if. SIZ>|y do. z=.'0',~ '- +'{~ 1+*y end.
+z return.
 )
 
 selfcanc=: 3 : 0
@@ -198,39 +202,12 @@ msg '--- selfcanc: EXITS: z=(z)'
 z return.
 )
 
-sci=: 3 : 0
-  NB. get/set SCI (sci notation threshold)
-if. 0=#y do. SCI
-else.
-  SCI=: {.y  NB. update the LOCAL constant
-NB.   smoutput '--- sci: SCI=',":SCI
-end.
-)
-
-sig=: 3 : 0
-  NB. get/set SIG (decimal places for: format)
-if. 0=#y do. SIG
-else.
-  SIG=: {.y  NB. update the LOCAL constant
-NB.   smoutput '--- sig: SIG=',":SIG
-end.
-)
-
-sic=: uunicode=: 3 : 0
-  NB. get/set UNICODE (SI-conformance level)
-if. 0=#y do. UNICODE
-else.
-  UNICODE=: {.y  NB. update the LOCAL constant
-NB.   smoutput '--- uunicode: UNICODE=',":UNICODE
-end.
-)
-
 slash1=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) single-slash convention
   NB. cf: dotted
 z=. deb y
 if. x do.  NB. apply convention
-  if. UNICODE>:2 do. y return. end.  NB. convention n/a
+  if. SIC>:2 do. y return. end.  NB. convention n/a
   if. ')'={:z do. y return. end.  NB. convention already applied
   z=. canon z
   a=. '/' taketo z
@@ -253,15 +230,6 @@ if. SL~:{.y do. y=. SP,y end.
 ssmx=: 4 : 'if. UCASE do. x ssmxU y else. x ssmxM y end.'
 ssmxM=: 4 : 'I. * +/"(1) y ss"1 x'
 ssmxU=: 4 : '(toupper x)ssmxM toupper y'
-
-testf=: 3 : 0
-	NB. test: format (and friends)
-if. 0=#y do. y=. 123.4567 end.
-for_no. ;:'eur gbp usd deg ! c eV Hz rad / *' do.
-	nom=. ,>no
-	smoutput nb nom ; TAB ; nom format y
-end.
-)
 
 ucase=: 3 : 0
 if. 0=#y do. UCASE
@@ -305,7 +273,7 @@ z [ 'cspel csymb'=: SAV
 )
 
 udat=: 4 : 0
-  NB. raw boxed data from y=. seltext''
+  NB. cut (UUC/F-type) string into boxed fields
   NB. x==0 -- const
   NB. x==1 -- formula
 'y zdesc'=. ']'cut y
@@ -323,7 +291,6 @@ end.
 )
 
 udiv=: 4 : 0
-  NB. udiv
   NB. divides 2 generalized units-strs: x y
   NB. For use by (eg): combine in: cal
 if. (1=#y) and (y=SL) do. x return. end.
@@ -394,12 +361,15 @@ NB.    cutuuc '-1.5 my-u [my-new] test'
 
 NB. ============================================
 
-uniform=: 3 : 0
+uniform=: '' ddefine
 0 pushme 'uniform'
-msg '+++ uniform: ENTERED: y=(y)'
-  NB. change units (y) as appropriate for (UNICODE)
+  NB. x== SI-conformance level, temporarily replaces SIC
+savedSIC=. SIC
+if. -. x-:'' do. SIC=: x end.
+msg '+++ uniform: ENTERED: x=(x) y=(y)'
+  NB. change units (y) as appropriate for (SIC)
 y=. utf8 deb y  NB. convert (y) from possible datatype=='unicode'
-select. UNICODE
+select. SIC
  case. 0 do.  NB. ASCII only
   z=. unucode undotted y
  case. 1 do.  NB. SI units with /
@@ -413,21 +383,21 @@ fcase. 2 do.  NB. Standard SI units
   if. y-: ,SL do.  NB. …no bare '/' in Standard SI
     msg '--- uniform: y=SL returns NIL'
     0 popme 'uniform'
-    '' return.
+    '' [SIC=: savedSIC return.
   end.
   ]z=. unucode undotted y	NB. c/f case 0
   ]z=. ucode deslash unslash1 z
-  if. UNICODE=3 do. z=. dotted z end.
+  if. SIC=3 do. z=. dotted z end.
 end.
 popme 'uniform'
-z return.
+z [SIC=: savedSIC return.
 )
 
 undeg=: 3600 %~ _ 60 60 #. 3 {. ]
 undotted=: 0&dotted
 unslash1=: 0&slash1
 unucode=: 0&ucode
-upost=: 4 : 'y,(x#~*UNICODE)'
+upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'
