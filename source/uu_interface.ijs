@@ -19,7 +19,7 @@ case. 'CPLI' do. NB. list of compatible units
 case. 'CNVJ' do. NB. cut a cunit (eg: '/kg^3')
 		cnvj arg
 case. 'CONV' do. NB. convert
-		targ convert 1;arg
+		convert arg
 case. 'CONS' do. NB. cut "cons" formatted string (c/f UUC)
 		0&udat arg
 case. 'DUMB' do. NB. cut "dumb" formatted string (c/f UUC)
@@ -78,7 +78,7 @@ case. 'ssiz' do. NB. set zero attraction threshold
 		SIZ=: numarg
 case. 'strt' do. NB. restart this instance of UU
 		start''
-case.        do. '>>> uuengine: bad y-arg';y
+case.        do. '>>> uuengine: bad instruction: ';y
 end.
 NB. >>>>> NO CODE PAST THIS POINT: return values are waiting
 )

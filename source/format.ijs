@@ -139,11 +139,11 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
-give_0_deg=: 4 : 0
-register'give_0_deg'
-  NB. outputs radians y [rad] as degrees of angle
+give_0_angle=: 4 : 0
+register'give_0_angle'
+  NB. outputs degrees y [deg] as degrees of angle
 assert. x -: 'deg'  NB. force error if wrong verb
-ds=. deg_symbol''
+ds=. deg_symbol'' NB. SI-compliant
 d=. scino y  NB. rad-->deg conversion specd already in UUC
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
@@ -251,6 +251,7 @@ rad4deg=: 13 : '(o.|y) % 180'
 rad4amin=: 13 : 'rad4deg y % 60'
 rad4asec=: 13 : 'rad4deg y % 3600'
 
+0 :0 NB. THIS IS WRONG: Monday 8 October 2018  02:03:47
 give_0_dms=: 4 : 0
 register'give_0_dms'
   NB. converts radians [rad] to d° m' s"
@@ -258,6 +259,16 @@ assert. x -: 'dms'  NB. force error if wrong verb
 NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
 'd m s'=.":each <.each 360 60 60 #: asec4rad |y
 ds=. deg_symbol''
+sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
+)
+
+give_0_dms=: 4 : 0
+register'give_0_dms'
+  NB. converts degrees [deg] to d° m' s"
+assert. x -: 'dms'  NB. force error if wrong verb
+NB. if. y-:'' do. y=. d4dms 3 59 59 end. ---WRONG
+'d m s'=.":each <.each 360 60 60 #: asec4deg |y
+ds=. deg_symbol''  NB. SI-compliant
 sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
 )
 

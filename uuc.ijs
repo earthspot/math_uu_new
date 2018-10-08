@@ -155,15 +155,15 @@ UUC=: cmx 0 : 0
 4.44822 N	[lbf]	pound-force
 9.96402e3 N	[tonf]	ton-force
 9.80665e_3 N	[gf]	gram-force
-373.16 K	[boil.w]	Water boils; Kelvin
-273.16 K	[frez.w]	Water freezes; Kelvin
+373.15 K	[b.p]	Boiling point of water; Kelvin
+273.15 K	[f.p]	Freezing point of water; Kelvin
 1 K	[C.dgr]	temperature range
 5/9 K	[F.dgr]	temperature range
 1 K	[degC]	temperature; Celsius
 1 K	[Celsius]	temperature; Celsius
 1 K	[Centigrade] temperature; Celsius
-1 K	[degF]	temperature; Fahrenheit
-1 K	[Fahrenheit] temperature; Fahrenheit
+9/5 K	[degF]	temperature; Fahrenheit
+9/5 K	[Fahrenheit] temperature; Fahrenheit
 1 K	[degRo]	temperature; Roemer
 1 K	[degN]	temperature; Newton
 1 K	[degDe]	temperature; Delisle

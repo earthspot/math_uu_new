@@ -9,7 +9,7 @@ start=: 3 : 0
   NB.  but should be called by apps using UU whenever
   NB.  the constants library (UUC) has been changed.
   NB. But not needed if only the functions library (UUF) changed
-ssw '+++ start: ENTERED. y=(y)'
+ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
 NB. make_msg 1  NB. enable diagnostics
 NB. trv 0
@@ -29,6 +29,7 @@ make_unitc''
 report_complex_nouns''  NB. NO NOUNS should be complex
 make_msg DIAGNOSTICS  NB. enable diagnostics
 NB. wd'msgs'
+ssw '+++ [uu] start: COMPLETED.'
 )
 
 create=: start

@@ -1,5 +1,5 @@
 0 :0
-Monday 3 September 2018  00:51:33
+Monday 8 October 2018  02:32:29
 -
 UU: scientific units conversion package
 )
@@ -7,58 +7,8 @@ UU: scientific units conversion package
 clear 'uu'
 coclass 'uu'
 
-AABUILT=: '2018-09-04  16:07:02'
-AABUILT=: '2018-09-04  17:40:16'
-AABUILT=: '2018-09-04  17:42:57'
-AABUILT=: '2018-09-04  17:43:34'
-AABUILT=: '2018-09-04  17:48:54'
-AABUILT=: '2018-09-04  17:54:50'
-AABUILT=: '2018-09-04  18:04:29'
-AABUILT=: '2018-09-04  18:07:44'
-AABUILT=: '2018-09-04  18:12:26'
-AABUILT=: '2018-09-04  18:14:05'
-AABUILT=: '2018-09-05  01:57:13'
-AABUILT=: '2018-09-05  12:20:47'
-AABUILT=: '2018-09-05  16:49:07'
-AABUILT=: '2018-09-05  17:01:23'
-AABUILT=: '2018-09-05  17:01:56'
-AABUILT=: '2018-09-05  17:20:04'
-AABUILT=: '2018-09-05  17:32:27'
-AABUILT=: '2018-09-05  17:42:04'
-AABUILT=: '2018-09-05  17:52:57'
-AABUILT=: '2018-09-08  16:28:51'
-AABUILT=: '2018-09-08  16:58:10'
-AABUILT=: '2018-09-08  17:09:10'
-AABUILT=: '2018-09-08  17:18:18'
-AABUILT=: '2018-09-08  17:34:26'
-AABUILT=: '2018-09-12  02:59:21'
-AABUILT=: '2018-09-12  04:51:50'
-AABUILT=: '2018-09-18  23:14:14'
-AABUILT=: '2018-09-20  14:06:34'
-AABUILT=: '2018-09-20  14:07:05'
-AABUILT=: '2018-10-03  22:48:54'
-AABUILT=: '2018-10-03  22:49:21'
-AABUILT=: '2018-10-03  23:00:33'
-AABUILT=: '2018-10-06  21:34:40'
-AABUILT=: '2018-10-06  23:21:10'
-AABUILT=: '2018-10-06  23:32:44'
-AABUILT=: '2018-10-07  01:21:24'
-AABUILT=: '2018-10-07  01:24:09'
-AABUILT=: '2018-10-07  01:43:49'
-AABUILT=: '2018-10-07  01:48:00'
-AABUILT=: '2018-10-07  01:55:49'
-AABUILT=: '2018-10-07  02:18:28'
-AABUILT=: '2018-10-07  02:28:21'
-AABUILT=: '2018-10-07  11:31:02'
-AABUILT=: '2018-10-07  11:59:01'
-AABUILT=: '2018-10-07  12:02:52'
-AABUILT=: '2018-10-07  13:39:16'
-AABUILT=: '2018-10-07  13:40:21'
-AABUILT=: '2018-10-07  13:59:41'
-AABUILT=: '2018-10-07  14:27:28'
-AABUILT=: '2018-10-07  14:30:14'
-AABUILT=: '2018-10-07  15:12:09'
-AABUILT=: '2018-10-07  15:13:39'
+AABUILT=: '2018-10-08  02:33:33'
+AABUILT=: '2018-10-08  03:04:54'
 
 '==================== [uu] constants ===================='
 
@@ -152,6 +102,34 @@ UUM=: ''
 
 
 mks=: ;:'m kg s A K cd mol rad eur'
+
+'==================== [z] paths.ijs ===================='
+
+cocurrent 'z'
+
+sl=: 4 : 0
+
+
+SL=. '/'
+if. SL={:x do. x=. }:x end.
+if. SL={.y do. x=. }.y end.
+x,SL,y
+)
+
+tpaths_validate=: 3 : 0
+assert. fexist TPATH_UU
+assert. fexist TPATH_UUC
+assert. fexist TPATH_UUF
+assert. fexist TPATH_UUM
+i.0 0
+)
+]TPATH_UU=: jpath'~Gituu'
+]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
+]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
+]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
+uuc=: 3 : 'openFolder TPATH_UUC'
+uuf=: 3 : 'openFolder TPATH_UUF'
+uum=: 3 : 'openFolder TPATH_UUM'
 0 :0
 Sunday 7 October 2018  12:48:11
 -
@@ -1320,8 +1298,8 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
-give_0_deg=: 4 : 0
-register'give_0_deg'
+give_0_angle=: 4 : 0
+register'give_0_angle'
 
 assert. x -: 'deg'
 ds=. deg_symbol''
@@ -1429,11 +1407,21 @@ rad4deg=: 13 : '(o.|y) % 180'
 rad4amin=: 13 : 'rad4deg y % 60'
 rad4asec=: 13 : 'rad4deg y % 3600'
 
+0 :0
 give_0_dms=: 4 : 0
 register'give_0_dms'
 
 assert. x -: 'dms'
 'd m s'=.":each <.each 360 60 60 #: asec4rad |y
+ds=. deg_symbol''
+sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
+)
+
+give_0_dms=: 4 : 0
+register'give_0_dms'
+
+assert. x -: 'dms'
+'d m s'=.":each <.each 360 60 60 #: asec4deg |y
 ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
 )
@@ -1680,7 +1668,7 @@ case. 'CPLI' do.
 case. 'CNVJ' do.
 		cnvj arg
 case. 'CONV' do.
-		targ convert 1;arg
+		convert arg
 case. 'CONS' do.
 		0&udat arg
 case. 'DUMB' do.
@@ -1739,37 +1727,9 @@ case. 'ssiz' do.
 		SIZ=: numarg
 case. 'strt' do.
 		start''
-case.        do. '>>> uuengine: bad y-arg';y
+case.        do. '>>> uuengine: bad instruction: ';y
 end.
 )
-
-'==================== [z] paths.ijs ===================='
-
-cocurrent 'z'
-
-sl=: 4 : 0
-
-
-SL=. '/'
-if. SL={:x do. x=. }:x end.
-if. SL={.y do. x=. }.y end.
-x,SL,y
-)
-
-tpaths_validate=: 3 : 0
-assert. fexist TPATH_UU
-assert. fexist TPATH_UUC
-assert. fexist TPATH_UUF
-assert. fexist TPATH_UUM
-i.0 0
-)
-]TPATH_UU=: jpath'~Gituu'
-]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
-]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
-]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
-uuc=: 3 : 'openFolder TPATH_UUC'
-uuf=: 3 : 'openFolder TPATH_UUF'
-uum=: 3 : 'openFolder TPATH_UUM'
 
 '==================== [uu] start ===================='
 
@@ -1781,7 +1741,7 @@ start=: 3 : 0
 
 
 
-ssw '+++ start: ENTERED. y=(y)'
+ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
 0 make_msg 0
 factory''
@@ -1796,6 +1756,7 @@ make_unitc''
 
 report_complex_nouns''
 make_msg DIAGNOSTICS
+ssw '+++ [uu] start: COMPLETED.'
 )
 
 create=: start

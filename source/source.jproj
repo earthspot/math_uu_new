@@ -1,5 +1,6 @@
 header.ijs
 constants.ijs
+paths.ijs
 blink.ijs
 utilities.ijs
 main.ijs
@@ -7,5 +8,4 @@ pp_encoding.ijs
 format.ijs
 formatin.ijs
 uu_interface.ijs
-paths.ijs
 start.ijs
