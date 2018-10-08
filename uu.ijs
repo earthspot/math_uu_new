@@ -9,6 +9,7 @@ coclass 'uu'
 
 AABUILT=: '2018-10-08  02:33:33'
 AABUILT=: '2018-10-08  03:04:54'
+AABUILT=: '2018-10-08  10:29:39'
 
 '==================== [uu] constants ===================='
 
@@ -245,18 +246,25 @@ ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 make_msg=: 1 ddefine
 
 
+
 clearme''
 talks=. x
-if. y do.
-  sessuu=: sessuu1
-  msg=: sessuu&sw
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
-else.
+select. y
+case. 0 do.
   sessuu=: empty
   msg=: empty
   sllog=: empty
   if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
+case. 1 do.
+  sessuu=: smoutput
+  msg=: sessuu&sw
+  sllog=: sessuu&llog
+  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
+case. 2 do.
+  sessuu=: sessuu1
+  msg=: sessuu&sw
+  sllog=: sessuu&llog
+  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
 end.
 i.0 0
 )

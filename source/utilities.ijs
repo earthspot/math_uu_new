@@ -30,20 +30,26 @@ ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 make_msg=: 1 ddefine
   NB. USED BY: start -and diagnostics for given IDs
   NB. These diagnostics get switched off/on by: start
+  NB. x==0 -suppress confirmation message to session
 clearme''  NB. cleardown ME (in all modes)
-talks=. x  NB. Boolean: x==1 -- output to sess
-if. y do.
-  sessuu=: sessuu1
-  msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
-else.
+talks=. x  NB. Boolean: x==1 -- output to session
+select. y
+case. 0 do.
   sessuu=: empty
   msg=: empty
   sllog=: empty
   if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
+case. 1 do.
+  sessuu=: smoutput
+  msg=: sessuu&sw  NB. for alert signal: ungoverned
+  sllog=: sessuu&llog
+  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
+case. 2 do.
+  sessuu=: sessuu1
+  msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS
+  sllog=: sessuu&llog
+  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
 end.
-NB. y return.
 i.0 0
 )
 

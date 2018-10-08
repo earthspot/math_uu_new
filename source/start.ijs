@@ -39,4 +39,4 @@ NB. uuinit_z_=: 3 : 0
 NB. ulo=. y conew 'uu'
 NB. )
 
-start''  NB. (FOR TESTS:) start _uu_ itself as its own instantiation.
+start''  NB. (FOR TESTS:) start _uu_ as its own instantiation.
