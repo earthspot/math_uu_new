@@ -162,8 +162,11 @@ UUC=: cmx 0 : 0
 1 K	[degC]	temperature; Celsius
 1 K	[Celsius]	temperature; Celsius
 1 K	[Centigrade] temperature; Celsius
-9/5 K	[degF]	temperature; Fahrenheit
-9/5 K	[Fahrenheit] temperature; Fahrenheit
+1j273.15 K	[Cent]	temperature; Celsius EXPERIMENTAL
+5r9j459.67 K	[FahR]	temperature; Fahrenheit EXPERIMENTAL
+5r9j255.372 K	[Fahr]	temperature; Fahrenheit EXPERIMENTAL
+5/9 K	[degF]	temperature; Fahrenheit
+5/9 K	[Fahrenheit] temperature; Fahrenheit
 1 K	[degRo]	temperature; Roemer
 1 K	[degN]	temperature; Newton
 1 K	[degDe]	temperature; Delisle

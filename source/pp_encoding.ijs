@@ -88,6 +88,7 @@ pushme 'qtcode4i'
   NB. returns (valu;code) for index: y
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
+]vald=.    y{uvald	      NB. displacement for valu
 ]units_y=. y pick units  NB. nominal units of valu
 ]unitv_y=. y pick unitv  NB. units definition as per UUC
   NB. Recognise [/] and [*] and handle them
@@ -294,10 +295,10 @@ targ ; loop ; factor return.
 
 uu=: ('' ddefine)"1
   NB. convert str: y (e.g. '212 degF') to target units (x)
-if. '*'={.y do. uuengine }.y return. end.
+if. '*'={.y do. uuengine }.y return. end. NB. uuengine call-thru
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
-]yf=: formatIN y  NB. y--> SI units, esp Fahrenheit--> K
+]yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
 NB. if. invalid val do.

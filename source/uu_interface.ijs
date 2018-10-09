@@ -3,25 +3,38 @@
 
 cocurrent 'uu'
 
+displacement=: 3 : 'uvald {~ units i. <,y'
+
+NB. displacement=: 3 : 0
+NB.   NB. displacement for units: y
+NB. try. uvald {~ units i. <,y
+NB. catch. 0
+NB. end.
+NB. )
+
+systemUnits=: 0&uniform
+
 uuengine=: 3 : 0
   NB. UU keyhole interface: (string) y is an instruction.
   NB. Pass-thru CAL instructions are identical to these.
   NB. Lowercase instructions change the state of UU
   NB. Uppercase instructions DO NOT change the state.
-arg=. dltb '>' taketo 4}.y
-targ=. dltb '>' takeafter y
+uarg=. systemUnits arg=. dltb '>' taketo yy=. dltb 4}.y
+utarg=. systemUnits targ=. dltb '>' takeafter y
 numarg=. {.0". arg
 select. 4{.y
 case. 'CPAT' do. NB. are 2 units compatible?
-		targ compatible arg
+		utarg compatible uarg
 case. 'CPLI' do. NB. list of compatible units
-		compatlist arg
+		compatlist uarg
 case. 'CNVJ' do. NB. cut a cunit (eg: '/kg^3')
-		cnvj arg
+		cnvj uarg
 case. 'CONV' do. NB. convert
-		convert arg
+		convert uarg
 case. 'CONS' do. NB. cut "cons" formatted string (c/f UUC)
 		0&udat arg
+case. 'DISP' do. NB. displacement for units
+		(displacement :: 0:) uarg
 case. 'DUMB' do. NB. cut "dumb" formatted string (c/f UUC)
 		udumb arg
 case. 'FUNC' do. NB. cut "func" formatted string (c/f UUC)
@@ -40,18 +53,18 @@ case. 'QSIZ' do. NB. query zero attraction threshold
 		SIZ
 case. 'SCIN' do. NB. numarg --> (string) scientific notation
 		scino numarg
-case. 'SELF' do. NB. self-cancel arg
-		selfcanc arg
+case. 'SELF' do. NB. self-cancel units
+		selfcanc uarg
 case. 'UCOD' do. NB. convert special symbols --> "goy"
 		ucode arg
 case. 'UCOS' do. NB. convert special symbols --> "goy" (not currency)
 		ucods arg
 case. 'UNUC' do. NB. un-convert "goy" special symbols --> "kosher"
-		0&ucode arg
+		uarg
 case. 'UDIV' do. NB. divide two units symbolically
-		targ udiv arg
+		utarg udiv uarg
 case. 'UNIF' do. NB. convert special symbols wrto SI-compliance level
-		uniform arg
+		uniform uarg
 case. 'UUUU' do. NB. call LOCAL uu via a uuengine-instruction
 		targ uu arg
 case. 'VUUC' do. NB. LF-separated contents of UUC

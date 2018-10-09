@@ -56,6 +56,7 @@ i.0 0
 all=: *./
 and=: *.
 any=: +./
+b4o=: [: <;._1 ' ' , ]  NB. use instead of (;:) with units
 begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":  NB. layout tool for message string ->'[y]'
 cmx=: [: > <;._2	NB. expects trailing LF
@@ -103,13 +104,13 @@ vt=: viewtable=: '' ddefine
   NB. x == OPEN list of names of nouns (usually the table's columns)
   NB. x == '' (defaulted) - use the default list
   NB. VIEWTABLE (if defined) alters the default number of displayed lines (10)
-faux=. 'units unitv unitx uvalu uvalx uvalc unitc i'	NB. x-default value
+faux=. 'units unitv uvalu uvald uvalc unitc i'	NB. x-default value
 if. '' -:x do. x=. faux end.
 if. isNo y do.
   y=. y+i.10 default 'VIEWTABLE'
 end.
 if. isLit y do.
-  y=. units i. ;:y
+  y=. units i. b4o y
 end.
 st =. (":&.>)"0	NB. utility verb: numlist-->string
 cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
@@ -143,18 +144,6 @@ ID=: 3 : 0
   NB. e.g.  ID 'm kWh gbp' --> 1 37 73
   NB. vt ID 'm kWh gbp'
 units i. ;:y
-)
-
-utab=: 3 : 0
-	NB. TEST diagnostics table of caches
-smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
-if. 0=#y do. y=. i.#units end.
-for_i. y do.
-  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
-  if.-. iu=ix do.
-    smoutput TAB,'>>> uvalu not equal to uvalx'
-  end.
-end.
 )
 
 trv_z_=: trv=: 3 : 0
@@ -260,3 +249,5 @@ end.
 i.0 0
 )
 
+real=: 9&o.
+imag=: 11&o.

@@ -10,6 +10,12 @@ coclass 'uu'
 AABUILT=: '2018-10-08  02:33:33'
 AABUILT=: '2018-10-08  03:04:54'
 AABUILT=: '2018-10-08  10:29:39'
+AABUILT=: '2018-10-08  20:08:43'
+AABUILT=: '2018-10-08  20:25:44'
+AABUILT=: '2018-10-08  20:29:21'
+AABUILT=: '2018-10-08  21:59:48'
+AABUILT=: '2018-10-09  02:49:11'
+AABUILT=: '2018-10-09  02:50:29'
 
 '==================== [uu] constants ===================='
 
@@ -272,6 +278,7 @@ i.0 0
 all=: *./
 and=: *.
 any=: +./
+b4o=: [: <;._1 ' ' , ]
 begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":
 cmx=: [: > <;._2
@@ -318,13 +325,13 @@ vt=: viewtable=: '' ddefine
 
 
 
-faux=. 'units unitv unitx uvalu uvalx uvalc unitc i'
+faux=. 'units unitv uvalu uvald uvalc unitc i'
 if. '' -:x do. x=. faux end.
 if. isNo y do.
   y=. y+i.10 default 'VIEWTABLE'
 end.
 if. isLit y do.
-  y=. units i. ;:y
+  y=. units i. b4o y
 end.
 st =. (":&.>)"0
 cst=. ([: st [) ,. [: st ]
@@ -353,18 +360,6 @@ ID=: 3 : 0
 
 
 units i. ;:y
-)
-
-utab=: 3 : 0
-
-smoutput nb 'units' ;TAB; 'uvalu' ;TAB; 'uvalx'
-if. 0=#y do. y=. i.#units end.
-for_i. y do.
-  smoutput nb i ; (brack >i{units) ;TAB; (iu=.i{uvalu) ;TAB; (ix=.i{uvalx)
-  if.-. iu=ix do.
-    smoutput TAB,'>>> uvalu not equal to uvalx'
-  end.
-end.
 )
 
 trv_z_=: trv=: 3 : 0
@@ -466,6 +461,8 @@ end.
 i.0 0
 )
 
+real=: 9&o.
+imag=: 11&o.
 
 '==================== [uu] main ===================='
 
@@ -584,7 +581,7 @@ end.
 eval=: 3 : 0 "1
 
 
-y=. '/%-_Ee'charsub ;y
+y=. '/%-_Ee'charsub >y
 try. {.".y catch. UNDEFINED end.
 )
 
@@ -773,10 +770,8 @@ make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
 units=: deb each us
-uvalu=: eval >v
-
-uvalx=: cycs=: (#UUC)$0
-unitx=: (#UUC)$<'??'
+uvalu=: real eval >v
+uvald=: imag eval >v
 i.0 0
 )
 
@@ -924,6 +919,7 @@ pushme 'qtcode4i'
 
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
+]vald=.    y{uvald
 ]units_y=. y pick units
 ]unitv_y=. y pick unitv
 
@@ -1132,7 +1128,7 @@ uu=: ('' ddefine)"1
 if. '*'={.y do. uuengine }.y return. end.
 pushme 'uu'
 NO_UNITS_NEEDED=: 0
-]yf=: formatIN y
+]yf=: dltb formatIN y
 ]val=: valueOf yf
 ]unit=: bris unitsOf yf
 if. 0<#x do.
@@ -1262,6 +1258,15 @@ deEuroName=: 3 : 0
 
 y rplc 'é';'e' ; 'ø';'oe'
 )
+K4C=: 3 : '273.15 + y'
+C4K=: 3 : '_273.15 + y'
+F4K=: 3 : '_459.67 + 1.8 * y'
+K4F=: 3 : '255.372 + 5r9 * y'
+0 :0
+C4K 373.15 273.15
+F4K 373.15 273.15
+)
+
 toK=: (4 : 0)"0
 f=. {:>x
 r=. -/>x
@@ -1660,25 +1665,30 @@ make_daisychainIN''
 
 cocurrent 'uu'
 
+displacement=: 3 : 'uvald {~ units i. <,y'
+systemUnits=: 0&uniform
+
 uuengine=: 3 : 0
 
 
 
 
-arg=. dltb '>' taketo 4}.y
-targ=. dltb '>' takeafter y
+uarg=. systemUnits arg=. dltb '>' taketo yy=. dltb 4}.y
+utarg=. systemUnits targ=. dltb '>' takeafter y
 numarg=. {.0". arg
 select. 4{.y
 case. 'CPAT' do.
-		targ compatible arg
+		utarg compatible uarg
 case. 'CPLI' do.
-		compatlist arg
+		compatlist uarg
 case. 'CNVJ' do.
-		cnvj arg
+		cnvj uarg
 case. 'CONV' do.
-		convert arg
+		convert uarg
 case. 'CONS' do.
 		0&udat arg
+case. 'DISP' do.
+		(displacement :: 0:) uarg
 case. 'DUMB' do.
 		udumb arg
 case. 'FUNC' do.
@@ -1698,17 +1708,17 @@ case. 'QSIZ' do.
 case. 'SCIN' do.
 		scino numarg
 case. 'SELF' do.
-		selfcanc arg
+		selfcanc uarg
 case. 'UCOD' do.
 		ucode arg
 case. 'UCOS' do.
 		ucods arg
 case. 'UNUC' do.
-		0&ucode arg
+		uarg
 case. 'UDIV' do.
-		targ udiv arg
+		utarg udiv uarg
 case. 'UNIF' do.
-		uniform arg
+		uniform uarg
 case. 'UUUU' do.
 		targ uu arg
 case. 'VUUC' do.

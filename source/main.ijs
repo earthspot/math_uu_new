@@ -116,7 +116,7 @@ end.
 eval=: 3 : 0 "1
   NB. used to evaluate numeric exprns in UUC
   NB. c/f valueOf, strValueOf
-y=. '/%-_Ee'charsub ;y
+y=. '/%-_Ee'charsub >y
 try. {.".y catch. UNDEFINED end.
 )
 
@@ -305,7 +305,7 @@ zdesc; znits; 1  NB. assume 1 nominal unit is only ever required
 )
 
 make_units=: 0 ddefine
-  NB. makes globals: cspel csymb units unitv uvalu unitx uvalx
+  NB. makes globals: cspel csymb units unitv uvalu uvald
   NB. x=0: DONT adjust currency
   NB. (cspel csymb) -used by: ucode to convert units: unicode<-->ascii
   NB. (sspel ssymb_ -used by: ucods (ditto, omits currency symbols)
@@ -320,12 +320,10 @@ csymb=: ssymb, <;._1 '|°|''|"'
   NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
 make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
-unitv=: deb each uv -.each TAB
-units=: deb each us
-uvalu=: eval >v
-  NB. Make DUMMY: unitx cycs uvalx from: units
-uvalx=: cycs=: (#UUC)$0
-unitx=: (#UUC)$<'??'
+unitv=: deb each uv -.each TAB  NB. defined units
+units=: deb each us             NB. nominal units
+uvalu=: real eval >v            NB. defined value: factor
+uvald=: imag eval >v            NB. defined value: displacement
 i.0 0
 )
 
