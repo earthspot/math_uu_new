@@ -159,14 +159,14 @@ UUC=: cmx 0 : 0
 273.15 K	[f.p]	Freezing point of water; Kelvin
 1 K	[C.dgr]	temperature range
 5/9 K	[F.dgr]	temperature range
-1 K	[degC]	temperature; Celsius
-1 K	[Celsius]	temperature; Celsius
-1 K	[Centigrade] temperature; Celsius
-1j273.15 K	[Cent]	temperature; Celsius EXPERIMENTAL
+1j273.15 K	[degC]	temperature; Celsius
+1j273.15 K	[Celsius]	temperature; Celsius
+1j273.15 K	[Centigrade] temperature; Centigrade
+1j273.15 K	[Cent]	temperature; Centigrade EXPERIMENTAL
 5r9j459.67 K	[FahR]	temperature; Fahrenheit EXPERIMENTAL
 5r9j255.372 K	[Fahr]	temperature; Fahrenheit EXPERIMENTAL
-5/9 K	[degF]	temperature; Fahrenheit
-5/9 K	[Fahrenheit] temperature; Fahrenheit
+5r9j255.372 K	[degF]	temperature; Fahrenheit
+5r9j255.372 K	[Fahrenheit] temperature; Fahrenheit
 1 K	[degRo]	temperature; Roemer
 1 K	[degN]	temperature; Newton
 1 K	[degDe]	temperature; Delisle

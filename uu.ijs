@@ -16,6 +16,22 @@ AABUILT=: '2018-10-08  20:29:21'
 AABUILT=: '2018-10-08  21:59:48'
 AABUILT=: '2018-10-09  02:49:11'
 AABUILT=: '2018-10-09  02:50:29'
+AABUILT=: '2018-10-13  13:16:38'
+AABUILT=: '2018-10-13  15:17:25'
+AABUILT=: '2018-10-13  15:26:08'
+AABUILT=: '2018-10-13  15:30:13'
+AABUILT=: '2018-10-13  15:30:23'
+AABUILT=: '2018-10-13  15:36:22'
+AABUILT=: '2018-10-13  15:38:58'
+AABUILT=: '2018-10-13  16:16:21'
+AABUILT=: '2018-10-13  16:26:16'
+AABUILT=: '2018-10-13  16:51:36'
+AABUILT=: '2018-10-13  17:45:02'
+AABUILT=: '2018-10-13  17:53:58'
+AABUILT=: '2018-10-13  18:01:09'
+AABUILT=: '2018-10-13  18:02:37'
+AABUILT=: '2018-10-13  18:05:09'
+AABUILT=: '2018-10-13  18:08:47'
 
 '==================== [uu] constants ===================='
 
@@ -565,6 +581,8 @@ popme 'deslash'
 dlb r return.
 )
 
+displacement=: (3 : 'uvald {~ units i. <,y') :: 0:
+
 dotted=: 1&$: : (4 : 0)
 
 
@@ -634,10 +652,11 @@ val ; uni
 
 rnd=: [: <. 0.5 + ]
 
-scino=: 3 : 0
+scino=: (3 : 0)"0
 
 
 
+if. y=<.y do. ":y return. end.
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
 if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ":y end.
 if. SIZ>|y do. z=.'0',~ '- +'{~ 1+*y end.
@@ -1123,45 +1142,6 @@ popme 'convert'
 targ ; loop ; factor return.
 )
 
-uu=: ('' ddefine)"1
-
-if. '*'={.y do. uuengine }.y return. end.
-pushme 'uu'
-NO_UNITS_NEEDED=: 0
-]yf=: dltb formatIN y
-]val=: valueOf yf
-]unit=: bris unitsOf yf
-if. 0<#x do.
-  targ=. bris x
-  'coeft codet'=. qtcode4anyunit targ
-  'coefu codeu'=. qtcode4anyunit unit
-  if. codet ~: codeu do.
-    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
-    BADQTY return.
-  end.
-  coeff=. coefu % coeft
-  msg '... uu: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
-else.
-  'coeff code'=. qtcode4anyunit unit
-  ]codet=. codeu=. code
-  ]targ=. canon expandcode code
-  msg '... uu: x=empty; coeff=(coeff) val=(val)'
-end.
-if. cannotScale unit do.
-  ]va=. val
-else.
-  ]va=. coeff * val
-end.
-sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
-
-]z=. targ formatOUT va
-
-
-if. NO_UNITS_NEEDED do. z return.
-else. deb z,SP,uniform targ return. end.
-)
-
 uniformD=: 3 : 0
 
 brack sval=: strValueOf y
@@ -1171,7 +1151,6 @@ brack unit=: uniform unitsOf y
 
 cannotScale=: 3 : 0
 
-if. isTemperature y do. 1 return. end.
 unsc=. ;:'gas.mark midino note'
 if. unsc e.~ <y do. 1 return. end.
 0 return.
@@ -1186,6 +1165,61 @@ elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. do. 0 return.
 end.
+)
+
+uu=: ('' ddefine)"1
+
+if. '*'={.y do. uuengine }.y return. end.
+pushme 'uu'
+NO_UNITS_NEEDED=: 0
+]yf=: dltb formatIN y
+]valu=: valueOf yf
+]unit=: bris unitsOf yf
+]dispu=. displacement unit
+	sllog 'uu_0 yf valu unit dispu'
+if. 0<#x do.
+  targ=. bris x
+  'coeft codet'=. qtcode4anyunit targ
+  'coefu codeu'=. qtcode4anyunit unit
+  if. codet ~: codeu do.
+    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
+    BADQTY return.
+  end.
+  coeff=. coefu % coeft
+else.
+  'coeff code'=. qtcode4anyunit unit
+  coefu=. coeff
+  coeft=. 1
+  ]codet=. codeu=. code
+  ]targ=. canon expandcode code
+end.
+dispt=. displacement targ
+disp=. dispu - dispt
+	sllog 'uu_1 x targ unit codet codeu'
+	sllog 'uu_1 coeff coeft coefu'
+	sllog 'uu_1 disp dispt dispu'
+if. cannotScale unit do.
+  ]vat=. valu
+else.
+  ]vaSI=. dispu + valu*coefu
+	sllog 'uu_2 vaSI dispu valu coefu'
+  ]vat=. (vaSI-dispt)%coeft
+	sllog 'uu_2 vat dispt vaSI coeft'
+end.
+]z=. targ formatOUT vat
+	sllog 'uu_3 z vat VEXIN VEX'
+
+if. NO_UNITS_NEEDED do. z
+else.                   deb z,SP,uniform targ
+end.
+)
+0 :0
+     'K' uu '273.15 K'
+  'Cent' uu '273.15 K'
+  'Fahr' uu '273.15 K'
+  'Fahr' uu '0 Cent'
+  'Fahr' uu '1 f.p'
 )
 
 '==================== [uu] format.ijs =================='
@@ -1320,6 +1354,41 @@ d=. scino y
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
+
+give_1_Cent=: 4 : 0
+
+register'give_1_Cent'
+unit=. ,x
+assert. unit-:'Cent'
+disp=. displacement unit
+sllog 'VEX x y unit disp'
+sw'(scino y)'
+)
+0 :0
+'Cent' give_1_Cent 373.15
+'Cent' uu '373.15 K'
+'Cent' uu '1 b.p'
+'Cent' uu '1 f.p'
+)
+
+give_1_Fahr=: 4 : 0
+
+register'give_1_Fahr'
+unit=. ,x
+assert. unit-:'Fahr'
+disp=. displacement unit
+sllog 'VEX x y unit disp'
+sw'(scino y)'
+)
+0 :0
+'Fahr' give_1_Fahr 373.15
+'Fahr' uu '273.15 K'
+'Fahr' uu '373.15 K'
+'Fahr' uu '1 b.p'
+'Fahr' uu '1 f.p'
+)
+
+0 :0
 give_1_deg=: 4 : 0
 register'give_1_deg'
 
@@ -1341,8 +1410,8 @@ end.
 )
 
 0 :0
-'degC' give_0_deg 373.15
-'degF' give_0_deg 373.15
+'degC' give_1_deg 373.15
+'degF' give_1_deg 373.15
 uu '100 degC'
    'degC' 	uu '100 degC'
    'degF' 	uu '100 degC'
@@ -1451,7 +1520,6 @@ sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 
 give_2_sci=: 4 : 0
 register'give_2_sci'
-
 z=. (toupper@hy@scino) y
 unit=. x
 msg '... give_2_sci: x=(x) y=(y) z=(z) unit=(unit)'
@@ -1586,6 +1654,74 @@ uu 'π rad'
 '°' uu 'π rad'
 )
 
+take_1_Cent=: 3 : 0
+registerIN 'take_1_Cent'
+blink'magenta'
+]unit=. deb bris unitsOf y
+assert. unit-:'Cent'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+sw'(valu) (unit)'
+)
+0 :0
+take_1_Cent '1 Cent'
+uu '1 Cent'
+'Cent' uu '1 b.p'
+)
+
+take_1_Fahr=: 3 : 0
+registerIN 'take_1_Fahr'
+blink'cyan'
+]unit=. deb bris unitsOf y
+assert. unit-:'Fahr'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+sw'(valu) (unit)'
+)
+0 :0
+VEXIN ; VEX
+take_1_Fahr '32 Fahr'
+         uu '32 Fahr'
+         uu '32 ft'
+'Fahr'   uu '32 Fahr'
+         uu '212 Fahr'
+       uu '1 f.p'
+'Fahr' uu '1 f.p'
+       uu '1 b.p'
+'Fahr' uu '1 b.p'
+)
+
+take_1_FahR=: 3 : 0
+registerIN 'take_1_FahR'
+blink'cyan'
+]unit=. deb bris unitsOf y
+assert. unit-:'FahR'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+sw'(valu) (unit)'
+)
+0 :0
+VEXIN ; VEX
+take_1_FahR '32 FahR'
+         uu '32 FahR'
+         uu '32 ft'
+'FahR'   uu '32 FahR'
+         uu '212 FahR'
+       uu '1 f.p'
+'FahR' uu '1 f.p'
+       uu '1 b.p'
+'FahR' uu '1 b.p'
+)
+
+
+
+0 :0
 take_1_deg=: 3 : 0
 registerIN 'take_1_deg'
 blink'red'
@@ -1613,8 +1749,6 @@ take_1_deg '212 °F'
 take_1_deg '212°F'
 -
 REMAINING BLINKS...
-blink 'magenta'
-blink 'cyan'
 blink 'yellow'
 blink 'flame'
 )
@@ -1665,16 +1799,13 @@ make_daisychainIN''
 
 cocurrent 'uu'
 
-displacement=: 3 : 'uvald {~ units i. <,y'
-systemUnits=: 0&uniform
-
 uuengine=: 3 : 0
 
 
 
 
-uarg=. systemUnits arg=. dltb '>' taketo yy=. dltb 4}.y
-utarg=. systemUnits targ=. dltb '>' takeafter y
+uarg=. (0&uniform) arg=. dltb '>' taketo yy=. dltb 4}.y
+utarg=. (0&uniform) targ=. dltb '>' takeafter y
 numarg=. {.0". arg
 select. 4{.y
 case. 'CPAT' do.
@@ -1688,7 +1819,7 @@ case. 'CONV' do.
 case. 'CONS' do.
 		0&udat arg
 case. 'DISP' do.
-		(displacement :: 0:) uarg
+		displacement uarg
 case. 'DUMB' do.
 		udumb arg
 case. 'FUNC' do.

@@ -293,50 +293,6 @@ popme 'convert'
 targ ; loop ; factor return.
 )
 
-uu=: ('' ddefine)"1
-  NB. convert str: y (e.g. '212 degF') to target units (x)
-if. '*'={.y do. uuengine }.y return. end. NB. uuengine call-thru
-pushme 'uu'
-NO_UNITS_NEEDED=: 0
-]yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
-]val=: valueOf yf
-]unit=: bris unitsOf yf
-NB. if. invalid val do.
-NB.   emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
-NB.   BADQTY return.
-NB. end.
-if. 0<#x do.  NB. use non-empty (x) as targ...
-  targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
-  'coeft codet'=. qtcode4anyunit targ
-  'coefu codeu'=. qtcode4anyunit unit
-  if. codet ~: codeu do.
-    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
-    BADQTY return.
-  end.
-  coeff=. coefu % coeft
-  msg '... uu: x=[(x)]; coefu=(coefu) coeft=(coeft) coeff=(coeff) val=(val)'
-else.  NB. (x) is empty or invocation is monadic
-  'coeff code'=. qtcode4anyunit unit
-  ]codet=. codeu=. code
-  ]targ=. canon expandcode code  NB. infer target units from: code
-  msg '... uu: x=empty; coeff=(coeff) val=(val)'
-end.
-if. cannotScale unit do.
-  ]va=. val  NB. formatOUT must handle (unit)
-else.
-  ]va=. coeff * val
-end.
-sllog 'uu__ val va coeff unit targ coefu codeu coeft codet'
-  NB. Note that uniform applies ucode to its own result
-]z=. targ formatOUT va
-NB. ]z=. uniformD z  NB. (string) value to return
-	NB. WRONG--munges: '180°'
-  NB. NO_UNITS_NEEDED gets set by formatOUT when appropriate
-if. NO_UNITS_NEEDED do. z return.
-else. deb z,SP,uniform targ return. end.
-)
-
 uniformD=: 3 : 0
   NB. apply verb: uniform to UNITS ONLY in (qty) y
 brack sval=: strValueOf y
@@ -345,8 +301,8 @@ brack unit=: uniform unitsOf y
 )
 
 cannotScale=: 3 : 0
-  NB. (kosher unit) y cannot be scaled, e.g. temperature scale
-if. isTemperature y do. 1 return. end.
+  NB. (kosher unit) y cannot be scaled, e.g. [note]
+NB. if. isTemperature y do. 1 return. end.
 unsc=. ;:'gas.mark midino note'
 if. unsc e.~ <y do. 1 return. end.
 0 return.  NB. (unit) y can be scaled
@@ -361,4 +317,65 @@ elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. by e. 2 {.each TEMPERATURE_SCALES do. 1 return.
 elseif. do. 0 return.  NB. not a temperature scale
 end.
+)
+
+uu=: ('' ddefine)"1
+  NB. convert str: y (e.g. '212 degF') to target units (x)
+if. '*'={.y do. uuengine }.y return. end. NB. uuengine call-thru
+pushme 'uu'
+NO_UNITS_NEEDED=: 0
+]yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
+]valu=: valueOf yf
+]unit=: bris unitsOf yf
+]dispu=. displacement unit
+	sllog 'uu_0 yf valu unit dispu'
+NB. if. invalid valu do.
+NB.   emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
+NB.   BADQTY return.
+NB. end.
+if. 0<#x do.  NB. use non-empty (x) as targ...
+  targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
+  'coeft codet'=. qtcode4anyunit targ
+  'coefu codeu'=. qtcode4anyunit unit
+  if. codet ~: codeu do.
+    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
+    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
+    BADQTY return.
+  end.
+  coeff=. coefu % coeft
+else.  NB. (x) is empty or invocation is monadic
+  'coeff code'=. qtcode4anyunit unit
+  coefu=. coeff
+  coeft=. 1
+  ]codet=. codeu=. code
+  ]targ=. canon expandcode code  NB. infer target units from: code
+end.
+dispt=. displacement targ
+disp=. dispu - dispt
+NB. disp=. dispu - dispt*coeff
+	sllog 'uu_1 x targ unit codet codeu'
+	sllog 'uu_1 coeff coeft coefu'
+	sllog 'uu_1 disp dispt dispu'
+if. cannotScale unit do.
+  ]vat=. valu  NB. formatOUT must handle (unit)
+else.
+NB.   ]va=. disp + coeff * valu
+  ]vaSI=. dispu + valu*coefu  NB. the SI-value of (valu)
+	sllog 'uu_2 vaSI dispu valu coefu'
+  ]vat=. (vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
+	sllog 'uu_2 vat dispt vaSI coeft'
+end.
+]z=. targ formatOUT vat
+	sllog 'uu_3 z vat VEXIN VEX'
+  NB. NO_UNITS_NEEDED gets set by whichever "take_" verb succeeds
+if. NO_UNITS_NEEDED do. z
+else.                   deb z,SP,uniform targ
+end.
+)
+0 :0
+     'K' uu '273.15 K'
+  'Cent' uu '273.15 K'
+  'Fahr' uu '273.15 K'
+  'Fahr' uu '0 Cent'
+  'Fahr' uu '1 f.p'
 )

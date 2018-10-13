@@ -124,6 +124,77 @@ uu 'π rad'
 '°' uu 'π rad'
 )
 
+take_1_Cent=: 3 : 0
+registerIN 'take_1_Cent'
+blink'magenta'
+]unit=. deb bris unitsOf y
+assert. unit-:'Cent'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+NB. sw'(valu+disp) K'
+sw'(valu) (unit)'
+)
+0 :0
+take_1_Cent '1 Cent'
+uu '1 Cent'
+'Cent' uu '1 b.p'
+)
+
+take_1_Fahr=: 3 : 0	NB. CANT GET IT TO WORK YET
+registerIN 'take_1_Fahr'
+blink'cyan'
+]unit=. deb bris unitsOf y
+assert. unit-:'Fahr'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+NB. sw'(valu+disp) K'
+sw'(valu) (unit)'
+)
+0 :0
+VEXIN ; VEX
+take_1_Fahr '32 Fahr'
+         uu '32 Fahr'
+         uu '32 ft'
+'Fahr'   uu '32 Fahr'
+         uu '212 Fahr'
+       uu '1 f.p'
+'Fahr' uu '1 f.p'
+       uu '1 b.p'
+'Fahr' uu '1 b.p'
+)
+
+take_1_FahR=: 3 : 0	NB. CANT GET IT TO WORK YET
+registerIN 'take_1_FahR'
+blink'cyan'
+]unit=. deb bris unitsOf y
+assert. unit-:'FahR'
+valu=. valueOf y
+disp=. displacement unit
+sllog 'VEXIN y valu unit disp'
+assert. -.undefined valu=. valueOf y
+NB. sw'(valu+disp) K'
+sw'(valu) (unit)'
+)
+0 :0
+VEXIN ; VEX
+take_1_FahR '32 FahR'
+         uu '32 FahR'
+         uu '32 ft'
+'FahR'   uu '32 FahR'
+         uu '212 FahR'
+       uu '1 f.p'
+'FahR' uu '1 f.p'
+       uu '1 b.p'
+'FahR' uu '1 b.p'
+)
+
+
+
+0 :0
 take_1_deg=: 3 : 0
 registerIN 'take_1_deg'
 blink'red'
@@ -153,8 +224,6 @@ take_1_deg '212 °F'
 take_1_deg '212°F'
 -
 REMAINING BLINKS...
-blink 'magenta'
-blink 'cyan'
 blink 'yellow'
 blink 'flame'
 )

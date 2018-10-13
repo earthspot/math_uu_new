@@ -100,6 +100,8 @@ popme 'deslash'
 dlb r return.
 )
 
+displacement=: (3 : 'uvald {~ units i. <,y') :: 0:
+
 dotted=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) dotted (·) convention
   NB. cf: slash1
@@ -180,10 +182,11 @@ val ; uni
 
 rnd=: [: <. 0.5 + ]
 
-scino=: 3 : 0
+scino=: (3 : 0)"0
   NB. Scientific notation for number: y
   NB. but returns ordinary integer for integer (y)
   NB. Uses current values of SIG and SCI (they can change)
+if. y=<.y do. ":y return. end.
 fmt=. j. SIG * 1 _1 {~ ((10^SCI) <: |y)  or  ((10^-SIG) > |y)
 if. (y=<.y) and (y<10^SCI) do. z=.":y else. z=.fmt ":y end.
 if. SIZ>|y do. z=.'0',~ '- +'{~ 1+*y end.

@@ -1,6 +1,6 @@
 NB. UU test suite
 0 :0
-Saturday 6 October 2018  21:52:20
+Saturday 13 October 2018  13:09:30
 )
 
 cocurrent 'base'
@@ -12,7 +12,16 @@ smoutput PLS,'+++ test.ijs - entered',PLS
 blink_uu_=: empty
 
 uunicode_z_=: 3 : 'uu_z_ ''*ssic '',":y'
-  NB. ...preceding '*' tells verb: uu it's a uuengine instruction
+  NB. ...prefix '*' tells verb: uu it's a uuengine instruction
+
+test_uu_=: 1 ddefine
+  NB. trace uu
+if. x=0 do. make_msg 0
+else.
+  make_msg 2
+  TRACEVERBS=: ,<'uu'
+end.
+)
 
 NB. trace these verbs…
 NB. trv 'start qty4i qty4anyunit qty4bareunit'
@@ -25,7 +34,8 @@ load '~Gituu/test/test1.ijs'
 require '~proj/redux.ijs'
 redux 14  NB. test SI-conformance with a complex definition
 redux 19  NB. test: convert
-redux 21  NB. test: temperature scales
+NB. redux 30  NB. test: temperature scales internals
+redux 21  NB. [Cent] [Fahr]
 
 NB. trv 0  NB. turn trace off
 

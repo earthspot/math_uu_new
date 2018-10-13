@@ -3,24 +3,13 @@
 
 cocurrent 'uu'
 
-displacement=: 3 : 'uvald {~ units i. <,y'
-
-NB. displacement=: 3 : 0
-NB.   NB. displacement for units: y
-NB. try. uvald {~ units i. <,y
-NB. catch. 0
-NB. end.
-NB. )
-
-systemUnits=: 0&uniform
-
 uuengine=: 3 : 0
   NB. UU keyhole interface: (string) y is an instruction.
   NB. Pass-thru CAL instructions are identical to these.
   NB. Lowercase instructions change the state of UU
   NB. Uppercase instructions DO NOT change the state.
-uarg=. systemUnits arg=. dltb '>' taketo yy=. dltb 4}.y
-utarg=. systemUnits targ=. dltb '>' takeafter y
+uarg=. (0&uniform) arg=. dltb '>' taketo yy=. dltb 4}.y
+utarg=. (0&uniform) targ=. dltb '>' takeafter y
 numarg=. {.0". arg
 select. 4{.y
 case. 'CPAT' do. NB. are 2 units compatible?
@@ -34,7 +23,7 @@ case. 'CONV' do. NB. convert
 case. 'CONS' do. NB. cut "cons" formatted string (c/f UUC)
 		0&udat arg
 case. 'DISP' do. NB. displacement for units
-		(displacement :: 0:) uarg
+		displacement uarg
 case. 'DUMB' do. NB. cut "dumb" formatted string (c/f UUC)
 		udumb arg
 case. 'FUNC' do. NB. cut "func" formatted string (c/f UUC)

@@ -157,6 +157,62 @@ d=. scino y  NB. rad-->deg conversion specd already in UUC
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
+
+give_1_Cent=: 4 : 0
+  NB. NO disp applied on output.
+register'give_1_Cent'
+unit=. ,x
+assert. unit-:'Cent'
+disp=. displacement unit
+sllog 'VEX x y unit disp'
+NB. sw'(y-disp)'
+sw'(scino y)'
+)
+0 :0
+'Cent' give_1_Cent 373.15
+'Cent' uu '373.15 K'
+'Cent' uu '1 b.p'
+'Cent' uu '1 f.p'
+)
+
+give_1_Fahr=: 4 : 0
+  NB. NO disp applied on output.
+register'give_1_Fahr'
+unit=. ,x
+assert. unit-:'Fahr'
+disp=. displacement unit
+sllog 'VEX x y unit disp'
+NB. sw'(y-disp)'
+sw'(scino y)'
+)
+0 :0
+'Fahr' give_1_Fahr 373.15
+'Fahr' uu '273.15 K'
+'Fahr' uu '373.15 K'
+'Fahr' uu '1 b.p'
+'Fahr' uu '1 f.p'
+)
+
+NB. give_1_FahR=: 4 : 0
+NB.   NB. NO disp applied on output.
+NB. register'give_1_FahR'
+NB. unit=. ,x
+NB. assert. unit-:'FahR'
+NB. disp=. displacement unit
+NB. sllog 'VEX x y unit disp'
+NB. NB. sw'(y-disp)'
+NB. sw'(scino y)'
+NB. )
+NB. 0 :0
+NB. 'FahR' give_1_FahR 373.15
+NB. 'FahR' uu '273.15 K'
+NB. 'FahR' uu '373.15 K'
+NB. 'FahR' uu '1 b.p'
+NB. 'FahR' uu '1 f.p'
+NB. )
+
+
+0 :0
 give_1_deg=: 4 : 0
 register'give_1_deg'
   NB. outputs (Kelvin) y [K] converted to scale (x)
@@ -180,12 +236,12 @@ end.
 )
 
 0 :0
-'degC' give_0_deg 373.15		NB. 100°C	√
-'degF' give_0_deg 373.15		NB. 32°F	√
+'degC' give_1_deg 373.15		NB. 100°C	√
+'degF' give_1_deg 373.15		NB. 212°F	√
 uu '100 degC'
    'degC' 	uu '100 degC'	NB. 100°C	√
-   'degF' 	uu '100 degC'	NB. X
-   'degF' 	uu '100 °C'	NB. X
+   'degF' 	uu '100 degC'	NB. 212°F	√
+   'degF' 	uu '100 °C'	NB. 212°F	√
 212°F
    'degC' 	uu '212 degF'
 100°C
@@ -293,7 +349,6 @@ sw'(note y) note' [ NO_UNITS_NEEDED=: 1
 
 give_2_sci=: 4 : 0
 register'give_2_sci'
-  NB. force error if wrong verb
 z=. (toupper@hy@scino) y  NB. scientific notation (conventional)
 unit=. x
 msg '... give_2_sci: x=(x) y=(y) z=(z) unit=(unit)'
