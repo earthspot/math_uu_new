@@ -9,7 +9,8 @@ PLS_z_=: LF,~LF,60$'+'
 
 smoutput PLS,'+++ test.ijs - entered',PLS
 
-blink_uu_=: empty
+blinkIN_uu_=: blink1_uu_
+blink_uu_=: blink1_uu_
 
 uunicode_z_=: 3 : 'uu_z_ ''*ssic '',":y'
   NB. ...prefix '*' tells verb: uu it's a uuengine instruction
@@ -37,7 +38,10 @@ redux 19  NB. test: convert
 NB. redux 30  NB. test: temperature scales internals
 redux 21  NB. [Cent] [Fahr]
 
+NB. Take the swabs out the patient...
 NB. trv 0  NB. turn trace off
+blinkIN_uu_=: empty
+blink_uu_=: empty
 
 NB. ---------------------------------------------------------
 0 :0

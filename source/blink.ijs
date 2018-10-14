@@ -1,8 +1,8 @@
 NB. customizable blink1 driver -- Gituu/source/blink.ijs
 0 :0
-Sunday 7 October 2018  12:48:11
+Sunday 14 October 2018  15:49:25
 -
-Used by: formatin.ijs -for testing take_1_ verbs
+Used by: format, formatin -for testing give_ and take_ verbs
 )
 
 cocurrent 'uu'
@@ -64,8 +64,8 @@ end.
 
 blink1 0
 
-blink=: blink1
-NB. disable with: blink=: empty
+blinkIN=: empty  NB. to activate, set to: blink1
+blink=: empty  NB. to activate, set to: blink1
 
 0 :0
 blink '?'

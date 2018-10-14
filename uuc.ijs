@@ -27,7 +27,7 @@ NB.	Their "true" values are not SCALED nor DISPLACED.
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Wednesday 19 September 2018  07:44:28
+1 /	[saved]	Sunday 14 October 2018  02:24:31
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -162,9 +162,6 @@ UUC=: cmx 0 : 0
 1j273.15 K	[degC]	temperature; Celsius
 1j273.15 K	[Celsius]	temperature; Celsius
 1j273.15 K	[Centigrade] temperature; Centigrade
-1j273.15 K	[Cent]	temperature; Centigrade EXPERIMENTAL
-5r9j459.67 K	[FahR]	temperature; Fahrenheit EXPERIMENTAL
-5r9j255.372 K	[Fahr]	temperature; Fahrenheit EXPERIMENTAL
 5r9j255.372 K	[degF]	temperature; Fahrenheit
 5r9j255.372 K	[Fahrenheit] temperature; Fahrenheit
 1 K	[degRo]	temperature; Roemer

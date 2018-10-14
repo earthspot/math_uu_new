@@ -32,6 +32,8 @@ AABUILT=: '2018-10-13  18:01:09'
 AABUILT=: '2018-10-13  18:02:37'
 AABUILT=: '2018-10-13  18:05:09'
 AABUILT=: '2018-10-13  18:08:47'
+AABUILT=: '2018-10-14  02:24:41'
+AABUILT=: '2018-10-14  02:31:09'
 
 '==================== [uu] constants ===================='
 
@@ -215,7 +217,9 @@ end.
 
 blink1 0
 
-blink=: blink1
+blinkIN=: empty  NB. to activate, set to: blink1
+blink=: empty  NB. to activate, set to: blink1
+
 0 :0
 blink '?'
 -
