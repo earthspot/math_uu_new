@@ -323,59 +323,49 @@ uu=: ('' ddefine)"1
   NB. convert str: y (e.g. '212 degF') to target units (x)
 if. '*'={.y do. uuengine }.y return. end. NB. uuengine call-thru
 pushme 'uu'
-NO_UNITS_NEEDED=: 0
-]yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
-]valu=: valueOf yf
-]unit=: bris unitsOf yf
-]dispu=. displacement unit
-	sllog 'uu_0 yf valu unit dispu'
-NB. if. invalid valu do.
-NB.   emsg '>>> uu: bad value: yf=[(yf)] y=[(y)]'
-NB.   BADQTY return.
-NB. end.
-if. 0<#x do.  NB. use non-empty (x) as targ...
+yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
+valu=: valueOf yf
+unit=: bris unitsOf yf
+	sllog 'uu_0 x y yf valu unit'
+if. 0=#x do.		NB. (x) is empty | monadic invocation
+  'coefu code'=. qtcode4anyunit unit
+  coeft=. 1
+  codet=. codeu=. code
+  targ=. canon expandcode code  NB. infer target units from: (code)
+	sllog 'uu_1 targ unit'
+elseif. x-:'=' do.		NB. target units are the nominal units
+  targ=. unit
+elseif. do.		NB. target units are (x)
   targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
+	sllog 'uu_1 targ unit'
+	sllog 'uu_1 coeft coefu codet codeu'
   if. codet ~: codeu do.
     emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
-  coeff=. coefu % coeft
-else.  NB. (x) is empty or invocation is monadic
-  'coeff code'=. qtcode4anyunit unit
-  coefu=. coeff
-  coeft=. 1
-  ]codet=. codeu=. code
-  ]targ=. canon expandcode code  NB. infer target units from: code
 end.
-dispt=. displacement targ
-disp=. dispu - dispt
-NB. disp=. dispu - dispt*coeff
-	sllog 'uu_1 x targ unit codet codeu'
-	sllog 'uu_1 coeff coeft coefu'
-	sllog 'uu_1 disp dispt dispu'
+  NB. compute target value: vatarg
 if. cannotScale unit do.
-  ]vat=. valu  NB. formatOUT must handle (unit)
-else.
-NB.   ]va=. disp + coeff * valu
-  ]vaSI=. dispu + valu*coefu  NB. the SI-value of (valu)
+  vatarg=. valu  NB. formatOUT must handle scaling and displacement
+elseif. x-:'=' do.
+  vatarg=. valu  NB. uu simply evaluates and formats y
+elseif. do.
+  dispt=. displacement targ
+  dispu=. displacement unit
+	sllog 'uu_1 dispt dispu'
+  vaSI=. dispu + valu*coefu  NB. the SI-value of (valu)
 	sllog 'uu_2 vaSI dispu valu coefu'
-  ]vat=. (vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
-	sllog 'uu_2 vat dispt vaSI coeft'
+  vatarg=. (vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
+	sllog 'uu_2 vatarg dispt vaSI coeft'
 end.
-]z=. targ formatOUT vat
-	sllog 'uu_3 z vat VEXIN VEX'
-  NB. NO_UNITS_NEEDED gets set by whichever "take_" verb succeeds
-if. NO_UNITS_NEEDED do. z
-else.                   deb z,SP,uniform targ
-end.
+  NB. format the target value: vatarg
+z=. targ formatOUT vatarg
+	sllog 'uu_3 z vatarg VEXIN VEX'
+  NB. The effective "take_" verb in formatOUT sets NO_UNITS_NEEDED
+if. NO_UNITS_NEEDED do. z else. deb z,SP,uniform targ end.
 )
-0 :0
-     'K' uu '273.15 K'
-  'Cent' uu '273.15 K'
-  'Fahr' uu '273.15 K'
-  'Fahr' uu '0 Cent'
-  'Fahr' uu '1 f.p'
-)
+NB. smoutput uu '10 dms'
+NB. smoutput '='uu '10 dms'

@@ -34,6 +34,9 @@ AABUILT=: '2018-10-13  18:05:09'
 AABUILT=: '2018-10-13  18:08:47'
 AABUILT=: '2018-10-14  02:24:41'
 AABUILT=: '2018-10-14  02:31:09'
+AABUILT=: '2018-10-14  23:37:47'
+AABUILT=: '2018-10-15  04:44:28'
+AABUILT=: '2018-10-15  05:03:40'
 
 '==================== [uu] constants ===================='
 
@@ -156,9 +159,9 @@ uuc=: 3 : 'openFolder TPATH_UUC'
 uuf=: 3 : 'openFolder TPATH_UUF'
 uum=: 3 : 'openFolder TPATH_UUM'
 0 :0
-Sunday 7 October 2018  12:48:11
+Sunday 14 October 2018  15:49:25
 -
-Used by: formatin.ijs -for testing take_1_ verbs
+Used by: format, formatin -for testing give_ and take_ verbs
 )
 
 cocurrent 'uu'
@@ -217,8 +220,8 @@ end.
 
 blink1 0
 
-blinkIN=: empty  NB. to activate, set to: blink1
-blink=: empty  NB. to activate, set to: blink1
+blinkIN=: empty
+blink=: empty
 
 0 :0
 blink '?'
@@ -1175,55 +1178,49 @@ uu=: ('' ddefine)"1
 
 if. '*'={.y do. uuengine }.y return. end.
 pushme 'uu'
-NO_UNITS_NEEDED=: 0
-]yf=: dltb formatIN y
-]valu=: valueOf yf
-]unit=: bris unitsOf yf
-]dispu=. displacement unit
-	sllog 'uu_0 yf valu unit dispu'
-if. 0<#x do.
+yf=: dltb formatIN y
+valu=: valueOf yf
+unit=: bris unitsOf yf
+	sllog 'uu_0 x y yf valu unit'
+if. 0=#x do.
+  'coefu code'=. qtcode4anyunit unit
+  coeft=. 1
+  codet=. codeu=. code
+  targ=. canon expandcode code
+	sllog 'uu_1 targ unit'
+elseif. x-:'=' do.
+  targ=. unit
+elseif. do.
   targ=. bris x
   'coeft codet'=. qtcode4anyunit targ
   'coefu codeu'=. qtcode4anyunit unit
+	sllog 'uu_1 targ unit'
+	sllog 'uu_1 coeft coefu codet codeu'
   if. codet ~: codeu do.
     emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
     emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
-  coeff=. coefu % coeft
-else.
-  'coeff code'=. qtcode4anyunit unit
-  coefu=. coeff
-  coeft=. 1
-  ]codet=. codeu=. code
-  ]targ=. canon expandcode code
 end.
-dispt=. displacement targ
-disp=. dispu - dispt
-	sllog 'uu_1 x targ unit codet codeu'
-	sllog 'uu_1 coeff coeft coefu'
-	sllog 'uu_1 disp dispt dispu'
-if. cannotScale unit do.
-  ]vat=. valu
-else.
-  ]vaSI=. dispu + valu*coefu
-	sllog 'uu_2 vaSI dispu valu coefu'
-  ]vat=. (vaSI-dispt)%coeft
-	sllog 'uu_2 vat dispt vaSI coeft'
-end.
-]z=. targ formatOUT vat
-	sllog 'uu_3 z vat VEXIN VEX'
 
-if. NO_UNITS_NEEDED do. z
-else.                   deb z,SP,uniform targ
+if. cannotScale unit do.
+  vatarg=. valu
+elseif. x-:'=' do.
+  vatarg=. valu
+elseif. do.
+  dispt=. displacement targ
+  dispu=. displacement unit
+	sllog 'uu_1 dispt dispu'
+  vaSI=. dispu + valu*coefu
+	sllog 'uu_2 vaSI dispu valu coefu'
+  vatarg=. (vaSI-dispt)%coeft
+	sllog 'uu_2 vatarg dispt vaSI coeft'
 end.
-)
-0 :0
-     'K' uu '273.15 K'
-  'Cent' uu '273.15 K'
-  'Fahr' uu '273.15 K'
-  'Fahr' uu '0 Cent'
-  'Fahr' uu '1 f.p'
+
+z=. targ formatOUT vatarg
+	sllog 'uu_3 z vatarg VEXIN VEX'
+
+if. NO_UNITS_NEEDED do. z else. deb z,SP,uniform targ end.
 )
 
 '==================== [uu] format.ijs =================='
@@ -1349,6 +1346,19 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
+scale_displace=: 4 : 0
+
+
+
+
+'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
+vaSI=. dispu + y*coefu
+(vaSI-dispt)%coeft
+)
+coefu4bf=: 3 : 0
+'b f'=. y
+coefu=. 100%(b-f)
+)
 give_0_angle=: 4 : 0
 register'give_0_angle'
 
@@ -1359,22 +1369,22 @@ sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
 
-give_1_Cent=: 4 : 0
+give_1_temp=: 4 : 0
 
-register'give_1_Cent'
+register'give_1_temp'
 unit=. ,x
-assert. unit-:'Cent'
-disp=. displacement unit
+assert. isTemperature unit
 sllog 'VEX x y unit disp'
 sw'(scino y)'
 )
 0 :0
-'Cent' give_1_Cent 373.15
-'Cent' uu '373.15 K'
-'Cent' uu '1 b.p'
-'Cent' uu '1 f.p'
+'degRo' give_1_temp 373.15
+'degRo' uu '373.15 K'
+'degRo' uu '1 b.p'
+'degRo' uu '1 f.p'
 )
 
+0 :0
 give_1_Fahr=: 4 : 0
 
 register'give_1_Fahr'
@@ -1391,6 +1401,8 @@ sw'(scino y)'
 'Fahr' uu '1 b.p'
 'Fahr' uu '1 f.p'
 )
+
+
 
 0 :0
 give_1_deg=: 4 : 0
@@ -1831,7 +1843,7 @@ case. 'FUNC' do.
 case. 'FMTI' do.
 		formatIN arg
 case. 'FMTO' do.
-		formatOUT qty4str arg
+		(bris unitsOf arg) format valueOf arg
 case. 'QSCI' do.
 		SCI
 case. 'QSIC' do.

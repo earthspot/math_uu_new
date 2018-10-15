@@ -30,8 +30,8 @@ case. 'FUNC' do. NB. cut "func" formatted string (c/f UUC)
 		1&udat arg
 case. 'FMTI' do. NB. format string-qty
 		formatIN arg
-case. 'FMTO' do. NB. format qty as output string
-		formatOUT qty4str arg
+case. 'FMTO' do. NB. format qty: arg as output string
+		(bris unitsOf arg) format valueOf arg
 case. 'QSCI' do. NB. query scientific notation threshold
 		SCI
 case. 'QSIC' do. NB. query SI-conformance level

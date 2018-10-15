@@ -19,15 +19,12 @@ NB.	They serve here as appendable lines for the sake of completeness.
 NB.
 NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
 NB.	--e.g '1 C.dgr' is equivalent to a rise in temperature of 1 K
-NB.	--but '1 degC' is equivalent to a temperature (absol) of 274.16 K
-NB.	Temperatures in [degC] [degF] [Celsius] [Centigrade] and [Fahrenheit]
-NB.	are straight reformattings of [K].
-NB.	Their "true" values are not SCALED nor DISPLACED.
+NB.	--but '1 degC' is equivalent to a temperature (absol) of 274.15 K
 
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Sunday 14 October 2018  02:24:31
+1 /	[saved]	Monday 15 October 2018  04:41:34
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -164,11 +161,13 @@ UUC=: cmx 0 : 0
 1j273.15 K	[Centigrade] temperature; Centigrade
 5r9j255.372 K	[degF]	temperature; Fahrenheit
 5r9j255.372 K	[Fahrenheit] temperature; Fahrenheit
-1 K	[degRo]	temperature; Roemer
-1 K	[degN]	temperature; Newton
-1 K	[degDe]	temperature; Delisle
-1 K	[degRa]	temperature; Rankine
-1 K	[degRe]	temperature; Reaumur
+1.90476j258.8644 K	[degRo]	temperature; Rømer
+1 degRo	[degRø]	temperature; Rømer
+3.0303j273.15 K	[degNe]	temperature; Newton
+_2r3j373.15 K	[degDe]	temperature; Delisle
+0.555648j_0.0455 K	[degRa]	temperature; Rankine
+1.25j273.15 K	[degRe]	temperature; Reaumur
+1 degRe	[degRé]	temperature; Reaumur
 1 kcal/kg/K [sht.w]	Specific heat of water
 1852 m	[naut]	nautical mile
 9.454e15 m	[li.yr]	light year

@@ -148,6 +148,46 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
+scale_displace=: 4 : 0
+  NB. apply factors and displacements between two UUC constants
+  NB. x== coeft,coefu,dispt,dispu
+  NB. y== (valu) -value of qty with coefu,dispu
+  NB. returned: target value
+'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
+vaSI=. dispu + y*coefu  NB. the SI-value of y
+(vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
+)
+NB. ]F0=. 459.67 * 5r9	NB. exact definition
+NB. ]C0=. 273.15 	NB. exact definition
+NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 491.67	NB. Ra-->K
+NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 671.64	NB. Ra-->K
+NB. smoutput (1 1.25 0 273.15)	scale_displace 0	NB. Re-->K
+NB. smoutput (1 1.25 0 273.15)	scale_displace 80	NB. Re-->K
+NB. smoutput (1 1 0,C0)	scale_displace 0	NB. C-->K
+NB. smoutput (1 1 0,C0)	scale_displace 100	NB. C-->K
+NB. smoutput (1 5r9 0,F0)	scale_displace 32	NB. F-->K
+NB. smoutput (1 5r9 0,F0)	scale_displace 212	NB. F-->K
+NB. smoutput (1 5r9,C0,F0)	scale_displace 32	NB. F-->C
+NB. smoutput (1 5r9,C0,F0)	scale_displace 212	NB. F-->C
+NB. smoutput (0.555648 1,F0,C0)	scale_displace 0	NB. C-->F (32)
+NB. smoutput (0.555648 1,F0,C0)	scale_displace 100	NB. C-->F (212)
+NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 0	NB. C-->Ra (491.67)
+NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 100	NB. C-->Ra (671.64)
+NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 0	NB. C-->Ro (7.5)
+NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 100	NB. C-->Ro (60)
+NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 0	NB. C-->N (0)
+NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 100	NB. C-->N (33)
+NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 0	NB. C-->De (150)
+NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 100	NB. C-->De (0)
+
+coefu4bf=: 3 : 0
+'b f'=. y
+coefu=. 100%(b-f)
+NB. dispu=. 273.15+(f%coefu)
+NB. coefu j. dispu
+)
+NB. smoutput coefu4bf boil_freeze 'De'
+
 give_0_angle=: 4 : 0
 register'give_0_angle'
   NB. outputs degrees y [deg] as degrees of angle
@@ -158,23 +198,22 @@ sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
 
-give_1_Cent=: 4 : 0
+give_1_temp=: 4 : 0
   NB. NO disp applied on output.
-register'give_1_Cent'
+register'give_1_temp'
 unit=. ,x
-assert. unit-:'Cent'
-disp=. displacement unit
+assert. isTemperature unit
 sllog 'VEX x y unit disp'
-NB. sw'(y-disp)'
 sw'(scino y)'
 )
 0 :0
-'Cent' give_1_Cent 373.15
-'Cent' uu '373.15 K'
-'Cent' uu '1 b.p'
-'Cent' uu '1 f.p'
+'degRo' give_1_temp 373.15
+'degRo' uu '373.15 K'
+'degRo' uu '1 b.p'
+'degRo' uu '1 f.p'
 )
 
+0 :0
 give_1_Fahr=: 4 : 0
   NB. NO disp applied on output.
 register'give_1_Fahr'
@@ -193,23 +232,6 @@ sw'(scino y)'
 'Fahr' uu '1 f.p'
 )
 
-NB. give_1_FahR=: 4 : 0
-NB.   NB. NO disp applied on output.
-NB. register'give_1_FahR'
-NB. unit=. ,x
-NB. assert. unit-:'FahR'
-NB. disp=. displacement unit
-NB. sllog 'VEX x y unit disp'
-NB. NB. sw'(y-disp)'
-NB. sw'(scino y)'
-NB. )
-NB. 0 :0
-NB. 'FahR' give_1_FahR 373.15
-NB. 'FahR' uu '273.15 K'
-NB. 'FahR' uu '373.15 K'
-NB. 'FahR' uu '1 b.p'
-NB. 'FahR' uu '1 f.p'
-NB. )
 
 
 0 :0
