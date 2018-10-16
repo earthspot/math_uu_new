@@ -71,7 +71,6 @@ for_i. i.#UUC [n=.0 do.
   if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
-    NB. 0 make_msg i e. 59 114 135 264 265  NB. trace qtcode4i for these ids
     'val code'=. qtcode4i i
     ssw '--- id=(i) val=(val) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
@@ -236,28 +235,6 @@ elseif. do.
 end.
 z=. deb z  NB. guarantee z has NO prefixed SP (or SL)
 k ; z
-)
-
-0 :0
-smoutput 8 1$' '
-	uu '1 yd'	NB. 0.914 m	√
-'ft'	uu '1 yd'	NB. 3 ft		√
-   	uu '100 degC'	NB. 373.15 K	√
-   	uu '212 degF'	NB. 373.15 K	√
-------------
-'degC' 	uu '100 degC'	NB. 100°C		√
-'degF' 	uu '100 degC'	NB. 749.336°F	XXX 212 degF
-'degF' 	uu '0 degC'	NB. 425.336°F	XXX 32 degF
-------------
-'degC' 	uu '212 degF'	NB. 100°C		√
-'degC' 	uu '373.15 K'	NB. 100°C		√
-'degF' 	uu '373.15 K'	NB. 749.368°F	XXX 212 degF
-'Fahrenheit'uu '373.15 K'	NB. 749.368°F	XXX 212 degF
-'Centigrade'uu '373.15 K'	NB. 100°C		√
-'Celsius'	uu '373.15 K'	NB. 100°C		√
-   yf ; val ; unit
-   '°C' 	uu '100 °C'
-   '°C' 	uu '100°C'
 )
 
 compatible=: 4 : 0

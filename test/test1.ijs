@@ -1,7 +1,7 @@
 NB. UU: scientific units conversion package - test1
 NB. test verb: uu using redux.ijs
 0 :0
-Wednesday 5 September 2018  17:31:38
+Tuesday 16 October 2018  00:03:45
 -
 Actual test logs reside in:
 ot 2	NB. uunicode 0
@@ -14,7 +14,7 @@ smoutput PLS,'+++ test1.ijs - entered',PLS
 
 cocurrent'base'
 
-trv 0  NB. turn off ALL trace messages --which redux will gag at
+traceverbs_uu_ 'OFF'  NB. turn off ALL trace messages --which redux will gag at
 
 SUCCESS=: <,:'no difference'
 

@@ -24,7 +24,6 @@ ICE_F=: 32	NB. water freezes [°F]
 ICE_C=: 0 	NB. water freezes [°C]
 ICE_K=: 273.15	NB. water freezes [K]
 HD=: '·'		NB. hi-dot, optional SI convention
-ME=: ''		NB. used by tracing: pushme popme etc
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PI=: o.1		NB. π
@@ -40,8 +39,6 @@ UNDEFINED=: _.	NB. should propagate in a formula
 factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
   NB. ONLY SCI and SIG reside in z-locale
-DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:sessuu=:empty
-ME=: ''		NB. used by tracing: pushme popme etc
 SIC=: 1		NB. Used chiefly by: ucode, uniform
 SIG=: 3		NB. used by: scino
 SCI=: 5		NB. used by: scino
@@ -78,6 +75,29 @@ UUC=: cmx 0 : 0
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
+1 A	[A]	fundamental unit - Ampere (electric current)
+1 K	[K]	fundamental unit - Kelvin (temperature)
+1 cd	[cd]	fundamental unit - candela (light intensity)
+1 mol	[mol]	fundamental unit - mole (amount of matter)
+1 rad	[rad]	fundamental unit - radian (angle)
+1 eur	[eur]	fundamental unit - euro (currency)
+1 /	[/]	fundamental unit - (dimensionless)
+1 *	[*]	fundamental unit - (matches any units)
+1000 m	[km] kilometre
+0.01 m	[cm] centimetre
+0.001 m	[mm] millimetre
+0.0254 m	[in]	inch
+12 in	[ft]	feet
+36 in	[yd]	yard
+1760 yd	[mi]	mile
+1 s	[sec]	second (time)
+60 s	[min]	minute
+60 min	[h]	hour
+24 h	[d]	day
+1 /s	[Hz]	Frequency; Hertz
+2p1 rad	[cyc]	cycle
+1/360 cyc	[deg]	degree of arc
+1 deg	[dms]	degrees as deg min sec
 )
 
 UUF=: cmx 0 : 0
@@ -89,7 +109,9 @@ tan a ; a(rad)		[/]	tangent
 
 UUM=: ''
 
-  NB. the primitive SI-units (+ "honorary" primitive units like [rad])
 mks=: ;:'m kg s A K cd mol rad eur'
+NB. The primitive SI-units (+ "honorary" primitive units like [rad])
 NB. mks=: mks,<'item'
-NB. mks=: mks , (<'item'),each ":each i.10  NB. append "units": item0 … item9
+NB. mks=: mks , (<'item'),each ":each i.10
+NB. append "user units": item0 … item9
+

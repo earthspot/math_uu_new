@@ -27,32 +27,6 @@ ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-make_msg=: 1 ddefine
-  NB. USED BY: start -and diagnostics for given IDs
-  NB. These diagnostics get switched off/on by: start
-  NB. x==0 -suppress confirmation message to session
-clearme''  NB. cleardown ME (in all modes)
-talks=. x  NB. Boolean: x==1 -- output to session
-select. y
-case. 0 do.
-  sessuu=: empty
-  msg=: empty
-  sllog=: empty
-  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
-case. 1 do.
-  sessuu=: smoutput
-  msg=: sessuu&sw  NB. for alert signal: ungoverned
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
-case. 2 do.
-  sessuu=: sessuu1
-  msg=: sessuu&sw	NB. for alert signal: governed by TRACEVERBS
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
-end.
-i.0 0
-)
-
 all=: *./
 and=: *.
 any=: +./
@@ -146,68 +120,6 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-trv_z_=: trv=: 3 : 0
-  NB. sets/resets TRACEVERBS
-PLUS=. '+'
-MINUS=. '-'
-verbs1=. ;: 'uu formatIN formatOUT'
-verbs2=. ;: 'uu'
-verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-NB.     if. PLUS={.y  do. z=. ~. TRACEVERBS ,~ ;: y-.PLUS
-NB. elseif. MINUS={.y do. z=. ~. TRACEVERBS -. ;: y-.MINUS
-select. {.y
-case. ' '   do. z=. TRACEVERBS  
-case. 0     do. z=. TRACEVERBS=: 0$a:
-case. 1     do. z=. TRACEVERBS=: verbs1
-case. 2     do. z=. TRACEVERBS=: verbs2
-case. 3     do. z=. TRACEVERBS=: verbs3
-case. PLUS  do. z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.PLUS
-case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
-case.       do. z=. TRACEVERBS=: ~. ;: y  NB. dflt: y==openlist of verbs
-end.
-ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
-)
-
-
-linz_z_=: linz=: 3 : 0
-	NB. linearize a boxed string of tokens for sm-output
-z=. }: ; (>y) ,. '|'
-brack z -. SP
-)
-
-clearme=: 3 : 0
-  NB. clear the register of currently running verbs
-ME=: ''  NB. cleardown ME
-i.0 0
-)
-
-pushme=: 1 ddefine
-  NB. register (y) as the currently running verb
-ME=: ~. ME ,~ ;:y
-if. x do. msg '+++ (y): ENTERED' end.
-i.0 0
-)
-
-popme=: 1 ddefine
-  NB. de-register (y) as the currently running verb
-if. x do. msg '--- (y): EXITS' end.
-ME=: ME -. ;:y
-i.0 0
-)
-
-sessuu1=: 3 : 0
-if. traced ME do. smoutput y end.
-i.0 0
-)
-
-traced=: 3 : 0
-  NB. (bool) verb/s (y) is/are listed in TRACEVERBS
-  NB. (y) is usually: (ME)
-NB. z=. boxopen y
-z=. {. boxopen y
-any z e. a: default 'TRACEVERBS'
-)
-
 runlab=: 3 : 0
   NB. private way to run uu.ijt in j807
   NB.   see: temp 16
@@ -219,7 +131,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-trv 0	NB. to reset existing verb tracing
+traceverbs 'OFF'	NB. to reset existing verb tracing
 require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab

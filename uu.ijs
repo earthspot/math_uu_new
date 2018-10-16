@@ -37,6 +37,13 @@ AABUILT=: '2018-10-14  02:31:09'
 AABUILT=: '2018-10-14  23:37:47'
 AABUILT=: '2018-10-15  04:44:28'
 AABUILT=: '2018-10-15  05:03:40'
+AABUILT=: '2018-10-15  21:39:10'
+AABUILT=: '2018-10-15  21:42:08'
+AABUILT=: '2018-10-15  21:50:46'
+AABUILT=: '2018-10-16  00:01:57'
+AABUILT=: '2018-10-16  00:05:54'
+AABUILT=: '2018-10-16  00:06:51'
+AABUILT=: '2018-10-16  00:27:42'
 
 '==================== [uu] constants ===================='
 
@@ -63,7 +70,6 @@ ICE_F=: 32
 ICE_C=: 0
 ICE_K=: 273.15
 HD=: '·'
-ME=: ''
 MI=: '-'
 NUN=: '??'
 PI=: o.1
@@ -79,8 +85,6 @@ UNDEFINED=: _.
 factory=: 3 : 0
 
 
-DIAGNOSTICS=: 0
-ME=: ''
 SIC=: 1
 SIG=: 3
 SCI=: 5
@@ -117,6 +121,29 @@ UUC=: cmx 0 : 0
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
+1 A	[A]	fundamental unit - Ampere (electric current)
+1 K	[K]	fundamental unit - Kelvin (temperature)
+1 cd	[cd]	fundamental unit - candela (light intensity)
+1 mol	[mol]	fundamental unit - mole (amount of matter)
+1 rad	[rad]	fundamental unit - radian (angle)
+1 eur	[eur]	fundamental unit - euro (currency)
+1 /	[/]	fundamental unit - (dimensionless)
+1 *	[*]	fundamental unit - (matches any units)
+1000 m	[km] kilometre
+0.01 m	[cm] centimetre
+0.001 m	[mm] millimetre
+0.0254 m	[in]	inch
+12 in	[ft]	feet
+36 in	[yd]	yard
+1760 yd	[mi]	mile
+1 s	[sec]	second (time)
+60 s	[min]	minute
+60 min	[h]	hour
+24 h	[d]	day
+1 /s	[Hz]	Frequency; Hertz
+2p1 rad	[cyc]	cycle
+1/360 cyc	[deg]	degree of arc
+1 deg	[dms]	degrees as deg min sec
 )
 
 UUF=: cmx 0 : 0
@@ -127,7 +154,6 @@ tan a ; a(rad)		[/]	tangent
 )
 
 UUM=: ''
-
 
 mks=: ;:'m kg s A K cd mol rad eur'
 
@@ -272,32 +298,6 @@ ssw=: smoutput&sw
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
-make_msg=: 1 ddefine
-
-
-
-clearme''
-talks=. x
-select. y
-case. 0 do.
-  sessuu=: empty
-  msg=: empty
-  sllog=: empty
-  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
-case. 1 do.
-  sessuu=: smoutput
-  msg=: sessuu&sw
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
-case. 2 do.
-  sessuu=: sessuu1
-  msg=: sessuu&sw
-  sllog=: sessuu&llog
-  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
-end.
-i.0 0
-)
-
 all=: *./
 and=: *.
 any=: +./
@@ -385,65 +385,6 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-trv_z_=: trv=: 3 : 0
-
-PLUS=. '+'
-MINUS=. '-'
-verbs1=. ;: 'uu formatIN formatOUT'
-verbs2=. ;: 'uu'
-verbs3=. ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-select. {.y
-case. ' '   do. z=. TRACEVERBS  
-case. 0     do. z=. TRACEVERBS=: 0$a:
-case. 1     do. z=. TRACEVERBS=: verbs1
-case. 2     do. z=. TRACEVERBS=: verbs2
-case. 3     do. z=. TRACEVERBS=: verbs3
-case. PLUS  do. z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.PLUS
-case. MINUS do. z=. TRACEVERBS=: TRACEVERBS -. ;: y-.MINUS
-case.       do. z=. TRACEVERBS=: ~. ;: y
-end.
-ssw '+++ trv: #:(#z) (LF)TRACEVERBS: (linz z)'
-)
-
-
-linz_z_=: linz=: 3 : 0
-
-z=. }: ; (>y) ,. '|'
-brack z -. SP
-)
-
-clearme=: 3 : 0
-
-ME=: ''
-i.0 0
-)
-
-pushme=: 1 ddefine
-
-ME=: ~. ME ,~ ;:y
-if. x do. msg '+++ (y): ENTERED' end.
-i.0 0
-)
-
-popme=: 1 ddefine
-
-if. x do. msg '--- (y): EXITS' end.
-ME=: ME -. ;:y
-i.0 0
-)
-
-sessuu1=: 3 : 0
-if. traced ME do. smoutput y end.
-i.0 0
-)
-
-traced=: 3 : 0
-
-
-z=. {. boxopen y
-any z e. a: default 'TRACEVERBS'
-)
-
 runlab=: 3 : 0
 
 
@@ -455,7 +396,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-trv 0
+traceverbs 'OFF'
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
@@ -928,7 +869,6 @@ for_i. i.#UUC [n=.0 do.
   if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
 
-
     'val code'=. qtcode4i i
     ssw '--- id=(i) val=(val) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
@@ -1092,28 +1032,6 @@ elseif. do.
 end.
 z=. deb z
 k ; z
-)
-
-0 :0
-smoutput 8 1$' '
-	uu '1 yd'
-'ft'	uu '1 yd'
-   	uu '100 degC'
-   	uu '212 degF'
-------------
-'degC' 	uu '100 degC'
-'degF' 	uu '100 degC'
-'degF' 	uu '0 degC'
-------------
-'degC' 	uu '212 degF'
-'degC' 	uu '373.15 K'
-'degF' 	uu '373.15 K'
-'Fahrenheit'uu '373.15 K'
-'Centigrade'uu '373.15 K'
-'Celsius'	uu '373.15 K'
-   yf ; val ; unit
-   '°C' 	uu '100 °C'
-   '°C' 	uu '100°C'
 )
 
 compatible=: 4 : 0
@@ -1895,10 +1813,129 @@ case. 'strt' do.
 case.        do. '>>> uuengine: bad instruction: ';y
 end.
 )
+'==================== [uu] traceverbs ===================='
+
+cocurrent 'uu'
+
+0 :0
+Monday 15 October 2018  19:20:07
+-
+Discretionary silencing of unwanted msg and sllog calls.
+Small footprint when facility switched off.
+-
+THIS SOURCE FILE IS COMMON TO ALL TABULA ADDONS.
+Check the dates for most recent version.
+-
+Traceable verbs must…
+ -use msg and/or sllog to output trace messages
+ -call pushme on entry
+ -call popme on exit (and before all return.s)
+Verb pushme pushes name of running verb onto the ME-list.
+Verb popme (called on exit) pops it.
+LATEST_ONLY silences all except the top of the ME-list
+Correct use of pushme/popme suppresses surplus msg calls.
+(See verb: uniform for example of correct usage.)
+)
+
+TRACEVERBS=: 0$a:
+LATEST_ONLY=: 1
+ME=: ''
+
+msg=: empty
+sesstrace=: empty
+sllog=: empty
+
+pushme=: 1 ddefine
+
+ME=: ~. ME ,~ ;:y
+if. x do. msg '+++ (y): ENTERED' end.
+i.0 0
+)
+
+popme=: 1 ddefine
+
+if. x do. msg '--- (y): EXITS' end.
+ME=: ME -. ;:y
+i.0 0
+)
+
+make_msg=: 1 ddefine
+
+
+
+
+ME=: ''
+talks=. x
+select. y
+case. 0 do.
+  sesstrace=: empty
+  msg=: empty
+  sllog=: empty
+  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
+case. 1 do.
+  sesstrace=: sesstrace1
+  msg=: sesstrace&sw
+  sllog=: sesstrace&llog
+  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
+case. 2 do.
+  sesstrace=: smoutput
+  msg=: sesstrace&sw
+  sllog=: sesstrace&llog
+  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
+end.
+i.0 0
+)
+
+sesstrace1=: 3 : 'if. traced ME do. smoutput y else. i.0 0 end.'
+
+traced=: 3 : 0
+
+
+
+
+
+
+z=. boxopen y
+if. LATEST_ONLY do. z=. {. z end.
+any z e. a: default 'TRACEVERBS'
+)
+
+traceverbs=: 3 : 0
+  NB. sets/resets TRACEVERBS
+  NB. y== ''	-returns boxed list of traced verbs
+  NB. y== 0	-no verbs to be traced / disable tracing
+  NB. y e. 1 2 3…	-predefined lists of verbs to trace
+  NB. y== '+myverb1 myverb2' -trace these verbs also
+  NB. y== '-myverb1 myverb2' -stop tracing these verbs
+  NB. y== 'myverb1 myverb2'  -openlist of ALL the verbs to trace
+  NB. y== 'OFF' -no tracing
+  NB. y== 'ON'  -tracing controlled (by TRACEVERBS and LATEST_ONLY)
+  NB. y== 'ALL' -tracing on, but unconditional
+z=.''
+mm1=. make_msg bind 1  NB. must switch on, too.
+select. {.y
+case. 'O' do. make_msg (y-:'ON')
+case. 'A' do. make_msg 2
+case. ' ' do. z=. TRACEVERBS  
+case. 0   do. z=. TRACEVERBS=: 0$a:
+case. 1   do. z=. TRACEVERBS=: ;: 'uu'
+case. 2   do. z=. TRACEVERBS=: ;: 'uu formatIN formatOUT'
+case. 3   do. z=. TRACEVERBS=: ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
+case. '+' do. mm1 z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.'+'
+case. '-' do. mm1 z=. TRACEVERBS=: TRACEVERBS -. ;: y-.'-'
+case.     do. mm1 z=. TRACEVERBS=: ~. ;: y  NB. assume y is an openlist of verbs
+end.
+smoutput '+++ traceverbs: #traced=',":#z
+smoutput >TRACEVERBS
+)
+
+
 
 '==================== [uu] start ===================='
 
 cocurrent 'uu'
+
+DIAGNOSTICS=: 0
 
 start=: 3 : 0
 
@@ -1908,7 +1945,8 @@ start=: 3 : 0
 
 ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
-0 make_msg 0
+traceverbs 'OFF'
+sess=: empty
 factory''
 tpaths_validate''
 VERSION=: getversion TPATH_UU
@@ -1920,7 +1958,8 @@ make_units''
 make_unitc''
 
 report_complex_nouns''
-make_msg DIAGNOSTICS
+traceverbs DIAGNOSTICS
+sess=: sesstrace
 ssw '+++ [uu] start: COMPLETED.'
 )
 
