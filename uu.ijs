@@ -44,6 +44,12 @@ AABUILT=: '2018-10-16  00:01:57'
 AABUILT=: '2018-10-16  00:05:54'
 AABUILT=: '2018-10-16  00:06:51'
 AABUILT=: '2018-10-16  00:27:42'
+AABUILT=: '2018-10-17  12:37:20'
+AABUILT=: '2018-10-17  12:39:23'
+AABUILT=: '2018-10-17  12:48:33'
+AABUILT=: '2018-10-17  12:49:48'
+AABUILT=: '2018-10-17  12:55:22'
+AABUILT=: '2018-10-17  13:10:05'
 
 '==================== [uu] constants ===================='
 
@@ -90,6 +96,12 @@ SIG=: 3
 SCI=: 5
 SIZ=: 1e_9
 i.0 0
+)
+
+CANNOTSCALE=: b4f }: 0 : 0
+gas.mark
+midino
+note
 )
 
 TEMPERATURE_SCALES=: b4f }: 0 : 0
@@ -1074,12 +1086,8 @@ brack unit=: uniform unitsOf y
 ]sval,SP,unit
 )
 
-cannotScale=: 3 : 0
+cannotScale=: 3 : 'CANNOTSCALE e.~ <deb y'
 
-unsc=. ;:'gas.mark midino note'
-if. unsc e.~ <y do. 1 return. end.
-0 return.
-)
 
 isTemperature=: 3 : 0
 
@@ -1121,24 +1129,28 @@ elseif. do.
   end.
 end.
 
-if. cannotScale unit do.
+if. (cannotScale unit) or (x-:'=') do.
   vatarg=. valu
-elseif. x-:'=' do.
-  vatarg=. valu
-elseif. do.
+else.
   dispt=. displacement targ
   dispu=. displacement unit
-	sllog 'uu_1 dispt dispu'
-  vaSI=. dispu + valu*coefu
-	sllog 'uu_2 vaSI dispu valu coefu'
-  vatarg=. (vaSI-dispt)%coeft
-	sllog 'uu_2 vatarg dispt vaSI coeft'
+  vatarg=. valu scale_displace~ coeft,coefu,dispt,dispu
 end.
 
 z=. targ formatOUT vatarg
 	sllog 'uu_3 z vatarg VEXIN VEX'
 
 if. NO_UNITS_NEEDED do. z else. deb z,SP,uniform targ end.
+)
+
+scale_displace=: 4 : 0
+
+
+
+
+'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
+vaSI=. dispu + y*coefu
+(vaSI-dispt)%coeft
 )
 
 '==================== [uu] format.ijs =================='
@@ -1264,15 +1276,6 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
-scale_displace=: 4 : 0
-
-
-
-
-'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
-vaSI=. dispu + y*coefu
-(vaSI-dispt)%coeft
-)
 coefu4bf=: 3 : 0
 'b f'=. y
 coefu=. 100%(b-f)
@@ -1901,18 +1904,18 @@ any z e. a: default 'TRACEVERBS'
 )
 
 traceverbs=: 3 : 0
-  NB. sets/resets TRACEVERBS
-  NB. y== ''	-returns boxed list of traced verbs
-  NB. y== 0	-no verbs to be traced / disable tracing
-  NB. y e. 1 2 3…	-predefined lists of verbs to trace
-  NB. y== '+myverb1 myverb2' -trace these verbs also
-  NB. y== '-myverb1 myverb2' -stop tracing these verbs
-  NB. y== 'myverb1 myverb2'  -openlist of ALL the verbs to trace
-  NB. y== 'OFF' -no tracing
-  NB. y== 'ON'  -tracing controlled (by TRACEVERBS and LATEST_ONLY)
-  NB. y== 'ALL' -tracing on, but unconditional
+
+
+
+
+
+
+
+
+
+
 z=.''
-mm1=. make_msg bind 1  NB. must switch on, too.
+mm1=. make_msg bind 1
 select. {.y
 case. 'O' do. make_msg (y-:'ON')
 case. 'A' do. make_msg 2
@@ -1923,13 +1926,11 @@ case. 2   do. z=. TRACEVERBS=: ;: 'uu formatIN formatOUT'
 case. 3   do. z=. TRACEVERBS=: ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
 case. '+' do. mm1 z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.'+'
 case. '-' do. mm1 z=. TRACEVERBS=: TRACEVERBS -. ;: y-.'-'
-case.     do. mm1 z=. TRACEVERBS=: ~. ;: y  NB. assume y is an openlist of verbs
+case.     do. mm1 z=. TRACEVERBS=: ~. ;: y
 end.
 smoutput '+++ traceverbs: #traced=',":#z
 smoutput >TRACEVERBS
 )
-
-
 
 '==================== [uu] start ===================='
 

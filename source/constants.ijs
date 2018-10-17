@@ -46,6 +46,12 @@ SIZ=: 1e_9	NB. used by: scino
 i.0 0
 )
 
+CANNOTSCALE=: b4f }: 0 : 0
+gas.mark
+midino
+note
+)
+
 TEMPERATURE_SCALES=: b4f }: 0 : 0
 K
 Kelvin

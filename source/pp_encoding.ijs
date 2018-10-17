@@ -277,13 +277,8 @@ brack unit=: uniform unitsOf y
 ]sval,SP,unit
 )
 
-cannotScale=: 3 : 0
+cannotScale=: 3 : 'CANNOTSCALE e.~ <deb y'
   NB. (kosher unit) y cannot be scaled, e.g. [note]
-NB. if. isTemperature y do. 1 return. end.
-unsc=. ;:'gas.mark midino note'
-if. unsc e.~ <y do. 1 return. end.
-0 return.  NB. (unit) y can be scaled
-)
 
 isTemperature=: 3 : 0
   NB. (kosher unit) y is a temperature scale
@@ -325,18 +320,12 @@ elseif. do.		NB. target units are (x)
   end.
 end.
   NB. compute target value: vatarg
-if. cannotScale unit do.
-  vatarg=. valu  NB. formatOUT must handle scaling and displacement
-elseif. x-:'=' do.
-  vatarg=. valu  NB. uu simply evaluates and formats y
-elseif. do.
+if. (cannotScale unit) or (x-:'=') do.
+  vatarg=. valu  NB. then formatOUT must itself scale and displace
+else.
   dispt=. displacement targ
   dispu=. displacement unit
-	sllog 'uu_1 dispt dispu'
-  vaSI=. dispu + valu*coefu  NB. the SI-value of (valu)
-	sllog 'uu_2 vaSI dispu valu coefu'
-  vatarg=. (vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
-	sllog 'uu_2 vatarg dispt vaSI coeft'
+  vatarg=. valu scale_displace~ coeft,coefu,dispt,dispu
 end.
   NB. format the target value: vatarg
 z=. targ formatOUT vatarg
@@ -344,5 +333,35 @@ z=. targ formatOUT vatarg
   NB. The effective "take_" verb in formatOUT sets NO_UNITS_NEEDED
 if. NO_UNITS_NEEDED do. z else. deb z,SP,uniform targ end.
 )
-NB. smoutput uu '10 dms'
-NB. smoutput '='uu '10 dms'
+
+scale_displace=: 4 : 0
+  NB. apply factors and displacements between two UUC constants
+  NB. x== coeft,coefu,dispt,dispu
+  NB. y== (valu) -value of qty with coefu,dispu
+  NB. returned: target value
+'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
+vaSI=. dispu + y*coefu  NB. the SI-value of y
+(vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
+)
+NB. ]F0=. 459.67 * 5r9	NB. exact definition
+NB. ]C0=. 273.15 	NB. exact definition
+NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 491.67	NB. Ra-->K
+NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 671.64	NB. Ra-->K
+NB. smoutput (1 1.25 0 273.15)	scale_displace 0	NB. Re-->K
+NB. smoutput (1 1.25 0 273.15)	scale_displace 80	NB. Re-->K
+NB. smoutput (1 1 0,C0)	scale_displace 0	NB. C-->K
+NB. smoutput (1 1 0,C0)	scale_displace 100	NB. C-->K
+NB. smoutput (1 5r9 0,F0)	scale_displace 32	NB. F-->K
+NB. smoutput (1 5r9 0,F0)	scale_displace 212	NB. F-->K
+NB. smoutput (1 5r9,C0,F0)	scale_displace 32	NB. F-->C
+NB. smoutput (1 5r9,C0,F0)	scale_displace 212	NB. F-->C
+NB. smoutput (0.555648 1,F0,C0)	scale_displace 0	NB. C-->F (32)
+NB. smoutput (0.555648 1,F0,C0)	scale_displace 100	NB. C-->F (212)
+NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 0	NB. C-->Ra (491.67)
+NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 100	NB. C-->Ra (671.64)
+NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 0	NB. C-->Ro (7.5)
+NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 100	NB. C-->Ro (60)
+NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 0	NB. C-->N (0)
+NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 100	NB. C-->N (33)
+NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 0	NB. C-->De (150)
+NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 100	NB. C-->De (0)

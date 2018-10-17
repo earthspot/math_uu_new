@@ -148,38 +148,6 @@ try. y fromK~ <boil_freeze x
 catch. _. end.
 )
 
-scale_displace=: 4 : 0
-  NB. apply factors and displacements between two UUC constants
-  NB. x== coeft,coefu,dispt,dispu
-  NB. y== (valu) -value of qty with coefu,dispu
-  NB. returned: target value
-'coeft coefu dispt dispu'=. z=: x,(4-~#x){.1 1 0 0
-vaSI=. dispu + y*coefu  NB. the SI-value of y
-(vaSI-dispt)%coeft  NB. undoes SI using dispt;coeft
-)
-NB. ]F0=. 459.67 * 5r9	NB. exact definition
-NB. ]C0=. 273.15 	NB. exact definition
-NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 491.67	NB. Ra-->K
-NB. smoutput (1 0.555648 0 _0.0455)	scale_displace 671.64	NB. Ra-->K
-NB. smoutput (1 1.25 0 273.15)	scale_displace 0	NB. Re-->K
-NB. smoutput (1 1.25 0 273.15)	scale_displace 80	NB. Re-->K
-NB. smoutput (1 1 0,C0)	scale_displace 0	NB. C-->K
-NB. smoutput (1 1 0,C0)	scale_displace 100	NB. C-->K
-NB. smoutput (1 5r9 0,F0)	scale_displace 32	NB. F-->K
-NB. smoutput (1 5r9 0,F0)	scale_displace 212	NB. F-->K
-NB. smoutput (1 5r9,C0,F0)	scale_displace 32	NB. F-->C
-NB. smoutput (1 5r9,C0,F0)	scale_displace 212	NB. F-->C
-NB. smoutput (0.555648 1,F0,C0)	scale_displace 0	NB. C-->F (32)
-NB. smoutput (0.555648 1,F0,C0)	scale_displace 100	NB. C-->F (212)
-NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 0	NB. C-->Ra (491.67)
-NB. smoutput (0.555648 1 _0.0455,C0)	scale_displace 100	NB. C-->Ra (671.64)
-NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 0	NB. C-->Ro (7.5)
-NB. smoutput (1.90476 1 258.8644,C0)	scale_displace 100	NB. C-->Ro (60)
-NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 0	NB. C-->N (0)
-NB. smoutput (3.0303 1 273.15 ,C0)	scale_displace 100	NB. C-->N (33)
-NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 0	NB. C-->De (150)
-NB. smoutput (_2r3 1 373.15 ,C0)	scale_displace 100	NB. C-->De (0)
-
 coefu4bf=: 3 : 0
 'b f'=. y
 coefu=. 100%(b-f)
