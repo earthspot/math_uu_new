@@ -8,6 +8,7 @@ uuengine=: 3 : 0
   NB. Pass-thru CAL instructions are identical to these.
   NB. Lowercase instructions change the state of UU
   NB. Uppercase instructions DO NOT change the state.
+if. isBoxed y do. y=. b2o y end.
 uarg=. (0&uniform) arg=. dltb '>' taketo yy=. dltb 4}.y
 utarg=. (0&uniform) targ=. dltb '>' takeafter y
 numarg=. {.0". arg

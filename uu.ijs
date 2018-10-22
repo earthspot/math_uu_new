@@ -50,6 +50,7 @@ AABUILT=: '2018-10-17  12:48:33'
 AABUILT=: '2018-10-17  12:49:48'
 AABUILT=: '2018-10-17  12:55:22'
 AABUILT=: '2018-10-17  13:10:05'
+AABUILT=: '2018-10-21  23:29:31'
 
 '==================== [uu] constants ===================='
 
@@ -1741,6 +1742,7 @@ uuengine=: 3 : 0
 
 
 
+if. isBoxed y do. y=. b2o y end.
 uarg=. (0&uniform) arg=. dltb '>' taketo yy=. dltb 4}.y
 utarg=. (0&uniform) targ=. dltb '>' takeafter y
 numarg=. {.0". arg
