@@ -260,14 +260,14 @@ pushme 'convert'
   NB. y (units) --> cu ; loop_count ; cf
   NB. x was speedup flag, but is now unused
 yb=. bris y  NB. kosher of (units) y
-msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
+disp=. displacement yb  NB. >>> NEW
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp)'
 'factor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
-loop=. _  NB. dummy value to act as a placeholder
 msg '--- convert: EXITS'
 wd'msgs'  NB. is this still needed?
 popme 'convert'
-targ ; loop ; factor return.
+targ ; disp ; factor return.
 )
 
 uniformD=: 3 : 0

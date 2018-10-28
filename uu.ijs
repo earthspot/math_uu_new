@@ -1070,14 +1070,14 @@ pushme 'convert'
 
 
 yb=. bris y
-msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb)'
+disp=. displacement yb
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp)'
 'factor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
-loop=. _
 msg '--- convert: EXITS'
 wd'msgs'
 popme 'convert'
-targ ; loop ; factor return.
+targ ; disp ; factor return.
 )
 
 uniformD=: 3 : 0
