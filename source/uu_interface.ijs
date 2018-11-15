@@ -1,13 +1,16 @@
 	NB. uu - uu_interface.ijs
-'==================== [uu] uu_interface ===================='
+'==================== [uuengine] uu_interface ===================='
 
 cocurrent 'uu'
 
 uuengine=: 3 : 0
-  NB. UU keyhole interface: (string) y is an instruction.
-  NB. Pass-thru CAL instructions are identical to these.
-  NB. Lowercase instructions change the state of UU
-  NB. Uppercase instructions DO NOT change the state.
+  NB. The primary interface to UU.
+  NB. ALL usage of UU can be done via this "keyhole" engine.
+  NB. (Pass-thru CAL instructions are identical to these.)
+  NB. (string) y is a uuengine instruction.
+  NB. …Lowercase instructions change the state of UU
+  NB. …Uppercase instructions DO NOT change the state of UU
+  NB.  but simply return information
 if. isBoxed y do. y=. b2o y end.
 uarg=. (0&uniform) arg=. dltb '>' taketo yy=. dltb 4}.y
 utarg=. (0&uniform) targ=. dltb '>' takeafter y

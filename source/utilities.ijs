@@ -20,7 +20,8 @@ isNo=: isNum *. isScalar
 ddefine=: 1 : 'm&$: : (4 : 0)'
 isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
-smresolve=: (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
+  NB. smresolve=. is only used by Swift-string verb: sw
+smresolve=. (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
 sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
 emsg=: smoutput&sw		NB. for error signal: always smoutputs
 ssw=: smoutput&sw		NB. the standard verb: always smoutputs
@@ -30,7 +31,10 @@ ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 all=: *./
 and=: *.
 any=: +./
-b4o=: [: <;._1 ' ' , ]  NB. use instead of (;:) with units
+b2o=: }.@((<' ') ;@,. ])
+b4o=: [: <;._1 ' ' , ]
+  NB. …use b4o instead of monadic (;:) with open-lists of units
+  NB. because units can contain '.' -which (;:) cuts.
 begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":  NB. layout tool for message string ->'[y]'
 cmx=: [: > <;._2	NB. expects trailing LF

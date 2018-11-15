@@ -3,6 +3,7 @@ constants.ijs
 paths.ijs
 blink.ijs
 utilities.ijs
+syntax_machines.ijs
 main.ijs
 pp_encoding.ijs
 format.ijs

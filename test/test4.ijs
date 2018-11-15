@@ -65,21 +65,21 @@ assert. 'ft·s⁻²'		-: 3 uniform 'ft/s^2'
 smoutput '--- uniform_test: EXIT'
 )
 
-NB. >>> COVERED BY redux 21 ...
-fromKelvin_test=: 3 : 0 ''
-fromKelvin=. fromKelvin_uu_
-smoutput '+++ fromKelvin_test: ENTER'
-assert. 0 100		-: 'C' fromKelvin 273.15 373.15
-assert. 32 212		-: 'F' fromKelvin 273.15 373.15
-assert. 7.5 60		-: 'Ro'fromKelvin 273.15 373.15
-assert. 0 33		-: 'N' fromKelvin 273.15 373.15
-assert. 150 0		-: 'De'fromKelvin 273.15 373.15
-assert. 0 80		-: 'Re'fromKelvin 273.15 373.15
-assert. 273.15 373.15	-: 'K' fromKelvin 273.15 373.15
-assert. 			128!:5 'Ab' fromKelvin 273.15 373.15
-  NB. (no such scale)
-smoutput '--- fromKelvin_test: EXIT'
-)
+NB. NB. >>> COVERED BY redux 21 ...
+NB. fromKelvin_test=: 3 : 0 ''
+NB. fromKelvin=. fromKelvin_uu_
+NB. smoutput '+++ fromKelvin_test: ENTER'
+NB. assert. 0 100		-: 'C' fromKelvin 273.15 373.15
+NB. assert. 32 212		-: 'F' fromKelvin 273.15 373.15
+NB. assert. 7.5 60		-: 'Ro'fromKelvin 273.15 373.15
+NB. assert. 0 33		-: 'N' fromKelvin 273.15 373.15
+NB. assert. 150 0		-: 'De'fromKelvin 273.15 373.15
+NB. assert. 0 80		-: 'Re'fromKelvin 273.15 373.15
+NB. assert. 273.15 373.15	-: 'K' fromKelvin 273.15 373.15
+NB. assert. 			128!:5 'Ab' fromKelvin 273.15 373.15
+NB.   NB. (no such scale)
+NB. smoutput '--- fromKelvin_test: EXIT'
+NB. )
 
 
 0 :0

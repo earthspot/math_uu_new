@@ -321,7 +321,7 @@ cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
   NB. mks (c/f 'm kg s') specifies the most primitive SI-units
   NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
-make_cutuuc''
+NB. make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB  NB. defined units
 units=: deb each us             NB. nominal units
@@ -329,38 +329,6 @@ uvalu=: real eval >v            NB. defined value: factor
 uvald=: imag eval >v            NB. defined value: displacement
 i.0 0
 )
-
-NB. ============================================
-  NB. Make inputs mapping table mj
-mj=: 0 $~ 256                     		NB. X (default bytes)
-mj=: 1 ch}mj [ ch=. a.i. SP,TAB		NB. S
-mj=: 2 ch}mj [ ch=. a.i. az,AZ,n9,'._-/^*%'	NB. A
-mj=: 3 ch}mj [ ch=. a.i. '['			NB. [
-mj=: 4 ch}mj [ ch=. a.i. ']'			NB. ]
-
-  NB. Make state transition table sj
-sj=: +. ".&> }. cutLF (0 define)
-  X    S    A    [    ]   NB. "input class"
- 1j1  0j0  1j1  1j1  1j1  NB. 0 space (starts in this state)
- 1j0  2j2  1j0  3j0  1j0  NB. 1 value		3jx, x e. i.4
- 2j2  2j0  2j0  5j2  2j0  NB. 2 units
- 3j0  3j0  3j0  3j2  4j2  NB. 3 simple units	5jx, only x=2 works
- 4j6  4j6  4j6  4j6  4j6  NB. 4 ]-state stops, doesn't return descr
- 3j1  3j1  3j1  3j1  3j1  NB. 5 [-state, eats [ -->3
-)
-
-make_cutuuc=: 3 : 0
-  NB. make UUC line-cutter verb: cutuuc
-  NB. noun x defines the seq machine
-x=. 0;sj;mj
-  NB. make tacit verb: cutuuc using x
-cutuuc=: x&;: "1
-i.0 0
-)
-NB.    make_cutuuc''
-NB.    cutuuc '-1.5 my-u [my-new] test'
-
-NB. ============================================
 
 uniform=: '' ddefine
 0 pushme 'uniform'

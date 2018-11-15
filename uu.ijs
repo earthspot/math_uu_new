@@ -6,6 +6,7 @@ UU: scientific units conversion package
 
 clear 'uu'
 coclass 'uu'
+onload_z_=: empty
 
 AABUILT=: '2018-10-08  02:33:33'
 AABUILT=: '2018-10-08  03:04:54'
@@ -51,6 +52,14 @@ AABUILT=: '2018-10-17  12:49:48'
 AABUILT=: '2018-10-17  12:55:22'
 AABUILT=: '2018-10-17  13:10:05'
 AABUILT=: '2018-10-21  23:29:31'
+AABUILT=: '2018-11-15  04:34:33'
+AABUILT=: '2018-11-15  04:53:09'
+AABUILT=: '2018-11-15  04:55:18'
+AABUILT=: '2018-11-15  04:58:51'
+AABUILT=: '2018-11-15  05:05:20'
+AABUILT=: '2018-11-15  05:10:11'
+AABUILT=: '2018-11-15  05:16:28'
+AABUILT=: '2018-11-15  05:26:30'
 
 '==================== [uu] constants ===================='
 
@@ -304,7 +313,8 @@ isNo=: isNum *. isScalar
 ddefine=: 1 : 'm&$: : (4 : 0)'
 isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
-smresolve=: (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
+
+smresolve=. (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
 sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
 emsg=: smoutput&sw
 ssw=: smoutput&sw
@@ -314,7 +324,10 @@ ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 all=: *./
 and=: *.
 any=: +./
+b2o=: }.@((<' ') ;@,. ])
 b4o=: [: <;._1 ' ' , ]
+
+
 begins=: beginsWith=: ] -: [ {.~ [: # ]
 brack=:	1 |. '][' , ":
 cmx=: [: > <;._2
@@ -440,6 +453,108 @@ i.0 0
 
 real=: 9&o.
 imag=: 11&o.
+
+'==================== [uu] syntax_machines ===================='
+0 :0
+Thursday 15 November 2018  05:05:14
+-
+Syntax machines defined in this script:
+	cutuuc	-tokenizes a line of UUC
+	smddmmyy	-recognises date
+	smtime	-recognises time
+)
+
+cocurrent 'uu'
+
+spout=: 3 ddefine
+
+w=. {:$z=. vv y
+for_k. i.x-w do.
+  z=. SP,.z
+end.
+,z
+)
+
+f5=: 3 : 0
+
+Outsymbols=. ' .:|;!$'
+z=. |: (5;sj;mj);: y
+i=. 0{z
+j=. 1{z
+r=. 2{z
+c=. 3{z
+R=. 4{z
+O=. 5{z
+iy=. i{y
+smoutput '           ',spout i
+smoutput '       (y) ',spout iy
+smoutput 'y-class(c) ',spout c
+smoutput '  state(r) ',spout r
+smoutput 'outcode(O) ',spout O{Outsymbols
+smoutput 'w-begin(j) ',spout j
+)
+
+mj=. 0 $~ 256
+mj=. 1 ch}mj [ ch=. a.i. SP,TAB
+mj=. 2 ch}mj [ ch=. a.i. az,AZ,n9,'._-/^*%'
+mj=. 3 ch}mj [ ch=. a.i. '['
+mj=. 4 ch}mj [ ch=. a.i. ']'
+
+
+sj=. +. ".&> }. cutLF (0 define)
+  X    S    A    [    ]
+ 1j1  0j0  1j1  1j1  1j1
+ 1j0  2j2  1j0  3j0  1j0
+ 2j2  2j0  2j0  5j2  2j0
+ 3j0  3j0  3j0  3j2  4j2
+ 4j6  4j6  4j6  4j6  4j6
+ 3j1  3j1  3j1  3j1  3j1
+)
+
+cutuuc=: (0;sj;mj)&;: "1
+t=. ,: 0   0   0j6 0j6 1j1 1j1 0j6
+t=. t, 0j6 0j6 0j6 0j6 2   2   0j6
+t=. t, 0j6 0j6 3j3 0j6 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 0j6 4j1 4j1 0j6
+t=. t, 0j6 0j6 0j6 0j6 5   5   0j6
+t=. t, 0j6 0j6 6j3 0j6 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 0j6 7j1 7j1 0j6
+t=. t, 0j6 0j6 0j6 0j6 8   8   0j6
+t=. t, 0j3 0j3 0j6 9   0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 0j6 10  10  0j6
+t=. t, 0j3 0j3 0j6 0j6 10  10  0j6
+
+sj=. +. t
+mj=.   < LF ; (NUL,SP,TAB) ; CO ; DT ; '012345' ; '6789'
+smtime=: ((0;sj;mj) ;: ucp)"1
+
+onload 0 : 0
+smoutput smtime '23:58'
+smoutput smtime '23:58:59'
+smoutput smtime '23:58:59.12'
+smoutput smtime '23:58:59.'
+smoutput smtime '23:58:59. '
+smoutput smtime '23:58:59   '
+)
+t=. ,: 0   0   0j6 1j1 1j1 0j6 0j6
+t=. t, 0j6 0j6 0j6 2   2   2   0j6
+t=. t, 0j6 0j6 3j3 0j6 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 4j1 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 5   5   5   0j6
+t=. t, 0j6 0j6 6j3 0j6 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 7j1 0j6 0j6 0j6
+t=. t, 0j6 0j6 0j6 8   8   8   0j6
+t=. t, 0j3 0j3 0j6 0j6 0j6 0j6 0j6
+
+sj=. +. t
+mj=.   < LF ; (NUL,SP,TAB) ; SL ; '01' ; '23' ; '456789'
+smddmmyy=: ((0;sj;mj) ;: ucp)"1
+
+onload 0 : 0
+smoutput smddmmyy '31/12/18'
+smoutput smddmmyy '31/13/18   '
+smoutput smddmmyy '31/13/18',LF
+)
 
 '==================== [uu] main ===================='
 
@@ -746,7 +861,6 @@ cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
 
 
-make_cutuuc''
 'v uv us'=. <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
 units=: deb each us
@@ -755,31 +869,6 @@ uvald=: imag eval >v
 i.0 0
 )
 
-mj=: 0 $~ 256
-mj=: 1 ch}mj [ ch=. a.i. SP,TAB
-mj=: 2 ch}mj [ ch=. a.i. az,AZ,n9,'._-/^*%'
-mj=: 3 ch}mj [ ch=. a.i. '['
-mj=: 4 ch}mj [ ch=. a.i. ']'
-
-
-sj=: +. ".&> }. cutLF (0 define)
-  X    S    A    [    ]
- 1j1  0j0  1j1  1j1  1j1
- 1j0  2j2  1j0  3j0  1j0
- 2j2  2j0  2j0  5j2  2j0
- 3j0  3j0  3j0  3j2  4j2
- 4j6  4j6  4j6  4j6  4j6
- 3j1  3j1  3j1  3j1  3j1
-)
-
-make_cutuuc=: 3 : 0
-
-
-x=. 0;sj;mj
-
-cutuuc=: x&;: "1
-i.0 0
-)
 uniform=: '' ddefine
 0 pushme 'uniform'
 
@@ -1159,7 +1248,10 @@ vaSI=. dispu + y*coefu
 cocurrent 'uu'
 
 0 :0
-Wednesday 3 October 2018  22:33:44
+Thursday 15 November 2018  04:10:53
+-
+-cloned into: temp 45 pre-purge of FahR etc: 15 November 2018
+NOTE: temp 45 may have some useful test expressions purged from here.
 -
 New format verb based on daisychain
 Tries each give (give_* verb) in turn until one exits normally,
@@ -1220,67 +1312,6 @@ deg_symbol=: 3 : 0
 if. SIC>0 do. '°' else. 'deg' end.
 )
 
-deEuroName=: 3 : 0
-
-y rplc 'é';'e' ; 'ø';'oe'
-)
-K4C=: 3 : '273.15 + y'
-C4K=: 3 : '_273.15 + y'
-F4K=: 3 : '_459.67 + 1.8 * y'
-K4F=: 3 : '255.372 + 5r9 * y'
-0 :0
-C4K 373.15 273.15
-F4K 373.15 273.15
-)
-
-toK=: (4 : 0)"0
-f=. {:>x
-r=. -/>x
-ICE_K + 100*(y-f)%r
-)
-fromK=: (4 : 0)"0
-f=. {:>x
-r=. -/>x
-f+r*(y-ICE_K)%100
-)
-
-Kr=: ICE_K + 100 0
-
-boil_freeze=: 3 : 0
-
-select. y
- case. 'C'	do.	bf=. 100 0
- case. 'F'	do.	bf=. 212 32
- case. 'Ro'	do.	bf=. 60 7.5
- case. 'N'	do.	bf=. 33 0
- case. 'De'	do.	bf=. 0 150
- case. 'Ra'	do.	bf=. 671.64 491.67
- case. 'Re'	do.	bf=. 80 0
- case. 'K'	do.	bf=. ICE_K+100 0
- case.    	do.	bf=. _ _
-end.
-)
-
-toKelvin=: 'F' ddefine
-
-
-try. z=. y toK~ <boil_freeze x
-     if. z<0 do. _. return. end.
-catch. _. end.
-)
-
-fromKelvin=: 'F' ddefine
-
-
-if. y<0 do. _. return. end.
-try. y fromK~ <boil_freeze x
-catch. _. end.
-)
-
-coefu4bf=: 3 : 0
-'b f'=. y
-coefu=. 100%(b-f)
-)
 give_0_angle=: 4 : 0
 register'give_0_angle'
 
@@ -1289,7 +1320,6 @@ ds=. deg_symbol''
 d=. scino y
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
-
 
 give_1_temp=: 4 : 0
 
@@ -1304,69 +1334,6 @@ sw'(scino y)'
 'degRo' uu '373.15 K'
 'degRo' uu '1 b.p'
 'degRo' uu '1 f.p'
-)
-
-0 :0
-give_1_Fahr=: 4 : 0
-
-register'give_1_Fahr'
-unit=. ,x
-assert. unit-:'Fahr'
-disp=. displacement unit
-sllog 'VEX x y unit disp'
-sw'(scino y)'
-)
-0 :0
-'Fahr' give_1_Fahr 373.15
-'Fahr' uu '273.15 K'
-'Fahr' uu '373.15 K'
-'Fahr' uu '1 b.p'
-'Fahr' uu '1 f.p'
-)
-
-
-
-0 :0
-give_1_deg=: 4 : 0
-register'give_1_deg'
-
-unit=. ,x
-assert. isTemperature unit
-T=. shorT unit
-z=. T fromKelvin y
-msg '... give_1_deg: x=(x) y=(y) unit=(unit) T=(T) z=(z)'
-if. T-:'K' do.
-  NO_UNITS_NEEDED=: 1
-  sw'(z) K'
-elseif. (<unit) e. ;:'Fahrenheit Centigrade Celsius' do.
-  NO_UNITS_NEEDED=: 1
-  sw'(z) (unit)'
-elseif. do.
-  NO_UNITS_NEEDED=: 1
-  sw'(z)(deg_symbol 0)(T)'
-end.
-)
-
-0 :0
-'degC' give_1_deg 373.15
-'degF' give_1_deg 373.15
-uu '100 degC'
-   'degC' 	uu '100 degC'
-   'degF' 	uu '100 degC'
-   'degF' 	uu '100 °C'
-212°F
-   'degC' 	uu '212 degF'
-100°C
-   'degC' 	uu '373.16 K'
-100.01°C
-   'degF' 	uu '373.16 K'
-212.018°F
-   'Fahrenheit'	uu '373.16 K'
-212.018° Fahrenheit
-   'Centigrade'	uu '373.16 K'
-100.01° Centigrade
-   'Celsius'	uu '373.16 K'
-100.01° Celsius
 )
 
 give_0_misc=: 4 : 0
@@ -1391,16 +1358,6 @@ msg '... give_9_general: x=(x) y=(y) unit=(unit)'
 sw'(y) (unit)'
 )
 
-isTime=: 4 : 0
-(<,x) e. compatlist 's'
-)
-
-s4hms=: 24 60 60 #. 3 {. ]
-s4h=: 3600 * ]
-s4min=: 60 * ]
-h4s=: 3600 %~ ]
-min4s=: 60 %~ ]
-
 give_0_hms=: 4 : 0
 register'give_0_hms'
 
@@ -1412,42 +1369,14 @@ if. 10>".ss do. ss=. '0',ss end.
 sw'(hh):(mm):(ss)'
 )
 
-isAngle=: 4 : 0
-x-: 'deg'
-)
-
-d4dms=: 1296000x %~ 360 60 60 #. 3 {. ]
-
-deg4rad=: 13 : '180 * y%o.1'
-amin4deg=: 13 : '60 * y'
-asec4deg=: 13 : '3600 * y'
-amin4rad=: 13 : '60 * deg4rad y'
-asec4rad=: 13 : '3600 * deg4rad y'
-rad4deg=: 13 : '(o.|y) % 180'
-rad4amin=: 13 : 'rad4deg y % 60'
-rad4asec=: 13 : 'rad4deg y % 3600'
-
-0 :0
 give_0_dms=: 4 : 0
 register'give_0_dms'
 
-assert. x -: 'dms'
-'d m s'=.":each <.each 360 60 60 #: asec4rad |y
-ds=. deg_symbol''
-sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
-)
-
-give_0_dms=: 4 : 0
-register'give_0_dms'
-
+asec4deg=. 3600 * ]
 assert. x -: 'dms'
 'd m s'=.":each <.each 360 60 60 #: asec4deg |y
 ds=. deg_symbol''
 sw'(d)(ds) (m)(QT) (s)"' [ NO_UNITS_NEEDED=: 1
-)
-
-0 :0
-'dms' give_0_dms 1
 )
 
 give_2_note=: 4 : 0
@@ -1470,9 +1399,11 @@ make_daisychain''
 
 '==================== [uu] formatin.ijs =================='
 0 :0
-Sunday 7 October 2018  15:11:37
+Thursday 15 November 2018  04:11:02
 -
 formatIN -- input-counterpart to: format
+-cloned into: temp 44 pre-purge of FahR etc: 15 November 2018
+NOTE: temp 44 may have some useful test expressions purged from here.
 )
 
 cocurrent 'uu'
@@ -1481,10 +1412,6 @@ registerIN=: 3 : 0
 
 
 VEXIN=: y
-)
-
-0 :0
-formatIN '100 °C'
 )
 
 formatIN=: 3 : 0
@@ -1532,37 +1459,6 @@ numeral=. strValueOf y
 deb y }.~ #numeral
 )
 
-dedeg=: 3 : 0
-
-y=. deb y
-if. y beginsWith 'deg' do. dlb 3}.y else. y end.
-)
-
-0 :0
-brack dedeg 'degC'
-brack dedeg 'deg C'
-brack dedeg ' degC'
-brack dedeg ' deg C'
-)
-
-shorT=: 3 : 0
-
-
-y=. dedeg deEuroName y
-T=. {.y
-if. T e. 'RD' do. T=. 2{.y end.
-)
-
-0 :0
-brack shorT 'degC'
-brack shorT 'deg C'
-brack shorT ' degC'
-brack shorT ' deg C'
-brack shorT 'Réaumur'
-deEuroName 'Réaumur'
-brack shorT 'Reaumur'
-)
-
 take_0_angle=: 3 : 0
 registerIN 'take_0_angle'
 blink'green'
@@ -1573,122 +1469,6 @@ yb=. (bris y) rplc 'deg' ; ' deg'
 ]unit=. deb unitsOf yb
 assert. (unit-:'deg')or(unit-:'rad')
 yb return.
-)
-
-0 :0
-foo=: uu
-foo=: take_0_angle
-foo '180°'
-foo '180 °'
-foo '180deg'
-foo '180 deg'
-foo '1 rad'
-foo 'PI rad'
-foo 'π rad'
-'deg' uu 'PI rad'
-'°' uu 'PI rad'
-'deg' uu 'π rad'
-uu 'π rad'
-'°' uu 'π rad'
-)
-
-take_1_Cent=: 3 : 0
-registerIN 'take_1_Cent'
-blink'magenta'
-]unit=. deb bris unitsOf y
-assert. unit-:'Cent'
-valu=. valueOf y
-disp=. displacement unit
-sllog 'VEXIN y valu unit disp'
-assert. -.undefined valu=. valueOf y
-sw'(valu) (unit)'
-)
-0 :0
-take_1_Cent '1 Cent'
-uu '1 Cent'
-'Cent' uu '1 b.p'
-)
-
-take_1_Fahr=: 3 : 0
-registerIN 'take_1_Fahr'
-blink'cyan'
-]unit=. deb bris unitsOf y
-assert. unit-:'Fahr'
-valu=. valueOf y
-disp=. displacement unit
-sllog 'VEXIN y valu unit disp'
-assert. -.undefined valu=. valueOf y
-sw'(valu) (unit)'
-)
-0 :0
-VEXIN ; VEX
-take_1_Fahr '32 Fahr'
-         uu '32 Fahr'
-         uu '32 ft'
-'Fahr'   uu '32 Fahr'
-         uu '212 Fahr'
-       uu '1 f.p'
-'Fahr' uu '1 f.p'
-       uu '1 b.p'
-'Fahr' uu '1 b.p'
-)
-
-take_1_FahR=: 3 : 0
-registerIN 'take_1_FahR'
-blink'cyan'
-]unit=. deb bris unitsOf y
-assert. unit-:'FahR'
-valu=. valueOf y
-disp=. displacement unit
-sllog 'VEXIN y valu unit disp'
-assert. -.undefined valu=. valueOf y
-sw'(valu) (unit)'
-)
-0 :0
-VEXIN ; VEX
-take_1_FahR '32 FahR'
-         uu '32 FahR'
-         uu '32 ft'
-'FahR'   uu '32 FahR'
-         uu '212 FahR'
-       uu '1 f.p'
-'FahR' uu '1 f.p'
-       uu '1 b.p'
-'FahR' uu '1 b.p'
-)
-
-
-
-0 :0
-take_1_deg=: 3 : 0
-registerIN 'take_1_deg'
-blink'red'
-
-
-y=. y rplc 'deg' ; ' deg'
-]unit=. deb bris unitsOf y
-assert. isTemperature unit
-]T=. shorT unit
-msg '... take_1_deg: unit=[(unit)] T=(T)'
-assert. -.undefined vy=. valueOf y
-]z=. T toKelvin vy
-msg '... take_1_deg: y=[(y)] unit=(unit) T=(T) z=(z)'
-sw'(z) K'
-)
-
-0 :0
-uu '100 degC'
-'degC' uu '100 degC'
-'degC' uu '212 degF'
-take_1_deg '100 degC'
-take_1_deg '212 degF'
-take_1_deg '212degF'
-take_1_deg '212 °F'
-take_1_deg '212°F'
--
-REMAINING BLINKS...
-blink 'yellow'
-blink 'flame'
 )
 
 take_8_misc=: 3 : 0
@@ -1733,11 +1513,14 @@ val ; unit
 
 make_daisychainIN''
 
-'==================== [uu] uu_interface ===================='
+'==================== [uuengine] uu_interface ===================='
 
 cocurrent 'uu'
 
 uuengine=: 3 : 0
+
+
+
 
 
 
