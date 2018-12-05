@@ -89,7 +89,7 @@ NB.class 0    1              2    3     4          5      6
 mj=.   < LF ; (NUL,SP,TAB) ; CO ; DT ; '012345' ; '6789'  NB.all else
 smtime=: ((0;sj;mj) ;: ucp)"1
 
-onload 0 : 0
+onload"1 cmx 0 : 0
 smoutput smtime '23:58'
 smoutput smtime '23:58:59'
 smoutput smtime '23:58:59.12'
@@ -121,7 +121,7 @@ NB.class 0    1              2     3      4      5        6
 mj=.   < LF ; (NUL,SP,TAB) ; SL ; '01' ; '23' ; '456789'  NB.all else
 smddmmyy=: ((0;sj;mj) ;: ucp)"1
 
-onload 0 : 0
+onload"1 cmx 0 : 0
 smoutput smddmmyy '31/12/18'
 smoutput smddmmyy '31/13/18   '
 smoutput smddmmyy '31/13/18',LF

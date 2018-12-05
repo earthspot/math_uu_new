@@ -34,6 +34,8 @@ uuengine_z_'strt'
 load TESTFILE
 smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
 
+onload_z_=: do
+
 NB. ---------------------------------------------------------
 
 smoutput 0 : 0
