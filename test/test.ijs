@@ -1,6 +1,6 @@
 NB. UU test suite
 0 :0
-Saturday 13 October 2018  13:09:30
+Wednesday 5 December 2018  11:09:45
 )
 
 cocurrent 'base'
@@ -15,7 +15,7 @@ blink_uu_=: empty
 uunicode_z_=: 3 : 'uu_z_ ''*ssic '',":y'
   NB. ...prefix '*' tells verb: uu it's a uuengine instruction
 
-test_uu_=: 1 ddefine
+test_uu_=: 1 ddefine  NB. for running via fkey 5
   NB. trace uu
 if. x=0 do. make_msg 0
 else.

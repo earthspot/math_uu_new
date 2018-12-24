@@ -3,15 +3,6 @@
 
 cocurrent 'z'
 
-sl=: 4 : 0
-  NB. RELIABLE path catenator
-  NB. IAC Thursday 30 August 2018  16:42:51
-SL=. '/'
-if. SL={:x do. x=. }:x end.
-if. SL={.y do. x=. }.y end.
-x,SL,y
-)
-
 tpaths_validate=: 3 : 0
 assert. fexist TPATH_UU
 assert. fexist TPATH_UUC

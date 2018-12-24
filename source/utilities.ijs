@@ -3,8 +3,15 @@
 
 cocurrent 'uu'
 
-NB. sl has been withdrawn from THIS SCRIPT.
-NB. It is now defined in: paths.ijs
+sl_z_=: 4 : 0
+  NB. RELIABLE path catenator: should reside in _z_
+  NB. made available in utilities.ijs of both CAL and UU
+  NB. IAC Saturday 22 December 2018  19:25:56
+SL=. '/'
+if. SL={:x do. x=. }:x end.
+if. SL={.y do. x=. }.y end.
+x,SL,y
+)
 
 NB. boxed substrings in x at the stars of pattern: y
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'

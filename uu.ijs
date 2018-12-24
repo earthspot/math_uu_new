@@ -1,5 +1,5 @@
 0 :0
-Monday 8 October 2018  02:32:29
+Saturday 22 December 2018  19:18:12
 -
 UU: scientific units conversion package
 )
@@ -8,58 +8,8 @@ clear 'uu'
 coclass 'uu'
 onload_z_=: empty
 
-AABUILT=: '2018-10-08  02:33:33'
-AABUILT=: '2018-10-08  03:04:54'
-AABUILT=: '2018-10-08  10:29:39'
-AABUILT=: '2018-10-08  20:08:43'
-AABUILT=: '2018-10-08  20:25:44'
-AABUILT=: '2018-10-08  20:29:21'
-AABUILT=: '2018-10-08  21:59:48'
-AABUILT=: '2018-10-09  02:49:11'
-AABUILT=: '2018-10-09  02:50:29'
-AABUILT=: '2018-10-13  13:16:38'
-AABUILT=: '2018-10-13  15:17:25'
-AABUILT=: '2018-10-13  15:26:08'
-AABUILT=: '2018-10-13  15:30:13'
-AABUILT=: '2018-10-13  15:30:23'
-AABUILT=: '2018-10-13  15:36:22'
-AABUILT=: '2018-10-13  15:38:58'
-AABUILT=: '2018-10-13  16:16:21'
-AABUILT=: '2018-10-13  16:26:16'
-AABUILT=: '2018-10-13  16:51:36'
-AABUILT=: '2018-10-13  17:45:02'
-AABUILT=: '2018-10-13  17:53:58'
-AABUILT=: '2018-10-13  18:01:09'
-AABUILT=: '2018-10-13  18:02:37'
-AABUILT=: '2018-10-13  18:05:09'
-AABUILT=: '2018-10-13  18:08:47'
-AABUILT=: '2018-10-14  02:24:41'
-AABUILT=: '2018-10-14  02:31:09'
-AABUILT=: '2018-10-14  23:37:47'
-AABUILT=: '2018-10-15  04:44:28'
-AABUILT=: '2018-10-15  05:03:40'
-AABUILT=: '2018-10-15  21:39:10'
-AABUILT=: '2018-10-15  21:42:08'
-AABUILT=: '2018-10-15  21:50:46'
-AABUILT=: '2018-10-16  00:01:57'
-AABUILT=: '2018-10-16  00:05:54'
-AABUILT=: '2018-10-16  00:06:51'
-AABUILT=: '2018-10-16  00:27:42'
-AABUILT=: '2018-10-17  12:37:20'
-AABUILT=: '2018-10-17  12:39:23'
-AABUILT=: '2018-10-17  12:48:33'
-AABUILT=: '2018-10-17  12:49:48'
-AABUILT=: '2018-10-17  12:55:22'
-AABUILT=: '2018-10-17  13:10:05'
-AABUILT=: '2018-10-21  23:29:31'
-AABUILT=: '2018-11-15  04:34:33'
-AABUILT=: '2018-11-15  04:53:09'
-AABUILT=: '2018-11-15  04:55:18'
-AABUILT=: '2018-11-15  04:58:51'
-AABUILT=: '2018-11-15  05:05:20'
-AABUILT=: '2018-11-15  05:10:11'
-AABUILT=: '2018-11-15  05:16:28'
-AABUILT=: '2018-11-15  05:26:30'
+AABUILT=: '2018-12-22  19:20:45'
+AABUILT=: '2018-12-22  20:27:35'
 
 '==================== [uu] constants ===================='
 
@@ -179,11 +129,12 @@ UUM=: ''
 
 mks=: ;:'m kg s A K cd mol rad eur'
 
-'==================== [z] paths.ijs ===================='
+'==================== [uu] utilities ===================='
 
-cocurrent 'z'
+cocurrent 'uu'
 
-sl=: 4 : 0
+sl_z_=: 4 : 0
+
 
 
 SL=. '/'
@@ -191,117 +142,6 @@ if. SL={:x do. x=. }:x end.
 if. SL={.y do. x=. }.y end.
 x,SL,y
 )
-
-tpaths_validate=: 3 : 0
-assert. fexist TPATH_UU
-assert. fexist TPATH_UUC
-assert. fexist TPATH_UUF
-assert. fexist TPATH_UUM
-i.0 0
-)
-]TPATH_UU=: jpath'~Gituu'
-]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
-]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
-]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
-uuc=: 3 : 'openFolder TPATH_UUC'
-uuf=: 3 : 'openFolder TPATH_UUF'
-uum=: 3 : 'openFolder TPATH_UUM'
-0 :0
-Sunday 14 October 2018  15:49:25
--
-Used by: format, formatin -for testing give_ and take_ verbs
-)
-
-cocurrent 'uu'
-
-BLINK=: '##'
-
-blink1=: 4 ddefine
-
-
-
-
-
-
-
-f=. '~/sh/blink1-tool'
-fade=. 100
-color=. 'red'
-r=. 255
-g=. '0x66'
-b=. 0
-rgbWhite=. 'ff8844'
-rgbWhite=. 'ff8855'
-rgbFlame=. 'ff9900'
-rgbFlame=. 'ff8800'
-rgbYellow=. 'ff6600'
-rgb=. rgbFlame
-s=. 3
-t0=. '(f) --off -m 0 &'
-t1=. '(f) --(color) &'
-t2=. '(f) --rgb (r),(g),(b) &'
-t3=. '(f) --rgb=(rgb) &'
-t4=. '(f) -m (fade) --rgb (r),(g),(b) --blink (s) &'
-t=. ".'t',":x
-select. y
-case. '?' do. smoutput '+++ blink: shell cmd was: ',BLINK return.
-case. 0 do. z=. sw '(f) --off -m 0 &'
-case. 1 do. z=. sw '(f) --red &'
-case. 2 do. z=. sw '(f) --green &'
-case. 3 do. z=. sw '(f) --blue &'
-case. 4 do. z=. sw t
-case. 5 do. z=. sw '(f) --rgb (r),(g),(b) -m (fade) &'
-case. 6 do. z=. sw '(f) --rgb (r),(g),(b) &'
-case. 'white'  do. z=. sw '(f) -m 0 --rgb=(rgbWhite) &'
-case. 'yellow' do. z=. sw '(f) -m 0 --rgb=(rgbYellow) &'
-case. 'flame'  do. z=. sw '(f) -m 0 --rgb=(rgbFlame) &'
-
-fcase. 'magenta' do.
-fcase. 'cyan' do.
-fcase. 'red' do.
-fcase. 'green' do.
-case. 'blue' do. z=. sw'(f) -m 0 --(y) &'
-case.        do. z=. sw'(f) (y) &'
-end.
-2!:1 BLINK=:z
-)
-
-blink1 0
-
-blinkIN=: empty
-blink=: empty
-
-0 :0
-blink '?'
--
-blink 'red'
-blink 'green'
-blink 'blue'
-blink 'magenta'
-blink 'cyan'
-blink 'yellow'
-blink 'white'
-blink 'flame'
--
-blink 0
-blink 1
-blink 2
-blink 3
-blink 4
-blink '--white'
-blink 'white'
-blink '--cyan'
-blink 'cyan'
-4 blink '--red --glimmer=10'
-2!:1 '~/sh/blink1-tool --off -m 0 &'
-2!:1 '~/sh/blink1-tool --rgb=ff6600 -m 0 &'
-blink 4
-3 blink 1
-)
-
-'==================== [uu] utilities ===================='
-
-cocurrent 'uu'
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
 isLit=: 2 2048 e.~ 3!:0
@@ -453,6 +293,117 @@ i.0 0
 
 real=: 9&o.
 imag=: 11&o.
+
+'==================== [z] paths.ijs ===================='
+
+cocurrent 'z'
+
+tpaths_validate=: 3 : 0
+assert. fexist TPATH_UU
+assert. fexist TPATH_UUC
+assert. fexist TPATH_UUF
+assert. fexist TPATH_UUM
+i.0 0
+)
+]TPATH_UU=: jpath'~Gituu'
+]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
+]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
+]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
+uuc=: 3 : 'openFolder TPATH_UUC'
+uuf=: 3 : 'openFolder TPATH_UUF'
+uum=: 3 : 'openFolder TPATH_UUM'
+0 :0
+Sunday 14 October 2018  15:49:25
+-
+Used by: format, formatin -for testing give_ and take_ verbs
+)
+
+cocurrent 'uu'
+
+BLINK=: '##'
+
+blink1=: 4 ddefine
+
+
+
+
+
+
+
+f=. '~/sh/blink1-tool'
+fade=. 100
+color=. 'red'
+r=. 255
+g=. '0x66'
+b=. 0
+rgbWhite=. 'ff8844'
+rgbWhite=. 'ff8855'
+rgbFlame=. 'ff9900'
+rgbFlame=. 'ff8800'
+rgbYellow=. 'ff6600'
+rgb=. rgbFlame
+s=. 3
+t0=. '(f) --off -m 0 &'
+t1=. '(f) --(color) &'
+t2=. '(f) --rgb (r),(g),(b) &'
+t3=. '(f) --rgb=(rgb) &'
+t4=. '(f) -m (fade) --rgb (r),(g),(b) --blink (s) &'
+t=. ".'t',":x
+select. y
+case. '?' do. smoutput '+++ blink: shell cmd was: ',BLINK return.
+case. 0 do. z=. sw '(f) --off -m 0 &'
+case. 1 do. z=. sw '(f) --red &'
+case. 2 do. z=. sw '(f) --green &'
+case. 3 do. z=. sw '(f) --blue &'
+case. 4 do. z=. sw t
+case. 5 do. z=. sw '(f) --rgb (r),(g),(b) -m (fade) &'
+case. 6 do. z=. sw '(f) --rgb (r),(g),(b) &'
+case. 'white'  do. z=. sw '(f) -m 0 --rgb=(rgbWhite) &'
+case. 'yellow' do. z=. sw '(f) -m 0 --rgb=(rgbYellow) &'
+case. 'flame'  do. z=. sw '(f) -m 0 --rgb=(rgbFlame) &'
+
+fcase. 'magenta' do.
+fcase. 'cyan' do.
+fcase. 'red' do.
+fcase. 'green' do.
+case. 'blue' do. z=. sw'(f) -m 0 --(y) &'
+case.        do. z=. sw'(f) (y) &'
+end.
+2!:1 BLINK=:z
+)
+
+blink1 0
+
+blinkIN=: empty
+blink=: empty
+
+0 :0
+blink '?'
+-
+blink 'red'
+blink 'green'
+blink 'blue'
+blink 'magenta'
+blink 'cyan'
+blink 'yellow'
+blink 'white'
+blink 'flame'
+-
+blink 0
+blink 1
+blink 2
+blink 3
+blink 4
+blink '--white'
+blink 'white'
+blink '--cyan'
+blink 'cyan'
+4 blink '--red --glimmer=10'
+2!:1 '~/sh/blink1-tool --off -m 0 &'
+2!:1 '~/sh/blink1-tool --rgb=ff6600 -m 0 &'
+blink 4
+3 blink 1
+)
 
 '==================== [uu] syntax_machines ===================='
 0 :0
