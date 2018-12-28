@@ -1,30 +1,27 @@
 NB. == CONSTANTS ==
 NB. syntax of a line: {<nn>} <value> <unitv> [<units>] <description>
 NB.	<value> can be calculated (but use '/' for division, not '%').
-NB.	<unitv> are the (elsewhere defined) units attached to <value>.
+NB.	<unitv> are the PREVIOUSLY DEFINED units attached to <value>.
 NB.	<units> are the nominal units, which are DEFINED by this line.
-NB.	<description> is what should appear in the ttable.
-NB.	-a final '!' in <description> means "persistent hold",
-NB.	--but '!' should not appear below:
+NB.	<description> is what should appear in the t-table when attached.
+NB.	-a final '=' in <description> means "persistent hold",
+NB.	--but '=' should not appear below:
 NB.	--it is added by TABULA to appended lines.
 NB.
-NB.	mks units (and SI-units) use 'kg' not 'g' as fundamental unit.
-NB.	This is built-into uu.ijs in verb: umake, which creates noun: mks
-NB.	Noun: mks is a list of the primitive SI units (=fundamental units)
 NB.	WARNING: The fundamental unit of mass in SI units is not [g] but [kg].
 NB.	This means that scaleunits_cal_ gives [g] and [kg] special treatment.
 NB.	The first 11 lines of UUC define fundamental units in terms of themselves.
-NB.	They are not "real" definitions: their conversion factor will always be 1.
-NB.	They serve here as appendable lines for the sake of completeness.
+NB.	They are not active definitions: their conversion factors are always 1.
+NB.	They appear below as appendable lines for the sake of completeness.
 NB.
 NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
 NB.	--e.g '1 C.dgr' is equivalent to a rise in temperature of 1 K
-NB.	--but '1 degC' is equivalent to a temperature (absol) of 274.15 K
+NB.	--but '1 degC' is equivalent to an absolute temperature of 274.15 K
 
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Monday 15 October 2018  04:41:34
+1 /	[saved]	Wednesday 26 December 2018  10:48:00
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -154,8 +151,8 @@ UUC=: cmx 0 : 0
 9.80665e_3 N	[gf]	gram-force
 373.15 K	[b.p]	Boiling point of water; Kelvin
 273.15 K	[f.p]	Freezing point of water; Kelvin
-1 K	[C.dgr]	temperature range
-5/9 K	[F.dgr]	temperature range
+1 K	[C.dgr]	temperature range in the Celsius/Kelvin scales
+5/9 K	[F.dgr]	temperature range in the Fahrenheit scale
 1j273.15 K	[degC]	temperature; Celsius
 1j273.15 K	[Celsius]	temperature; Celsius
 1j273.15 K	[Centigrade] temperature; Centigrade
@@ -171,7 +168,7 @@ _2r3j373.15 K	[degDe]	temperature; Delisle
 1 kcal/kg/K [sht.w]	Specific heat of water
 1852 m	[naut]	nautical mile
 9.454e15 m	[li.yr]	light year
-3.26 li.yr	[parsec]	parsec
+3.26 li.yr	[pc]	parsec
 149.6e6 km	[au]	astronomical unit
 0.4470 m/s	[mph]	miles per hour
 1 mph	[m.p.h]	mile per hour
