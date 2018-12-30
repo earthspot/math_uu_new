@@ -1,7 +1,6 @@
 header.ijs
 constants.ijs
 utilities.ijs
-paths.ijs
 blink.ijs
 syntax_machines.ijs
 main.ijs

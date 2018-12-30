@@ -18,11 +18,10 @@ NB. wd'msgs'
 traceverbs 'OFF'  NB. disable diagnostics while caches are being built
 sess=: empty  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 factory''  NB. assigns: SCI SIC SIG SIZ
-tpaths_validate''
-VERSION=: getversion TPATH_UU
-load TPATH_UUC
-load TPATH_UUF
-load TPATH_UUM
+VERSION=: getversion jpath'~UU'
+load jpath'~UUC'
+load jpath'~UUF'
+load jpath'~UUM'
 make_units''
   NB. …makes globals: cspel csymb units unitv uvalu uvald
 make_unitc''
@@ -41,4 +40,4 @@ NB. uuinit_z_=: 3 : 0
 NB. ulo=. y conew 'uu'
 NB. )
 
-start''  NB. (FOR TESTS:) start _uu_ as its own instantiation.
+start''  NB. (FOR TESTS:) onload: start _uu_ as its own instantiation.

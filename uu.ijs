@@ -1,5 +1,5 @@
 0 :0
-Saturday 22 December 2018  19:18:12
+Saturday 29 December 2018  15:21:14
 -
 UU: scientific units conversion package
 )
@@ -8,8 +8,9 @@ clear 'uu'
 coclass 'uu'
 onload_z_=: empty
 
-AABUILT=: '2018-12-22  19:20:45'
-AABUILT=: '2018-12-22  20:27:35'
+AABUILT=: '2018-12-29  15:21:55'
+AABUILT=: '2018-12-29  15:33:46'
+AABUILT=: '2018-12-29  15:46:13'
 
 '==================== [uu] constants ===================='
 
@@ -57,6 +58,7 @@ SCI=: 5
 SIZ=: 1e_9
 i.0 0
 )
+b4f=: f2b=:	[: <;._1 LF , ]
 
 CANNOTSCALE=: b4f }: 0 : 0
 gas.mark
@@ -161,11 +163,15 @@ ssw=: smoutput&sw
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
+real=: 9&o.
+imag=: 11&o.
+
 all=: *./
 and=: *.
 any=: +./
-b2o=: }.@((<' ') ;@,. ])
-b4o=: [: <;._1 ' ' , ]
+o4b=: b2o=:	}.@((<SP) ;@,. ])
+b4o=: o2b=:	[: <;._1 SP , ]
+b4f=: f2b=:	[: <;._1 LF , ]
 
 
 begins=: beginsWith=: ] -: [ {.~ [: # ]
@@ -266,52 +272,6 @@ traceverbs 'OFF'
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
-
-tpath=: 3 : 0
-
-smoutput'———————————————————————————'
-]tt=. 'TPATH_' nl_z_ 0
-for_tboxed. tt do. t=. >tboxed
-  tx=. 16{. t,'_z_'
-  ssw '(tx) =: ''(t~)'''
-end.
-smoutput'———————————————————————————'
-)
-
-tpaths=: 3 : 0
-
-]z=. 'TPATH' nl_z_ 0
-]p=. ".each z
-]e=. (;fexist each p) { <"0'? '
-smoutput e ,. z ,. p
-for_t. z do.
-
-  smoutput 'shell' c (quote'open ') c CM c >t
-end.
-i.0 0
-)
-
-real=: 9&o.
-imag=: 11&o.
-
-'==================== [z] paths.ijs ===================='
-
-cocurrent 'z'
-
-tpaths_validate=: 3 : 0
-assert. fexist TPATH_UU
-assert. fexist TPATH_UUC
-assert. fexist TPATH_UUF
-assert. fexist TPATH_UUM
-i.0 0
-)
-]TPATH_UU=: jpath'~Gituu'
-]TPATH_UUC=: TPATH_UU sl 'uuc.ijs'
-]TPATH_UUF=: TPATH_UU sl 'uuf.ijs'
-]TPATH_UUM=: TPATH_UU sl 'uum.ijs'
-uuc=: 3 : 'openFolder TPATH_UUC'
-uuf=: 3 : 'openFolder TPATH_UUF'
-uum=: 3 : 'openFolder TPATH_UUM'
 0 :0
 Sunday 14 October 2018  15:49:25
 -
@@ -1685,11 +1645,10 @@ if. isNo y do. SIC=: y end.
 traceverbs 'OFF'
 sess=: empty
 factory''
-tpaths_validate''
-VERSION=: getversion TPATH_UU
-load TPATH_UUC
-load TPATH_UUF
-load TPATH_UUM
+VERSION=: getversion jpath'~UU'
+load jpath'~UUC'
+load jpath'~UUF'
+load jpath'~UUM'
 make_units''
 
 make_unitc''

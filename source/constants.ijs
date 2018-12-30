@@ -46,6 +46,9 @@ SIZ=: 1e_9	NB. used by: scino
 i.0 0
 )
 
+NB. FORWARD DEFINITION REQD HERE:
+b4f=: f2b=:	[: <;._1 LF , ]
+
 CANNOTSCALE=: b4f }: 0 : 0
 gas.mark
 midino

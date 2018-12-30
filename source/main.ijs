@@ -136,7 +136,7 @@ NB. )
 getversion=: 3 : 0
   NB. get VERSION from manifest.ijs in (path) y
 VERSION=: 'v.v.v'
-assert. fexist y  NB. y operationally is TPATH_UU
+assert. fexist y  NB. y operationally is jpath'~UU'
 load y sl 'manifest.ijs'
 assert. -. absent 'VERSION'
 erase 'FILES RELEASE LABCATEGORY PLATFORMS'

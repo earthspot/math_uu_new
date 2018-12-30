@@ -1,6 +1,6 @@
 NB. uu - run
 0 :0
-Tuesday 4 September 2018  15:21:05
+Saturday 29 December 2018  14:54:00
 -
 cocurrent 'base'
 open BUILTFILE
@@ -35,12 +35,3 @@ load TESTFILE
 smoutput '--- run.ijs: TESTFILE completed without discrepancies:',LF,TESTFILE
 
 onload_z_=: do
-
-NB. ---------------------------------------------------------
-
-smoutput 0 : 0
->>> To view existing TPATH_* settings...
-   tpath''
->>> To force good working TPATH_* settings:
-   load temp 6
-)

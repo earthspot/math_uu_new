@@ -35,11 +35,15 @@ ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
 
+real=: 9&o.
+imag=: 11&o.
+
 all=: *./
 and=: *.
 any=: +./
-b2o=: }.@((<' ') ;@,. ])
-b4o=: [: <;._1 ' ' , ]
+o4b=: b2o=:	}.@((<SP) ;@,. ])
+b4o=: o2b=:	[: <;._1 SP , ]
+b4f=: f2b=:	[: <;._1 LF , ]
   NB. …use b4o instead of monadic (;:) with open-lists of units
   NB. because units can contain '.' -which (;:) cuts.
 begins=: beginsWith=: ] -: [ {.~ [: # ]
@@ -147,30 +151,3 @@ require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab
 )
-
-tpath=: 3 : 0
-  NB. queries TPATH_ settings
-smoutput'———————————————————————————'
-]tt=. 'TPATH_' nl_z_ 0
-for_tboxed. tt do. t=. >tboxed
-  tx=. 16{. t,'_z_'
-  ssw '(tx) =: ''(t~)'''
-end.
-smoutput'———————————————————————————'
-)
-
-tpaths=: 3 : 0
-  NB. list of TPATH* nouns in _z_ and their contents
-]z=. 'TPATH' nl_z_ 0
-]p=. ".each z
-]e=. (;fexist each p) { <"0'? '
-smoutput e ,. z ,. p
-for_t. z do.
-  NB. generate phrases to show Finder windows...
-  smoutput 'shell' c (quote'open ') c CM c >t
-end.
-i.0 0
-)
-
-real=: 9&o.
-imag=: 11&o.
