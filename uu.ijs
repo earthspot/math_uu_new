@@ -11,6 +11,7 @@ onload_z_=: empty
 AABUILT=: '2018-12-29  15:21:55'
 AABUILT=: '2018-12-29  15:33:46'
 AABUILT=: '2018-12-29  15:46:13'
+AABUILT=: '2019-01-01  20:26:37'
 
 '==================== [uu] constants ===================='
 
@@ -596,7 +597,7 @@ getversion=: 3 : 0
 VERSION=: 'v.v.v'
 assert. fexist y
 load y sl 'manifest.ijs'
-assert. -. absent 'VERSION'
+assert. -. NaNoun 'VERSION'
 erase 'FILES RELEASE LABCATEGORY PLATFORMS'
 VERSION return.
 )

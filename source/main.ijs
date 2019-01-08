@@ -138,7 +138,7 @@ getversion=: 3 : 0
 VERSION=: 'v.v.v'
 assert. fexist y  NB. y operationally is jpath'~UU'
 load y sl 'manifest.ijs'
-assert. -. absent 'VERSION'
+assert. -. NaNoun 'VERSION'
 erase 'FILES RELEASE LABCATEGORY PLATFORMS'
 NB. empty erase 'CAPTION DESCRIPTION FOLDER'
 VERSION return.

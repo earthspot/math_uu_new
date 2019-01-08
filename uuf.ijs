@@ -24,10 +24,10 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
-__ [/] Monday 24 December 2018  01:20:36
-plotl(X,Y) ; X(*),Y(*)	[/]	plot Y against X
-plotl(X,Y,Z) ; X(*),Y(*),Z(*)	[/]	plot Y, Z against X
-plotl(X,U,V,W) ; X(*),U(*),V(*),W(*)	[/]	plot U,V,W against X
+__ [/] Sunday 6 January 2019  05:31:39
+plotline(X,Y) ; X(*),Y(*)	[/]	plot Y against X
+plotline(X,Y,Z) ; X(*),Y(*),Z(*)	[/]	plot Y, Z against X
+plotline(X,U,V,W) ; X(*),U(*),V(*),W(*)	[/]	plot U,V,W against X
 a/b^2 : a(kg),b(m)	[/]	body mass index
 ((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[+]
 ((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/)	[/]	quadratic root[-]

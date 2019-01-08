@@ -128,7 +128,6 @@ fmt=: formatOUT
 'able' fmt 99
 'able' fmt __
 'able' fmt UNDEFINED
-'able' fmt INVALID
 'hms' fmt 1
 'hms' fmt (s4h 4)+(s4min 2)+1  NB. 04:02:01
 'dms' fmt PI
