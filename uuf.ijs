@@ -24,7 +24,8 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
-__ [/] Sunday 6 January 2019  05:31:39
+__ [/] Saturday 12 January 2019  12:25:25
+tran(X,Y) ; X(*),Y(*)	[/]	transfer X into Y
 plotline(X,Y) ; X(*),Y(*)	[/]	plot Y against X
 plotline(X,Y,Z) ; X(*),Y(*),Z(*)	[/]	plot Y, Z against X
 plotline(X,U,V,W) ; X(*),U(*),V(*),W(*)	[/]	plot U,V,W against X
