@@ -268,20 +268,20 @@ end.
 )
 
 ucods=: 1&$: : (4 : 0)
-	NB. saddle to call ucode, but ignoring currency symbols
+  NB. saddle to call ucode, but ignoring currency symbols
 SAV=. cspel ;< csymb
 'cspel csymb'=: sspel ;< ssymb
 z=. x ucode y
 z [ 'cspel csymb'=: SAV
 )
 
-udat=: 4 : 0
+udat=: (4 : 0)"1
   NB. cut (UUC/F-type) string into boxed fields
   NB. x==0 -- const
   NB. x==1 -- formula
-'y zdesc'=. ']'cut y
+'y zdesc'=. 2{. ']'cut y
 zdesc=. dltb zdesc -.TAB
-'y znits'=. '['cut y
+'y znits'=. 2{. '['cut y
 NB. 'z y'=. '}'cut y	NB. WITHDRAWN: leading {**}
 if. x do.		NB. return fields for a formula
   zfmla=. deb y-.TAB

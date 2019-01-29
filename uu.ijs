@@ -12,6 +12,7 @@ AABUILT=: '2018-12-29  15:21:55'
 AABUILT=: '2018-12-29  15:33:46'
 AABUILT=: '2018-12-29  15:46:13'
 AABUILT=: '2019-01-01  20:26:37'
+AABUILT=: '2019-01-27  10:18:11'
 
 '==================== [uu] constants ===================='
 
@@ -734,9 +735,9 @@ udat=: 4 : 0
 
 
 
-'y zdesc'=. ']'cut y
+'y zdesc'=. 2{. ']'cut y
 zdesc=. dltb zdesc -.TAB
-'y znits'=. '['cut y
+'y znits'=. 2{. '['cut y
 if. x do.
   zfmla=. deb y-.TAB
   zdesc; znits; zfmla

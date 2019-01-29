@@ -24,14 +24,14 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
-__ [/] Tuesday 15 January 2019  18:17:00
+__ [/] Tuesday 29 January 2019  04:47:33
 tran(X,Y) ; X(*),Y(*) [/] transfer {X} into {Y}
 plotline(X,Y) ; X(*),Y(*) [/] plot {Y} against {X}
 plotline(X,Y,Z) ; X(*),Y(*),Z(*) [/] plot {Y} {Z} against {X}
 plotline(X,U,V,W) ; X(*),U(*),V(*),W(*) [/] plot {U} {V} {W} against {X}
 a/b^2 : a(kg),b(m) [/] body mass index
-((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] quadratic root[+]
-((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] quadratic root[-]
+real((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] +ve quadratic root
+real((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] -ve quadratic root
 (v^2)/r : v(m/s),r(m) [m/s^2] centripetal acceleration
 (v-u)/t : v(m/s),u(m/s),t(s) [m/s^2] acceleration to final speed
 a*3.281 ; a(m) [ft] convert m to ft <<<<< TEST ONLY
@@ -58,7 +58,7 @@ a*RT3/2 : a(m) [m] hgt of equilateral triangle
 a*a*RT3/4 : a(m) [m^2] area of equilateral triangle
 a*a*1.5*RT3 : a(m) [m^2] area of regular hexagon
 2*a*a*(1+RT2) : a(m) [m^2] area of regular octagon
-2*PIb3*(r^3)*(v^2)*d : r(m),v(m/s),d(/) [Mton.TNT] asteroid impact energy; d=rel.density; CHECK THIS
+2*PIb3*(r^3)*(v^2)*d : r(m),v(m/s),d(/) [Mton.TNT] asteroid impact energy
 400.0*(p^0.67) ; p(Mton.TNT) [m^2] area of destruction; CHECK THIS
 m*(v^2)/2 : m(kg),v(m/s) [J] kinetic energy
 m*f*h : m(kg),f(m/s^2),h(m) [J] potential energy
@@ -88,21 +88,21 @@ i*exp(x*t) : i(mol),x(/),t(s) [mol] radioactive decay; CHECK THIS
 i*exp(x*d) : i(cd),x(/),d(m) [cd] Lambert's law; CHECK THIS
 M*L*L/12 : M(kg),L(m) [kg m^2] 1st moment; slender rod; axis thru centre
 M*L*L/3 : M(kg),L(m) [kg m^2] 1st moment; slender rod; axis thru end
-M*W times W/3 : M(kg),W(m) [kg m^2] 1st moment; rectangular plane; axis along edge
-M*((L^2)+(W^2))div 12 : M(kg),L(m),W(m) [kg m^2] 1st moment; rectangular plane; axis thru centre
-M*((I^2)+(J^2))div 2 : M(kg),I(m),J(m) [kg m^2] 1st moment; cylinder; hollow
+M*W times W/3 : M(kg),W(m) [kg m^2] 1st moment; rect plane; axis=edge
+M*((L^2)+(W^2))div 12 : M(kg),L(m),W(m) [kg m^2] 1st mo; rect; axis=centre
+M*((I^2)+(J^2))div 2 : M(kg),I(m),J(m) [kg m^2] 1st mo; cylinder; hollow
 M*R*R/2 : M(kg),R(m) [kg m^2] 1st moment; cylinder; solid
 M*R*R : M(kg),R(m) [kg m^2] 1st moment; cylinder; thin walled hollow
 M*L*L : M(kg),L(m) [kg m^2] 1st moment; point mass on weightless rod
 M*R*R*2/3 : M(kg),R(m) [kg m^2] 1st moment; sphere; thin walled hollow
 M*R*R*2/5 : M(kg),R(m) [kg m^2] 1st moment; sphere; solid
 M*R*R/4 : M(kg),R(m) [kg m^2] 1st moment; disk
-G*M/d^2 : G(G),M(ea.mass),d(eq.r) [m/s^2] gravitational attraction; earth; estimate
+G*M/d^2 : G(G),M(ea.mass),d(eq.r) [m/s^2] grav attractn; earth; estimate
 G*M/d^2 : G(G),M(kg),d(m) [m/s^2] gravitational attraction;unit
 PI2*sqrt(a/g) : g(grav),a(m) [s] earth orbital period
-PI2*sqrt((a^3)/(G*M)) : G(G),M(kg),a(m) [s] orbital period; small body; {a}=semimajor axis
-PI2*sqrt((a^3)/(G*(M+N))) : G(G),M(kg),N(kg),a(m) [s] orbital period; two bodies; {a}=semimajor axis
--(G*M)/(2*a) : G(G),M(kg),a(m) [MJ/kg] specific orbital energy (vis-viva); elliptical orbit
+PI2*sqrt((a^3)/(G*M)) : G(G),M(kg),a(m) [s] orb period; small body
+PI2*sqrt((a^3)/(G*(M+N))) : G(G),M(kg),N(kg),a(m) [s] orb period; 2 body
+-(G*M)/(2*a) : G(G),M(kg),a(m) [MJ/kg] specific orb energy (vis-viva)
 x/t : x(m),t(s) [m/s] average speed
 u+(f*t) : u(m/s),t(s),f(m/s^2) [m/s] final speed
 (u*t)+(0.5*f*t^2) : u(m/s),t(s),f(m/s^2) [m] distance covered
@@ -115,4 +115,3 @@ PIb3*h*r^2 : r(m),h(m) [m^3] volume of cone
 PI*h*r^2 : r(m),h(m) [m^3] volume of cylinder
 a-273.15 ; a(K) [/] Kelvin to Celsius
 32+(9/5)*(a-273.15) ; a(K) [/] Kelvin to Fahrenheit
-)
