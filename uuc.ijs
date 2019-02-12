@@ -76,6 +76,7 @@ UUC=: cmx 0 : 0
 1e4 m^2	[ha]	hectare
 4840 yd^2	[acre]	acre
 0.25 acre	[rd]	rood
+7140 m^2	[soccer.pitch]	area of typical football field
 1e_3 m^3	[l]	litre
 1e_3 l	[ml]	millilitre
 1 m/s	[v.si]	unit velocity
