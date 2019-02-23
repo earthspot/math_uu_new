@@ -4,6 +4,7 @@
 cocurrent 'uu'
 
 DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:sesstrace=:empty
+blink=: empty	NB. activate with: op'blink'
 
 start=: 3 : 0
   NB. start the UU locale - which may be a numbered one.
