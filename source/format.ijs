@@ -77,6 +77,40 @@ d=. scino y  NB. rad-->deg conversion specd already in UUC
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
+give_0_yesno=: 4 : 0
+register'give_0_yesno'
+NB. 	ssw'+++ give_0_yesno: x=[(crex x)] y=(y)'
+  NB. outputs Boolean y [!] as (e.g.) NO or YES
+  NB. uses setting of global: ZERO
+assert. (,x) -: ,'!'  NB. force error if wrong verb
+NO_UNITS_NEEDED=: 1
+NB. 	ssw'+++ give_0_yesno: ZERO=[(ZERO)]'
+if. y=0 do. ZERO
+else.
+select. ZERO
+case. 'no' do. 'yes'
+case. 'NO' do. 'YES'
+case. 'off' do. 'on'
+case. 'OFF' do. 'ON'
+case. 'lo' do. 'hi'
+case. 'LO' do. 'HI'
+case. 'low' do. 'high'
+case. 'LOW' do. 'HIGH'
+case. 'false' do. 'true'
+case. 'FALSE' do. 'TRUE'
+case. do. '~',ZERO  NB. ZERO has unanticipated value
+end.
+end.
+)
+0 :0
+'!' give_0_yesno 0
+'!' give_0_yesno 1
+uu '0 !'
+'!' uu '0 !'
+uu '1 !'
+'!' uu '1 !'
+)
+
 give_1_temp=: 4 : 0
   NB. NO disp applied on output.
 register'give_1_temp'

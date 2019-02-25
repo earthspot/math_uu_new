@@ -44,6 +44,8 @@ case. 'QSIG' do. NB. query significant figures
 		SIG
 case. 'QSIZ' do. NB. query zero attraction threshold
 		SIZ
+case. 'QZER' do. NB. query Boolean ZERO word
+		ZERO
 case. 'SCIN' do. NB. numarg --> (string) scientific notation
 		scino numarg
 case. 'SELF' do. NB. self-cancel units
@@ -84,6 +86,8 @@ case. 'ssiz' do. NB. set zero attraction threshold
 		SIZ=: numarg
 case. 'strt' do. NB. restart this instance of UU
 		start''
+case. 'szer' do. NB. set Boolean ZERO word
+		ZERO=: arg
 case.        do. '>>> uuengine: bad instruction: ';y
 end.
 NB. >>>>> NO CODE PAST THIS POINT: return values are waiting

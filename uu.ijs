@@ -14,6 +14,11 @@ AABUILT=: '2018-12-29  15:46:13'
 AABUILT=: '2019-01-01  20:26:37'
 AABUILT=: '2019-01-27  10:18:11'
 AABUILT=: '2019-02-22  22:49:49'
+AABUILT=: '2019-02-25  12:14:59'
+AABUILT=: '2019-02-25  12:15:29'
+AABUILT=: '2019-02-25  12:30:23'
+AABUILT=: '2019-02-25  12:31:04'
+AABUILT=: '2019-02-25  12:38:52'
 
 '==================== [uu] constants ===================='
 
@@ -54,11 +59,11 @@ UNDEFINED=: _.
 
 factory=: 3 : 0
 
-
 SIC=: 1
 SIG=: 3
 SCI=: 5
 SIZ=: 1e_9
+ZERO=: 'NO'
 i.0 0
 )
 b4f=: f2b=:	[: <;._1 LF , ]
@@ -1143,6 +1148,38 @@ d=. scino y
 sw'(d)(ds)' [ NO_UNITS_NEEDED=: 1
 )
 
+give_0_yesno=: 4 : 0
+register'give_0_yesno'
+
+
+assert. (,x) -: ,'!'
+NO_UNITS_NEEDED=: 1
+if. y=0 do. ZERO
+else.
+select. ZERO
+case. 'no' do. 'yes'
+case. 'NO' do. 'YES'
+case. 'off' do. 'on'
+case. 'OFF' do. 'ON'
+case. 'lo' do. 'hi'
+case. 'LO' do. 'HI'
+case. 'low' do. 'high'
+case. 'LOW' do. 'HIGH'
+case. 'false' do. 'true'
+case. 'FALSE' do. 'TRUE'
+case. do. '~',ZERO
+end.
+end.
+)
+0 :0
+'!' give_0_yesno 0
+'!' give_0_yesno 1
+uu '0 !'
+'!' uu '0 !'
+uu '1 !'
+'!' uu '1 !'
+)
+
 give_1_temp=: 4 : 0
 
 register'give_1_temp'
@@ -1380,6 +1417,8 @@ case. 'QSIG' do.
 		SIG
 case. 'QSIZ' do.
 		SIZ
+case. 'QZER' do.
+		ZERO
 case. 'SCIN' do.
 		scino numarg
 case. 'SELF' do.
@@ -1420,6 +1459,8 @@ case. 'ssiz' do.
 		SIZ=: numarg
 case. 'strt' do.
 		start''
+case. 'szer' do.
+		ZERO=: arg
 case.        do. '>>> uuengine: bad instruction: ';y
 end.
 )

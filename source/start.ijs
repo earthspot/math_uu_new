@@ -18,7 +18,7 @@ NB. traceverbs 'ON'  NB. enable diagnostics
 NB. wd'msgs'
 traceverbs 'OFF'  NB. disable diagnostics while caches are being built
 sess=: empty  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-factory''  NB. assigns: SCI SIC SIG SIZ
+factory''  NB. assigns: SCI SIC SIG SIZ ZERO
 VERSION=: getversion jpath'~UU'
 load jpath'~UUC'
 load jpath'~UUF'

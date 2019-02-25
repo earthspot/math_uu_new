@@ -38,11 +38,11 @@ UNDEFINED=: _.	NB. should propagate in a formula
 
 factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
-  NB. ONLY SCI and SIG reside in z-locale
 SIC=: 1		NB. Used chiefly by: ucode, uniform
 SIG=: 3		NB. used by: scino
 SCI=: 5		NB. used by: scino
 SIZ=: 1e_9	NB. used by: scino
+ZERO=: 'NO'	NB. used by: format
 i.0 0
 )
 
