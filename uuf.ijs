@@ -24,11 +24,14 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
-__ [/] Tuesday 29 January 2019  04:47:33
-tran(X,Y) ; X(*),Y(*) [/] transfer {X} into {Y}
-plotline(X,Y) ; X(*),Y(*) [/] plot {Y} against {X}
-plotline(X,Y,Z) ; X(*),Y(*),Z(*) [/] plot {Y} {Z} against {X}
-plotline(X,U,V,W) ; X(*),U(*),V(*),W(*) [/] plot {U} {V} {W} against {X}
+__ [/] Tuesday 5 March 2019  05:16:08
+tran(X,Y) : X(*),Y(*) [!] {X} --> {Y}
+trag(X,Y) : X(*),Y(*) [!] {X} -->+{Y}
+trad(X,Y) : X(*),Y(*) [!] {X} -->-{Y}
+tram(X,Y) : X(*),Y(*) [!] {X} -->*{Y}
+plotline(X,Y) : X(*),Y(*) [!] plot {Y} against {X}
+plotline(X,Y,Z) : X(*),Y(*),Z(*) [!] plot {Y} {Z} against {X}
+plotline(X,U,V,W) : X(*),U(*),V(*),W(*) [!] plot {U} {V} {W} against {X}
 a/b^2 : a(kg),b(m) [/] body mass index
 real((-b)+sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] +ve quadratic root
 real((-b)-sqrt((b^2)-4*a*c))%2*a : a(/),b(/),c(/) [/] -ve quadratic root
@@ -38,18 +41,18 @@ a*3.281 ; a(m) [ft] convert m to ft <<<<< TEST ONLY
 u+(t*32.1944) ; u(ft/s),t(s) [ft/s] final speed <<<<< TEST ONLY
 u+(t*9.812865328) ; u(m/s),t(s) [m/s] final speed <<<<< TEST ONLY
 u+(t*f) : u(m/s),t(s),f(m/s/s) [m/s] final speed <<<<< TEST ONLY
-sin a ; a(rad) [/] sine
-cos a ; a(rad) [/] cosine
-tan a ; a(rad) [/] tangent
-arcsin u ; u(/) [rad] arc sine
-arccos u ; u(/) [rad] arc cosine
-arctan u ; u(/) [rad] arc tangent
-sinh u ; u(/) [/] hyperbolic sine
-cosh u ; u(/) [/] hyperbolic cosine
-tanh u ; u(/) [/] hyperbolic tangent
-arcsinh u ; u(/) [/] inverse hyperbolic sine
-arccosh u ; u(/) [/] inverse hyperbolic cosine
-arctanh u ; u(/) [/] inverse hyperbolic tangent
+sin a : a(rad) [/] sine
+cos a : a(rad) [/] cosine
+tan a : a(rad) [/] tangent
+arcsin u : u(/) [rad] arc sine
+arccos u : u(/) [rad] arc cosine
+arctan u : u(/) [rad] arc tangent
+sinh u : u(/) [/] hyperbolic sine
+cosh u : u(/) [/] hyperbolic cosine
+tanh u : u(/) [/] hyperbolic tangent
+arcsinh u : u(/) [/] inverse hyperbolic sine
+arccosh u : u(/) [/] inverse hyperbolic cosine
+arctanh u : u(/) [/] inverse hyperbolic tangent
 PI*r*r : r(m) [m^2] area of circle
 PI*a*b : a(m),b(m) [m^2] area of ellipse
 PI4*r^2 : r(m) [m^2] surface area of sphere
@@ -113,5 +116,3 @@ d^3 : d(m) [m^3] volume of cube
 4*PIb3*r^3 : r(m) [m^3] volume of sphere
 PIb3*h*r^2 : r(m),h(m) [m^3] volume of cone
 PI*h*r^2 : r(m),h(m) [m^3] volume of cylinder
-a-273.15 ; a(K) [/] Kelvin to Celsius
-32+(9/5)*(a-273.15) ; a(K) [/] Kelvin to Fahrenheit
