@@ -24,11 +24,11 @@ NB. If units not specified for a given var (say a) then a(*) assumed.
 cocurrent 'uu'
 
 UUF=: cmx noun define
-__ [/] Tuesday 5 March 2019  05:16:08
-tran(X,Y) : X(*),Y(*) [!] {X} --> {Y}
-trag(X,Y) : X(*),Y(*) [!] {X} -->+{Y}
-trad(X,Y) : X(*),Y(*) [!] {X} -->-{Y}
-tram(X,Y) : X(*),Y(*) [!] {X} -->*{Y}
+__ [/] Wednesday 6 March 2019  01:17:52
+tran(X,Y) : X(*),Y(*) [!] transfer {X} --> {Y}
+trag(X,Y) : X(*),Y(*) [!] transfer {X} -->+{Y}
+trad(X,Y) : X(*),Y(*) [!] transfer {X} -->-{Y}
+tram(X,Y) : X(*),Y(*) [!] transfer {X} -->*{Y}
 plotline(X,Y) : X(*),Y(*) [!] plot {Y} against {X}
 plotline(X,Y,Z) : X(*),Y(*),Z(*) [!] plot {Y} {Z} against {X}
 plotline(X,U,V,W) : X(*),U(*),V(*),W(*) [!] plot {U} {V} {W} against {X}
@@ -108,7 +108,9 @@ PI2*sqrt((a^3)/(G*(M+N))) : G(G),M(kg),N(kg),a(m) [s] orb period; 2 body
 -(G*M)/(2*a) : G(G),M(kg),a(m) [MJ/kg] specific orb energy (vis-viva)
 x/t : x(m),t(s) [m/s] average speed
 u+(f*t) : u(m/s),t(s),f(m/s^2) [m/s] final speed
-(u*t)+(0.5*f*t^2) : u(m/s),t(s),f(m/s^2) [m] distance covered
+(u*t)+(half f*t^2) : u(m/s),t(s),f(m/s^2) [m] distance covered
+f*t : t(s),f(m/s^2) [m/s] final speed, u=0
+half f*t^2 : t(s),f(m/s^2) [m] distance covered, u=0
 T-(T mod 3600) : T(s) [h] hours portion
 (T mod 3600)-(T mod 60) : T(s) [min] minutes portion
 T mod 60 : T(s) [s] seconds portion
