@@ -23,10 +23,10 @@ VERSION=: getversion jpath'~UU'
 load jpath'~UUC'
 load jpath'~UUF'
 load jpath'~UUM'
-make_units''
-  NB. …makes globals: cspel csymb units unitv uvalu uvald
-make_unitc''
-  NB. …makes global: unitc --based on pp_encoding
+make_units''  NB. globals: cspel csymb units unitv uvald rvald uvalu rvalu
+make_unitc''  NB. global: unitc uvalc rvalc
+rat_check''
+  NB. …verifies integrity of rational caches
 report_complex_nouns''  NB. NO NOUNS should be complex
 traceverbs DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
 sess=: sesstrace  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

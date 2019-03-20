@@ -1,5 +1,5 @@
 Note'' NB. 'TERMINOLOGY OF UU'
-Wednesday 13 June 2018  09:39:10
+Saturday 16 March 2019  20:38:19
 
 UU		"Universal Units" - an addon for units-conversion
 units		the "units" of a (physical or notional) quantity
@@ -35,8 +35,9 @@ basic units[of UU]	the fundamental units extended by: rad eur
  └───────────────────────────────────────────────────┘
 mks		(noun) boxed list of basic units in standard order
 canonic expansion	expansion in terms of basic units in mks-order
+cunit		single powered unit in kosher form
+kosher		units expressed in ascii-only canonical form
 xunit		(literal) list representing a canonic expansion
-pp		
 pp-encoding	UU technique: encodes "units" as a unique number
  ┌───────────────────────────────────────────────────────────┐  
  │each mks unit is assigned a prime number in-turn: 2 3 5 7… │
@@ -46,3 +47,14 @@ pp-encoding	UU technique: encodes "units" as a unique number
  └───────────────────────────────────────────────────────────┘  
 pp		(integer) list of the actual ±powers of mks primes
 code [number]	(extended|rational) pp-coded number of given "units"
+		…units with same code are compatible (interconvertible)
+ ┌─────────────────────────────────────────────┐
+ │RECONCILE with SI-units official terminology…│
+ └─────────────────────────────────────────────┘
+unitc		(pp) code of units
+units		nominal units, e.g. 'ft'
+unitv		units of defined quantity
+uvalc		conversion factor from SI-units
+uvald		displacement (used by temperature scales)
+uvalu		value (floating) of defined quantity
+rvalu		value (rational) of defined quantity

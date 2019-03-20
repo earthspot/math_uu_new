@@ -101,6 +101,7 @@ dlb r return.
 )
 
 displacement=: (3 : 'uvald {~ units i. <,y') :: 0:
+rdisplacement=: (3 : 'rvald {~ units i. <,y') :: 0:  NB. is 0: okay to use??
 
 dotted=: 1&$: : (4 : 0)
   NB. apply(x=1--default)/unapply(x=0) dotted (·) convention
@@ -113,13 +114,6 @@ else.  NB. unapply convention
   if. -.any HD E. z do. y return. end.  NB. convention not applied
   z=. z rplc HD;SP
 end.
-)
-
-eval=: 3 : 0 "1
-  NB. used to evaluate numeric exprns in UUC
-  NB. c/f valueOf, strValueOf
-y=. '/%-_Ee'charsub >y
-try. {.".y catch. UNDEFINED end.
 )
 
 exrate=: exrate_exch_
@@ -321,13 +315,22 @@ cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
   NB. mks (c/f 'm kg s') specifies the most primitive SI-units
   NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
-NB. make_cutuuc''
-'v uv us'=. <"1 |: cutuuc UUC
+'v uv us'=: <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB  NB. defined units
-units=: deb each us             NB. nominal units
-uvalu=: real eval >v            NB. defined value: factor
-uvald=: imag eval >v            NB. defined value: displacement
+units=: deb each us    NB. nominal units
+uvald=: imag eval >v   NB. defined value: displacement
+assert. notFloat rvald=: ieval >v  NB. defined value: rdisplacement <<<<< rational
+uvalu=: real eval >v   NB. defined value: factor
+assert. notFloat rvalu=: reval >v  NB. defined value: factor <<<<< rational
 i.0 0
+)
+
+eval=: 3 : 0 "1
+  NB. returns 'floating'
+  NB. used to evaluate numeric exprns in UUC
+  NB. c/f valueOf, strValueOf
+y=. '/%-_Ee'charsub >y
+try. {.".y catch. UNDEFINED end.
 )
 
 uniform=: '' ddefine

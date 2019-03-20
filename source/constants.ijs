@@ -27,6 +27,8 @@ HD=: '·'		NB. hi-dot, optional SI convention
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PI=: o.1		NB. π
+PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
+		NB. π (rational - accurate to 50 decimal places)
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power

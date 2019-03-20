@@ -1,6 +1,10 @@
 	NB. uu - uu_interface.ijs
 '==================== [uuengine] uu_interface ===================='
 
+0 :0
+Tuesday 19 March 2019  19:05:51
+)
+
 cocurrent 'uu'
 
 uuengine=: 3 : 0
@@ -36,6 +40,8 @@ case. 'FMTI' do. NB. format string-qty
 		formatIN arg
 case. 'FMTO' do. NB. format qty: arg as output string
 		(bris unitsOf arg) format valueOf arg
+case. 'QRAT' do. NB. query rational value saved by: uu
+		UU_VALUE
 case. 'QSCI' do. NB. query scientific notation threshold
 		SCI
 case. 'QSIC' do. NB. query SI-conformance level

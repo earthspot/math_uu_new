@@ -19,6 +19,27 @@ AABUILT=: '2019-02-25  12:15:29'
 AABUILT=: '2019-02-25  12:30:23'
 AABUILT=: '2019-02-25  12:31:04'
 AABUILT=: '2019-02-25  12:38:52'
+AABUILT=: '2019-03-16  11:27:12'
+AABUILT=: '2019-03-16  11:48:39'
+AABUILT=: '2019-03-16  14:32:11'
+AABUILT=: '2019-03-16  19:51:17'
+AABUILT=: '2019-03-16  19:55:54'
+AABUILT=: '2019-03-16  19:57:05'
+AABUILT=: '2019-03-19  17:40:10'
+AABUILT=: '2019-03-19  19:06:38'
+AABUILT=: '2019-03-19  19:07:31'
+AABUILT=: '2019-03-19  23:16:02'
+AABUILT=: '2019-03-19  23:18:17'
+AABUILT=: '2019-03-19  23:18:38'
+AABUILT=: '2019-03-19  23:27:36'
+AABUILT=: '2019-03-19  23:27:45'
+AABUILT=: '2019-03-19  23:32:14'
+AABUILT=: '2019-03-20  00:01:11'
+AABUILT=: '2019-03-20  00:10:48'
+AABUILT=: '2019-03-20  00:15:01'
+AABUILT=: '2019-03-20  00:27:51'
+AABUILT=: '2019-03-20  00:34:40'
+AABUILT=: '2019-03-20  00:57:58'
 
 '==================== [uu] constants ===================='
 
@@ -48,6 +69,8 @@ HD=: '·'
 MI=: '-'
 NUN=: '??'
 PI=: o.1
+PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
+
 PWM=: '^-'
 PWU=: '^_'
 PW=: '^'
@@ -152,6 +175,9 @@ if. SL={:x do. x=. }:x end.
 if. SL={.y do. x=. }.y end.
 x,SL,y
 )
+
+real=: 9&o.
+imag=: 11&o.
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
 isLit=: 2 2048 e.~ 3!:0
@@ -170,9 +196,6 @@ emsg=: smoutput&sw
 ssw=: smoutput&sw
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
-
-real=: 9&o.
-imag=: 11&o.
 
 all=: *./
 and=: *.
@@ -228,7 +251,9 @@ vt=: viewtable=: '' ddefine
 
 
 
-faux=. 'units unitv uvalu uvald uvalc unitc i'
+
+faux=. 'i unitc units unitv uvalc rvalc uvalu rvalu uvald rvald'
+
 if. '' -:x do. x=. faux end.
 if. isNo y do.
   y=. y+i.10 default 'VIEWTABLE'
@@ -242,6 +267,10 @@ cst=. ([: st [) ,. [: st ]
 ]i=. i.#UUC
 ]t=. ". cols rplc SP;' cst '
 h,y{t
+)
+0 :0
+vt I. uvalc ~: uvalu
+vt I. uvald>0
 )
 dip=: 3 : 0
 
@@ -279,6 +308,84 @@ end.
 traceverbs 'OFF'
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
+)
+
+'==================== [uu] rational ===================='
+
+0 :0
+Tuesday 19 March 2019  17:10:47
+-
+from: tempuu 76
+-
+NOW just needs to handle: 4p1/3 -or is it: 4/3p3
+  accept 1/2p1, also 1r2p1
+  -but these are formally floating !!
+-
+assert 'rational'-:datatype z
+	in all rat4* verbs?
+make reval recursive where it matters.
+-
+Be suspicious of: __r1&". 
+-How might number-detection actually fail?
+)
+
+cocurrent 'uu'
+
+notFloat=: 3 : 0
+
+-. (datatype y) -: 'floating'
+)
+
+reval=: 3 : 0 "1
+
+
+y=. deb >y
+    if. all y e. n9 do. ". y,'x'
+elseif. '/' e. y do. __r1&". '/r-_'charsub y
+elseif. 'j' e. y do. rat4sc 'j' taketo y
+elseif. all y e. n9,'._' do. rat4sc y
+elseif. 'e' e. y do. rat4sc y
+elseif. 'p' e. y do. rat4pi y
+elseif. do. _r1 [ssw '>>> reval: cannot handle y=(y)'
+end.
+)
+
+ieval=: 3 : 0 "1
+
+
+y=. deb >y
+if. 'j' e. y do. rat4sc 'j' takeafter y
+else. 0r1
+end.
+)
+
+rat4pi=: 3 : 0 "1
+
+
+'c d'=. <;._2 y,'p'
+a=. ".c
+b=. ".d
+". sw '(a)*PI^(b)'
+)
+
+rat4sc=: 3 : 0 "1
+
+c=. 'e' taketo y
+a=. ".c-.DT
+b=. ".y
+scale=. rnd 10^. a%b
+if. 'rational'-:datatype b do. b
+elseif. scale<0      do. ". ((c-.DT) , (|scale)#'0') , 'r1'
+elseif.              do. ". (c-.DT) , 'r1' , scale#'0'
+end.
+)
+
+rat_check=: 3 : 0
+
+assert. all uvalu = real rvalu
+assert. all uvald = real rvald
+assert. all uvalc = real rvalc
+assert. -. 0 e. uvalc
 )
 
 '==================== [uu] syntax_machines ===================='
@@ -485,6 +592,7 @@ dlb r return.
 )
 
 displacement=: (3 : 'uvald {~ units i. <,y') :: 0:
+rdisplacement=: (3 : 'rvald {~ units i. <,y') :: 0:
 
 dotted=: 1&$: : (4 : 0)
 
@@ -497,13 +605,6 @@ else.
   if. -.any HD E. z do. y return. end.
   z=. z rplc HD;SP
 end.
-)
-
-eval=: 3 : 0 "1
-
-
-y=. '/%-_Ee'charsub >y
-try. {.".y catch. UNDEFINED end.
 )
 
 exrate=: exrate_exch_
@@ -688,12 +789,22 @@ cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|''|"'
 
 
-'v uv us'=. <"1 |: cutuuc UUC
+'v uv us'=: <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
 units=: deb each us
-uvalu=: real eval >v
 uvald=: imag eval >v
+assert. notFloat rvald=: ieval >v
+uvalu=: real eval >v
+assert. notFloat rvalu=: reval >v
 i.0 0
+)
+
+eval=: 3 : 0 "1
+
+
+
+y=. '/%-_Ee'charsub >y
+try. {.".y catch. UNDEFINED end.
 )
 
 uniform=: '' ddefine
@@ -785,25 +896,29 @@ isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 make_unitc=: 1 ddefine
 
 
+
 pass=. x
 rebuild=. pass<:1
 ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)'
 if. rebuild do.
   ssw=. empty
   uvalc=:(#UUC)$0
+  rvalc=:(#UUC)$0r1
   unitc=:(#UUC)$UNSETCODE
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (-. isGoodCode code) or (0=val) do.
+  rval=. i{rvalc
+  if. (-. isGoodCode code) or (0=rval) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
 
-    'val code'=. qtcode4i i
-    ssw '--- id=(i) val=(val) code=(crex code)(LF)'
+    'val rval code'=. qtcode4i i
+    ssw '--- id=(i) val=(val) rval=(rval) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
+    rvalc=: rval i}rvalc
     unitc=: code i}unitc
     n=. n+1
-    assert 64 128 e.~ 3!:0 unitc
+    assert. 64 128 e.~ 3!:0 unitc
   end.
 end.
 n return.
@@ -814,34 +929,38 @@ pushme 'qtcode4i'
 
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
+]ralu=.    y{rvalu
+]valc=.    y{uvalc
+]ralc=.    y{rvalc
 ]vald=.    y{uvald
+]rald=.    y{rvald
 ]units_y=. y pick units
 ]unitv_y=. y pick unitv
 
-if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
-if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
+if. unitv_y -: ,SL do. valu;ralu;TRIVIALCODE return. end.
+if. unitv_y -: ,ST do. 1;1r1;KILLERCODE return. end.
 
-if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+if. Nmks > i=. mks i. <,units_y do. 1;1r1;i{Pmks return. end.
 code=. y{unitc
 msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
 
 
 if. -. code e. UNSETCODE,BADCODE do.
-  valc=. y{uvalc
-  val=. valu*valc
   msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
-  val;code return.
+  msg '--- qtcode4i: VALID1 code=(crex code) ralu=(ralu) ralc=(ralc) ralu*ralc=(ral)'
+  (valu*valc);(ralu*ralc);code return.
 end.
 
-'valc code'=. qtcode4anyunit unitv_y
-msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
-if. -. code e. UNSETCODE,BADCODE do.
-  val=. valu*valc
-  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
-  val;code
-else.
+'valc ralc code'=. qtcode4anyunit unitv_y
+msg '... qtcode4i: valc=(valc) ralc=(ralc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
+if. code e. UNSETCODE,BADCODE do.
   msg '--- qtcode4i: invalid-code=(crex code)'
-  0;BADCODE
+  0;0r1;BADCODE
+else.
+  val=. valu*valc
+  ral=. ralu*ralc
+  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) ralu=(ralu) ralc=(ralc) valu*valc=(val) ralu*ralc=(ral)'
+  val;ral;code
 end.
 )
 
@@ -851,12 +970,13 @@ pushme 'qtcode4bareunit'
 
 i=. units i. <,y
 msg '+++ qtcode4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
-if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
+if. (i<0) or (i >: #UUC) do. 0;0r1;BADCODE return. end.
 valc=. i{uvalc
+ralc=. i{rvalc
 code=. i{unitc
-msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) ralc=(ralc) code=(crex code)'
 popme 'qtcode4bareunit'
-valc;code
+valc;ralc;code
 )
 
 qtcode4anyunit=: 3 : 0
@@ -865,27 +985,31 @@ pushme 'qtcode4anyunit'
 
 
 msg '+++ qtcode4anyunit: y=[(y)]'
-if. 0=#y    do. 1;TRIVIALCODE return. end.
-if. (,SL)-: ,y do. 1;TRIVIALCODE return. end.
-if. (,ST)-: ,y do. 1;KILLERCODE return. end.
-v=. z=. 0$0x
+if. 0=#y    do. 1;1r1;TRIVIALCODE return. end.
+if. (,SL)-: ,y do. 1;1r1;TRIVIALCODE return. end.
+if. (,ST)-: ,y do. 1;1r1;KILLERCODE return. end.
+r=. v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t
-  'valu code'=. qtcode4bareunit bareunit
-sllog 'cunit invert scale bareunit power valu code'
+
+  'valu ralu code'=. qtcode4bareunit bareunit
+sllog 'cunit invert scale bareunit power valu ralu code'
   if. invert do.
     z=. z , % (code^power)
     v=. v , scale % (valu^power)
+    assert. notFloat r=. r , scale % (ralu^power)
   else.
     z=. z , code^power
     v=. v , scale * (valu^power)
+    assert. notFloat r=. r , scale * (ralu^power)
   end.
 end.
 muv=. */v
+mur=. */r
 muz=. */z
-msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv) mur=(mur); z=[(crex z)] muz=(muz)'
 popme 'qtcode4anyunit'
-muv;muz return.
+muv;mur;muz return.
 )
 
 cnvj=: cnvCunit=: 3 : 0
@@ -970,14 +1094,14 @@ ident=. ([: , [) -: ([: , ])
     if. ('*' ident x) or ('*' ident y) do. 1 return.
 elseif. ('!' ident x) or ('!' ident y) do. 1 return.
 end.
-xcode=. 1 pick qtcode4anyunit x
-ycode=. 1 pick qtcode4anyunit y
+xcode=. >{: qtcode4anyunit x
+ycode=. >{: qtcode4anyunit y
 xcode -: ycode
 )
 
 compatlist=: 3 : 0
 
-]ycode=. 1 pick qtcode4anyunit y
+]ycode=. >{: qtcode4anyunit y
 (ycode=unitc) # units
 )
 
@@ -987,13 +1111,14 @@ pushme 'convert'
 
 yb=. bris y
 disp=. displacement yb
-msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp)'
-'factor code'=. qtcode4anyunit yb
+rdisp=. rdisplacement yb
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp) rdisp=(rdisp)'
+'factor rfactor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
 msg '--- convert: EXITS'
 wd'msgs'
 popme 'convert'
-targ ; disp ; factor return.
+targ ; rdisp ; rfactor return.
 )
 
 uniformD=: 3 : 0
@@ -1023,11 +1148,13 @@ if. '*'={.y do. uuengine }.y return. end.
 pushme 'uu'
 yf=: dltb formatIN y
 valu=: valueOf yf
+ralu=: rvalueOf yf
 unit=: bris unitsOf yf
-	sllog 'uu_0 x y yf valu unit'
+	sllog 'uu_0 x y yf valu ralu unit'
 if. 0=#x do.
-  'coefu code'=. qtcode4anyunit unit
+  'coefu rcoefu code'=. qtcode4anyunit unit
   coeft=. 1
+  rcoeft=. 1r1
   codet=. codeu=. code
   targ=. canon expandcode code
 	sllog 'uu_1 targ unit'
@@ -1035,24 +1162,31 @@ elseif. x-:'=' do.
   targ=. unit
 elseif. do.
   targ=. bris x
-  'coeft codet'=. qtcode4anyunit targ
-  'coefu codeu'=. qtcode4anyunit unit
+  'coeft rcoeft codet'=. qtcode4anyunit targ
+  'coefu rcoefu codeu'=. qtcode4anyunit unit
 	sllog 'uu_1 targ unit'
-	sllog 'uu_1 coeft coefu codet codeu'
+	sllog 'uu_1 coeft coefu rcoeft rcoefu codet codeu'
   if. codet ~: codeu do.
     emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
+    emsg '... coeft=(coeft) coefu=(coefu) rcoeft=(coeft) rcoefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
 end.
 
 if. (cannotScale unit) or (x-:'=') do.
   vatarg=. valu
+  ratarg=. ralu
 else.
   dispt=. displacement targ
   dispu=. displacement unit
+  rdispt=. rdisplacement targ
+  rdispu=. rdisplacement unit
   vatarg=. valu scale_displace~ coeft,coefu,dispt,dispu
+  assert. notFloat ratarg=. ralu scale_displace~ rcoeft,rcoefu,rdispt,rdispu
 end.
+
+UU_VALUE=: ratarg
+
 
 z=. targ formatOUT vatarg
 	sllog 'uu_3 z vatarg VEXIN VEX'
@@ -1306,6 +1440,13 @@ try. val=. ". strValueOf y
 catch. _. end.
 )
 
+rvalueOf=: 3 : 0
+
+
+try. val=. reval strValueOf y
+catch. _. end.
+)
+
 strValueOf=: 3 : 0
 
 
@@ -1374,6 +1515,10 @@ make_daisychainIN''
 
 '==================== [uuengine] uu_interface ===================='
 
+0 :0
+Tuesday 19 March 2019  19:05:51
+)
+
 cocurrent 'uu'
 
 uuengine=: 3 : 0
@@ -1409,6 +1554,8 @@ case. 'FMTI' do.
 		formatIN arg
 case. 'FMTO' do.
 		(bris unitsOf arg) format valueOf arg
+case. 'QRAT' do.
+		UU_VALUE
 case. 'QSCI' do.
 		SCI
 case. 'QSIC' do.
@@ -1603,8 +1750,8 @@ load jpath'~UUC'
 load jpath'~UUF'
 load jpath'~UUM'
 make_units''
-
 make_unitc''
+rat_check''
 
 report_complex_nouns''
 traceverbs DIAGNOSTICS

@@ -57,26 +57,31 @@ isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 
 make_unitc=: 1 ddefine
   NB. x=pass# (1,2,3…)
-  NB. does NOT use: msg or sllog
+  NB. does NOT use: msg or sllog, but ssw instead
+  NB. -to suppress smoutput, set: ssw=:empty
 pass=. x
 rebuild=. pass<:1
 ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)'
 if. rebuild do.
   ssw=. empty
   uvalc=:(#UUC)$0
+  rvalc=:(#UUC)$0r1	NB. <<<<<<<<<< rational
   unitc=:(#UUC)$UNSETCODE
 end.
 for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
-  if. (-. isGoodCode code) or (0=val) do.
+  rval=. i{rvalc		NB. <<<<<<<<<< rational
+  if. (-. isGoodCode code) or (0=rval) do.	NB. <<<<<<<<<< rational
+NB.   if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
-    'val code'=. qtcode4i i
-    ssw '--- id=(i) val=(val) code=(crex code)(LF)'
+    'val rval code'=. qtcode4i i	NB. <<<<<<<<<< rational
+    ssw '--- id=(i) val=(val) rval=(rval) code=(crex code)(LF)'
     uvalc=: val  i}uvalc
+    rvalc=: rval i}rvalc	NB. <<<<<<<<<< rational
     unitc=: code i}unitc
     n=. n+1
-    assert 64 128 e.~ 3!:0 unitc  NB. must remain extended|rational
+    assert. 64 128 e.~ 3!:0 unitc  NB. must remain extended|rational
   end.
 end.
 n return.  NB. count of unitc entries reassigned
@@ -84,37 +89,45 @@ n return.  NB. count of unitc entries reassigned
 
 qtcode4i=: (3 : 0)"0
 pushme 'qtcode4i'
-  NB. returns (valu;code) for index: y
+  NB. returns (valu;ralu;code) for index into UUC: (…4i) (y)
 if. (y<0) or (y>:#UUC) do. 0;BADCODE return. end.
 ]valu=.    y{uvalu
-]vald=.    y{uvald	      NB. displacement for valu
+]ralu=.    y{rvalu		NB. <<<<<<<<<< rational
+]valc=.    y{uvalc
+]ralc=.    y{rvalc		NB. <<<<<<<<<< rational
+]vald=.    y{uvald	      NB. displacement for valu	NOT USED IN THIS VERB
+]rald=.    y{rvald	      NB. displacement for ralu	NOT USED IN THIS VERB
 ]units_y=. y pick units  NB. nominal units of valu
 ]unitv_y=. y pick unitv  NB. units definition as per UUC
   NB. Recognise [/] and [*] and handle them
-if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
-if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
-  NB. Recognise a basic unit and return its prime with "valc"==1 …
-if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+NB. if. unitv_y -: ,SL do. valu;TRIVIALCODE return. end.
+if. unitv_y -: ,SL do. valu;ralu;TRIVIALCODE return. end.	NB. <<<<<<<<<< rational
+NB. if. unitv_y -: ,ST do. 1;KILLERCODE return. end.
+if. unitv_y -: ,ST do. 1;1r1;KILLERCODE return. end.	NB. <<<<<<<<<< rational
+  NB. Recognise a basic unit and return its prime with "valc"==1
+NB. if. Nmks > i=. mks i. <,units_y do. 1;i{Pmks return. end.
+if. Nmks > i=. mks i. <,units_y do. 1;1r1;i{Pmks return. end.	NB. <<<<<<<<<< rational
 code=. y{unitc
 msg '(LF)+++ qtcode4i[(y)]: units_y=[(units_y)] unitv_y=[(unitv_y)] code=(crex code)'
   NB. …use of crex prints 4x instead of 4 (say)
   NB. if code is valid, assume y{uvalc is valid too
-if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<<
-  valc=. y{uvalc
-  val=. valu*valc
+if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<< ????
   msg '--- qtcode4i: VALID1 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
-  val;code return.
+  msg '--- qtcode4i: VALID1 code=(crex code) ralu=(ralu) ralc=(ralc) ralu*ralc=(ral)'	NB. <<<<<<<<<< rational
+NB.   val;code return.
+  (valu*valc);(ralu*ralc);code return.	NB. <<<<<<<<<< rational
 end.
   NB. Else compute qty==(valc;code) from specd units: unitv_y
-'valc code'=. qtcode4anyunit unitv_y
-msg '... qtcode4i: valc=(valc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
-if. -. code e. UNSETCODE,BADCODE do.  NB. <<<<<<<<<<<<<<<<<<<<<<
-  val=. valu*valc
-  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) valu*valc=(val)'
-  val;code
-else.
+'valc ralc code'=. qtcode4anyunit unitv_y
+msg '... qtcode4i: valc=(valc) ralc=(ralc) code=(crex code) from: qtcode4anyunit ''(unitv_y)'''
+if. code e. UNSETCODE,BADCODE do.
   msg '--- qtcode4i: invalid-code=(crex code)'
-  0;BADCODE
+  0;0r1;BADCODE
+else.
+  val=. valu*valc
+  ral=. ralu*ralc	NB. <<<<<<<<<< rational
+  msg '--- qtcode4i: VALID2 code=(crex code) valu=(valu) valc=(valc) ralu=(ralu) ralc=(ralc) valu*valc=(val) ralu*ralc=(ral)'
+  val;ral;code
 end.
 )
 
@@ -124,12 +137,13 @@ pushme 'qtcode4bareunit'
   NB. may be basic or derived, BUT expect to find it in: units
 i=. units i. <,y
 msg '+++ qtcode4bareunit[(y)] id=(i) #uvalc=(#uvalc)'
-if. (i<0) or (i >: #UUC) do. 0;BADCODE return. end.
+if. (i<0) or (i >: #UUC) do. 0;0r1;BADCODE return. end.
 valc=. i{uvalc
+ralc=. i{rvalc	NB. <<<<<<<<<< rational
 code=. i{unitc
-msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) code=(crex code)'
+msg '--- qtcode4bareunit[(y)] id=(i) valc=(valc) ralc=(ralc) code=(crex code)'
 popme 'qtcode4bareunit'
-valc;code
+valc;ralc;code
 )
 
 qtcode4anyunit=: 3 : 0
@@ -138,28 +152,32 @@ pushme 'qtcode4anyunit'
   NB. …ignores existing code in unitc if product of codes
   NB. multiply the codes for each (powered)token
 msg '+++ qtcode4anyunit: y=[(y)]'
-if. 0=#y    do. 1;TRIVIALCODE return. end.
-if. (,SL)-: ,y do. 1;TRIVIALCODE return. end.
-if. (,ST)-: ,y do. 1;KILLERCODE return. end.
-v=. z=. 0$0x
+if. 0=#y    do. 1;1r1;TRIVIALCODE return. end.
+if. (,SL)-: ,y do. 1;1r1;TRIVIALCODE return. end.
+if. (,ST)-: ,y do. 1;1r1;KILLERCODE return. end.
+r=. v=. z=. 0$0x  NB. Initialize list-caches paralleling (utoks y)
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t
-  'valu code'=. qtcode4bareunit bareunit
+	NB. …assume scale, power are integers, won't corrupt rationals
+  'valu ralu code'=. qtcode4bareunit bareunit
 NB. pushme 'qtcode4anyunit'  NB. restore after qtcode4bareunit
-sllog 'cunit invert scale bareunit power valu code'
+sllog 'cunit invert scale bareunit power valu ralu code'
   if. invert do.
     z=. z , % (code^power)
     v=. v , scale % (valu^power)
+    assert. notFloat r=. r , scale % (ralu^power)	NB. <<<<< rational
   else.
     z=. z , code^power
     v=. v , scale * (valu^power)
+    assert. notFloat r=. r , scale * (ralu^power)	NB. <<<<< rational
   end.
 end.
-muv=. */v  NB. combine all the valus
-muz=. */z  NB. combine all the codes
-msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv); z=[(crex z)] muz=(muz)'
+muv=. */v  NB. combine all the valu's
+mur=. */r  NB. combine all the ralu's			NB. <<<<< rational
+muz=. */z  NB. combine all the code's
+msg '--- qtcode4anyunit: y=[(y)] v=[(v)] muv=(muv) mur=(mur); z=[(crex z)] muz=(muz)'
 popme 'qtcode4anyunit'
-muv;muz return.
+muv;mur;muz return.
 )
 
 cnvj=: cnvCunit=: 3 : 0
@@ -244,14 +262,14 @@ ident=. ([: , [) -: ([: , ])
     if. ('*' ident x) or ('*' ident y) do. 1 return.
 elseif. ('!' ident x) or ('!' ident y) do. 1 return.
 end.
-xcode=. 1 pick qtcode4anyunit x
-ycode=. 1 pick qtcode4anyunit y
+xcode=. >{: qtcode4anyunit x
+ycode=. >{: qtcode4anyunit y
 xcode -: ycode
 )
 
 compatlist=: 3 : 0
   NB. return extract of (units) compatible with units: y
-]ycode=. 1 pick qtcode4anyunit y
+]ycode=. >{: qtcode4anyunit y
 (ycode=unitc) # units
 )
 
@@ -260,14 +278,16 @@ pushme 'convert'
   NB. y (units) --> cu ; loop_count ; cf
   NB. x was speedup flag, but is now unused
 yb=. bris y  NB. kosher of (units) y
-disp=. displacement yb  NB. >>> NEW
-msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp)'
-'factor code'=. qtcode4anyunit yb
+disp=. displacement yb
+rdisp=. rdisplacement yb  	NB. <<<<< rational
+msg '+++ convert: ENTERED: x=(x) y=(y) yb=(yb) disp=(disp) rdisp=(rdisp)'
+'factor rfactor code'=. qtcode4anyunit yb
 targ=. canon expandcode code
 msg '--- convert: EXITS'
 wd'msgs'  NB. is this still needed?
 popme 'convert'
-targ ; disp ; factor return.
+NB. targ ; disp ; factor return.
+targ ; rdisp ; rfactor return. 	NB. <<<<< rational
 )
 
 uniformD=: 3 : 0
@@ -297,11 +317,13 @@ if. '*'={.y do. uuengine }.y return. end. NB. uuengine call-thru
 pushme 'uu'
 yf=: dltb formatIN y  NB. y--> SI units, esp Fahrenheit--> K
 valu=: valueOf yf
+ralu=: rvalueOf yf	NB. <<<<< rational
 unit=: bris unitsOf yf
-	sllog 'uu_0 x y yf valu unit'
+	sllog 'uu_0 x y yf valu ralu unit'
 if. 0=#x do.		NB. (x) is empty | monadic invocation
-  'coefu code'=. qtcode4anyunit unit
+  'coefu rcoefu code'=. qtcode4anyunit unit
   coeft=. 1
+  rcoeft=. 1r1	NB. <<<<< rational
   codet=. codeu=. code
   targ=. canon expandcode code  NB. infer target units from: (code)
 	sllog 'uu_1 targ unit'
@@ -309,25 +331,32 @@ elseif. x-:'=' do.		NB. target units are the nominal units
   targ=. unit
 elseif. do.		NB. target units are (x)
   targ=. bris x  NB. (x) in kosher: 'm/s^2' ...NOT 'm s⁻²'
-  'coeft codet'=. qtcode4anyunit targ
-  'coefu codeu'=. qtcode4anyunit unit
+  'coeft rcoeft codet'=. qtcode4anyunit targ
+  'coefu rcoefu codeu'=. qtcode4anyunit unit
 	sllog 'uu_1 targ unit'
-	sllog 'uu_1 coeft coefu codet codeu'
+	sllog 'uu_1 coeft coefu rcoeft rcoefu codet codeu'
   if. codet ~: codeu do.
     emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) codet=(codet) codeu=(codeu)'
+    emsg '... coeft=(coeft) coefu=(coefu) rcoeft=(coeft) rcoefu=(coefu) codet=(codet) codeu=(codeu)'
     BADQTY return.
   end.
 end.
   NB. compute target value: vatarg
 if. (cannotScale unit) or (x-:'=') do.
   vatarg=. valu  NB. then formatOUT must itself scale and displace
+  ratarg=. ralu	NB. <<<<< rational
 else.
   dispt=. displacement targ
   dispu=. displacement unit
+  rdispt=. rdisplacement targ	NB. <<<<< rational
+  rdispu=. rdisplacement unit	NB. <<<<< rational
   vatarg=. valu scale_displace~ coeft,coefu,dispt,dispu
+  assert. notFloat ratarg=. ralu scale_displace~ rcoeft,rcoefu,rdispt,rdispu	NB. <<<<< rational
 end.
-  NB. format the target value: vatarg
+  NB. cache the exact value, obtained from the rational calculations
+UU_VALUE=: ratarg	NB. <<<<< rational
+  NB. Format the target value: vatarg
+  NB. ONLY USE the (floating) value, vatarg <<<<<
 z=. targ formatOUT vatarg
 	sllog 'uu_3 z vatarg VEXIN VEX'
   NB. The effective "take_" verb in formatOUT sets NO_UNITS_NEEDED

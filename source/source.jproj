@@ -1,6 +1,7 @@
 header.ijs
 constants.ijs
 utilities.ijs
+rational.ijs
 syntax_machines.ijs
 main.ijs
 pp_encoding.ijs

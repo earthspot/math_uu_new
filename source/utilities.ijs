@@ -13,6 +13,9 @@ if. SL={.y do. x=. }.y end.
 x,SL,y
 )
 
+real=: 9&o.  NB. use also to convert rational --> floating if reqd
+imag=: 11&o.
+
 NB. boxed substrings in x at the stars of pattern: y
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
@@ -34,9 +37,6 @@ emsg=: smoutput&sw		NB. for error signal: always smoutputs
 ssw=: smoutput&sw		NB. the standard verb: always smoutputs
 zeroifabsent=: [: {. ".
 ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
-
-real=: 9&o.
-imag=: 11&o.
 
 all=: *./
 and=: *.
@@ -87,13 +87,15 @@ z=. (z e. SP,SL) <;.1 z
 )
 
 vt=: viewtable=: '' ddefine
-  NB. y == index into list: units -OR…
-  NB.   y == nominal units, e.g. 'G'
+  NB. y == list of indexes into UUC -- OR ALTERNATIVELY...
+  NB.   y == single index (expands to a block of VIEWTABLE lines)
+  NB.   y == nominal unit, e.g. 'G'
   NB.   y == open list of nominal units, e.g. 'G N'
   NB. x == OPEN list of names of nouns (usually the table's columns)
-  NB. x == '' (defaulted) - use the default list
+  NB. x == '' (defaulted) - use the default list: faux
   NB. VIEWTABLE (if defined) alters the default number of displayed lines (10)
-faux=. 'units unitv uvalu uvald uvalc unitc i'	NB. x-default value
+faux=. 'i unitc units unitv uvalc rvalc uvalu rvalu uvald rvald'  NB. x-default value
+  NB. …for meaning of a given list, see: terminology.txt
 if. '' -:x do. x=. faux end.
 if. isNo y do.
   y=. y+i.10 default 'VIEWTABLE'
@@ -107,6 +109,10 @@ cst=. ([: st [) ,. [: st ]  NB. utility verb: combine st-ed lists x y
 ]i=. i.#UUC
 ]t=. ". cols rplc SP;' cst '
 h,y{t
+)
+0 :0 NB. SAMPLES...
+vt I. uvalc ~: uvalu
+vt I. uvald>0
 )
 
 NB. ======================================
