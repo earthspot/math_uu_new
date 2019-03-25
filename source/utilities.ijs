@@ -86,6 +86,10 @@ z=. sp1 y	NB. ensure leading sign-byte: SP|SL
 z=. (z e. SP,SL) <;.1 z
 )
 
+NB. ======================================
+NB. TEST-ONLY utilities, some redundant...
+NB. ======================================
+
 vt=: viewtable=: '' ddefine
   NB. y == list of indexes into UUC -- OR ALTERNATIVELY...
   NB.   y == single index (expands to a block of VIEWTABLE lines)
@@ -114,10 +118,6 @@ h,y{t
 vt I. uvalc ~: uvalu
 vt I. uvald>0
 )
-
-NB. ======================================
-NB. TEST-ONLY utilities, some redundant...
-NB. ======================================
 
 dip=: 3 : 0
   NB. y is bool e.g. u2~:unitc or: unitc=_
@@ -157,3 +157,7 @@ require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab
 )
+
+uuc_z_=: 3 : 'open ''~UUC'''
+uuf_z_=: 3 : 'open ''~UUF'''
+uum_z_=: 3 : 'open ''~UUM'''

@@ -40,24 +40,24 @@ AABUILT=: '2019-03-20  00:15:01'
 AABUILT=: '2019-03-20  00:27:51'
 AABUILT=: '2019-03-20  00:34:40'
 AABUILT=: '2019-03-20  00:57:58'
+AABUILT=: '2019-03-20  14:10:37'
+AABUILT=: '2019-03-20  14:10:49'
+AABUILT=: '2019-03-20  19:36:23'
+AABUILT=: '2019-03-20  19:38:27'
+AABUILT=: '2019-03-21  01:53:02'
 
 '==================== [uu] constants ===================='
 
 cocurrent 'uu'
 
-
-
-
-
-
-
-
+0 :0
+Wednesday 20 March 2019  19:21:15
+)
 
 
 
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'
 CUTAB=: CUTAB0
-
 BADQTY=: '0 ??'
 BOIL_F=: 212
 BOIL_C=: 100
@@ -69,8 +69,6 @@ HD=: '·'
 MI=: '-'
 NUN=: '??'
 PI=: o.1
-PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
-
 PWM=: '^-'
 PWU=: '^_'
 PW=: '^'
@@ -79,6 +77,10 @@ SP=: ' '
 ST=: '*'
 UL=: '_'
 UNDEFINED=: _.
+
+
+
+
 
 factory=: 3 : 0
 
@@ -159,8 +161,10 @@ tan a ; a(rad)		[/]	tangent
 )
 
 UUM=: ''
+SIbu=: ;:'m kg s A K mol cd'
+mks=:   SIbu,'rad';'eur'
 
-mks=: ;:'m kg s A K cd mol rad eur'
+PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
 
 '==================== [uu] utilities ===================='
 
@@ -243,7 +247,6 @@ utoks=: 3 : 0
 z=. sp1 y
 z=. (z e. SP,SL) <;.1 z
 )
-
 vt=: viewtable=: '' ddefine
 
 
@@ -272,6 +275,7 @@ h,y{t
 vt I. uvalc ~: uvalu
 vt I. uvald>0
 )
+
 dip=: 3 : 0
 
 assert (#y)=(#UUC)
@@ -310,6 +314,10 @@ require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
 
+uuc_z_=: 3 : 'open ''~UUC'''
+uuf_z_=: 3 : 'open ''~UUF'''
+uum_z_=: 3 : 'open ''~UUM'''
+
 '==================== [uu] rational ===================='
 
 0 :0
@@ -334,6 +342,11 @@ cocurrent 'uu'
 notFloat=: 3 : 0
 
 -. (datatype y) -: 'floating'
+)
+
+rat=: rational=: 3 : 0 "0
+
+reval ":y
 )
 
 reval=: 3 : 0 "1
@@ -786,9 +799,7 @@ sspel=: <;._1 ' PI Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
 ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
 
 cspel=: sspel, <;._1 ' deg amin asec'
-csymb=: ssymb, <;._1 '|°|''|"'
-
-
+csymb=: ssymb, <;._1 '|°|′|″'
 'v uv us'=: <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB
 units=: deb each us
@@ -854,13 +865,11 @@ validunits=: 3 : 'units e.~ <,y'
 cocurrent 'uu'
 
 0 :0
-Monday 20 August 2018  00:35:37
+Wednesday 20 March 2019  19:21:15
 )
 
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
 TRIVIALCODE=: 1x
-
-
 Nmks=: #mks
 
 Pmks=: x:p:i.Nmks
@@ -991,17 +1000,18 @@ if. (,ST)-: ,y do. 1;1r1;KILLERCODE return. end.
 r=. v=. z=. 0$0x
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t
-
+  rscale=. rational scale
+  rpower=. rational power
   'valu ralu code'=. qtcode4bareunit bareunit
-sllog 'cunit invert scale bareunit power valu ralu code'
+sllog 'cunit invert scale bareunit power code valu ralu rscale rpower'
   if. invert do.
     z=. z , % (code^power)
     v=. v , scale % (valu^power)
-    assert. notFloat r=. r , scale % (ralu^power)
+    assert. notFloat r=. r , rscale % (ralu^rpower)
   else.
     z=. z , code^power
     v=. v , scale * (valu^power)
-    assert. notFloat r=. r , scale * (ralu^power)
+    assert. notFloat r=. r , rscale * (ralu^rpower)
   end.
 end.
 muv=. */v

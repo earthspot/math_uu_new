@@ -5,7 +5,7 @@
 cocurrent 'uu'
 
 0 :0
-Monday 20 August 2018  00:35:37
+Wednesday 20 March 2019  19:21:15
 )
 
 UNSETCODE=: BADCODE=: KILLERCODE=: ZEROCODE=: 0x
@@ -17,10 +17,9 @@ NB. PWU=: '^_'	NB. power,underscore (precedes a negative power)
 NB. PW=: '^'		NB. power
 NB. MI=: '-'		NB. minus (==HY)
 
-NB. mks=: ;:'m kg s A K cd mol rad eur' ---BUT CHECK!!!
-	NB. <<< mks HAS ALREADY BEEN ASSIGNED BY NOW (in: constants.ijs)
-	NB. …only here for reference.
-Nmks=: #mks	NB. # of basic mks-units == # of primes for pp-coding
+NB. mksx=: ;:'m kg s A K cd mol rad eur'
+NB. ---BUT assignment in constants.ijs is DEFINITIVE.
+Nmks=: #mks	NB. # of base units == # of primes for pp-coding
   NB. …Nmks used in tacit verbs. Otherwise scarcely faster than #mks
 Pmks=: x:p:i.Nmks	NB. the first (#mks) primes
 
@@ -158,18 +157,19 @@ if. (,ST)-: ,y do. 1;1r1;KILLERCODE return. end.
 r=. v=. z=. 0$0x  NB. Initialize list-caches paralleling (utoks y)
 for_t. utoks y do.
   'invert scale bareunit power'=. cnvCunit cunit=.>t
-	NB. …assume scale, power are integers, won't corrupt rationals
+  rscale=. rational scale
+  rpower=. rational power
   'valu ralu code'=. qtcode4bareunit bareunit
 NB. pushme 'qtcode4anyunit'  NB. restore after qtcode4bareunit
-sllog 'cunit invert scale bareunit power valu ralu code'
+sllog 'cunit invert scale bareunit power code valu ralu rscale rpower'
   if. invert do.
     z=. z , % (code^power)
     v=. v , scale % (valu^power)
-    assert. notFloat r=. r , scale % (ralu^power)	NB. <<<<< rational
+    assert. notFloat r=. r , rscale % (ralu^rpower)	NB. <<<<< rational
   else.
     z=. z , code^power
     v=. v , scale * (valu^power)
-    assert. notFloat r=. r , scale * (ralu^power)	NB. <<<<< rational
+    assert. notFloat r=. r , rscale * (ralu^rpower)	NB. <<<<< rational
   end.
 end.
 muv=. */v  NB. combine all the valu's

@@ -310,11 +310,9 @@ sspel=: <;._1 ' PI Ang Ohm ^-1 ^-2 ^-3 ^-4 ^2 ^3 ^4'
 ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
   NB. cspel,csymb converts these also...
 NB.     cspel=: sspel, <;._1 ' deg amin asec eur cnt gbp'
-NB.     csymb=: ssymb, <;._1 '|°|''|"|€|¢|£'
+NB.     csymb=: ssymb, <;._1 '|°|′|″|€|¢|£'
 cspel=: sspel, <;._1 ' deg amin asec'
-csymb=: ssymb, <;._1 '|°|''|"'
-  NB. mks (c/f 'm kg s') specifies the most primitive SI-units
-  NB. mks=: ;:'m kg s A K cd mol rad eur' NB. <<<set in ONLOAD
+csymb=: ssymb, <;._1 '|°|′|″'
 'v uv us'=: <"1 |: cutuuc UUC
 unitv=: deb each uv -.each TAB  NB. defined units
 units=: deb each us    NB. nominal units

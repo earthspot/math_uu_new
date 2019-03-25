@@ -3,18 +3,22 @@
 
 cocurrent 'uu'
 
+0 :0
+Wednesday 20 March 2019  19:21:15
+)
+
+NB. =========================================================
   NB. currency exchange-rate tables, used by: quoted
   NB. quoted currencies are expressed in terms of the Euro.
-  NB. if net is accessible, CUTAB to be updated from Eurobank figures
-
-  NB. SIC -- controls SI-compliance via utf-8 chars
-  NB. SIC=0	units expressed entirely in ASCII
-  NB. SIC=1	utf-8s e.g. Å but inverse shown as: /Å
-  NB. SIC=2	utf-8, no '/'
-  NB. SIC=3	utf-8, no '/', uses '·'
+  NB. if net is accessible, CUTAB to be updated from Eurobank
+NB. =========================================================
 
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'	NB. initial short table
-CUTAB=: CUTAB0			NB. pre-start value
+CUTAB=: CUTAB0	NB. can be overridden by: start
+
+NB. =========================================================
+NB. General purpose constants
+NB. =========================================================
 
 BADQTY=: '0 ??'	NB. error returned qty by verb: uu
 BOIL_F=: 212	NB. water boils [°F]
@@ -27,8 +31,6 @@ HD=: '·'		NB. hi-dot, optional SI convention
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
 PI=: o.1		NB. π
-PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
-		NB. π (rational - accurate to 50 decimal places)
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
@@ -36,7 +38,15 @@ SL=: '/'
 SP=: ' '
 ST=: '*'
 UL=: '_'
-UNDEFINED=: _.	NB. should propagate in a formula
+UNDEFINED=: _.	NB. will propagate in a formula
+
+NB. =========================================================
+  NB. SIC -- controls SI-compliance via utf-8 chars
+  NB. SIC=0	units expressed entirely in ASCII
+  NB. SIC=1	utf-8s e.g. Å but inverse shown as: /Å
+  NB. SIC=2	utf-8, no '/'
+  NB. SIC=3	utf-8, no '/', uses '·'
+NB. =========================================================
 
 factory=: 3 : 0
   NB. init/restore factory settings of alterable globals
@@ -48,7 +58,7 @@ ZERO=: 'NO'	NB. used by: format
 i.0 0
 )
 
-NB. FORWARD DEFINITION REQD HERE:
+NB. A FORWARD DEFINITION WHICH IS REQD HERE:
 b4f=: f2b=:	[: <;._1 LF , ]
 
 CANNOTSCALE=: b4f }: 0 : 0
@@ -120,9 +130,22 @@ tan a ; a(rad)		[/]	tangent
 
 UUM=: ''
 
-mks=: ;:'m kg s A K cd mol rad eur'
-NB. The primitive SI-units (+ "honorary" primitive units like [rad])
-NB. mks=: mks,<'item'
-NB. mks=: mks , (<'item'),each ":each i.10
-NB. append "user units": item0 … item9
+NB. =========================================================
+NB. mks -is UU's reference list of base units
+NB. SI "Base units" are: m kg s A K mol cd
+NB. UU adds "honorary" base units: rad eur
+NB. We might also add later:
+NB.  mks=: mks,<'item'
+NB.  mks=: mks , (<'item'),each ":each i.10
+NB.  …appends "user units": item0 … item9
+NB. =========================================================
 
+SIbu=: ;:'m kg s A K mol cd'  NB. the official SI "base units"
+mks=:   SIbu,'rad';'eur'      NB. UU adds extra "dimensions"
+
+NB. ==============================================
+NB. RATIONAL CONSTANTS can override floating defns
+NB. ==============================================
+
+  NB. π (rational - accurate to 50 decimal places)
+PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 

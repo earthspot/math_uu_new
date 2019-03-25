@@ -25,6 +25,11 @@ notFloat=: 3 : 0
 -. (datatype y) -: 'floating'
 )
 
+rat=: rational=: 3 : 0 "0
+  NB. convert datatype: floating --> rational
+reval ":y
+)
+
 reval=: 3 : 0 "1
   NB. variant of: eval - returns 'rational'
   NB. used by make_units to evaluate numeric exprns in: UUC
