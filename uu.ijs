@@ -45,6 +45,11 @@ AABUILT=: '2019-03-20  14:10:49'
 AABUILT=: '2019-03-20  19:36:23'
 AABUILT=: '2019-03-20  19:38:27'
 AABUILT=: '2019-03-21  01:53:02'
+AABUILT=: '2019-03-27  23:03:53'
+AABUILT=: '2019-03-28  01:04:22'
+AABUILT=: '2019-03-28  01:40:41'
+AABUILT=: '2019-03-28  01:53:29'
+AABUILT=: '2019-03-28  01:56:12'
 
 '==================== [uu] constants ===================='
 
@@ -352,14 +357,19 @@ reval ":y
 reval=: 3 : 0 "1
 
 
+y__=: y
 y=. deb >y
     if. all y e. n9 do. ". y,'x'
 elseif. '/' e. y do. __r1&". '/r-_'charsub y
 elseif. 'j' e. y do. rat4sc 'j' taketo y
+elseif. y-: ,'_' do. _r1
+elseif. y-: '__' do. __r1
 elseif. all y e. n9,'._' do. rat4sc y
 elseif. 'e' e. y do. rat4sc y
 elseif. 'p' e. y do. rat4pi y
-elseif. do. _r1 [ssw '>>> reval: cannot handle y=(y)'
+elseif. 'r' e. y do. rat4r y
+elseif. 'x'= {:y do. rat4x y
+elseif. do. _r1 [ssw '>>> reval: cannot handle y=[(y)]'
 end.
 )
 
@@ -370,6 +380,18 @@ y=. deb >y
 if. 'j' e. y do. rat4sc 'j' takeafter y
 else. 0r1
 end.
+)
+
+rat4x=: 3 : 0 "1
+
+msg '... rat4x: y=(y) [(real ".y)]'
+".y
+)
+
+rat4r=: 3 : 0 "1
+
+msg '... rat4r: y=(y) [(real ".y)]'
+".y
 )
 
 rat4pi=: 3 : 0 "1
@@ -1555,7 +1577,7 @@ case. 'CONV' do.
 case. 'CONS' do.
 		0&udat arg
 case. 'DISP' do.
-		displacement uarg
+		rdisplacement uarg
 case. 'DUMB' do.
 		udumb arg
 case. 'FUNC' do.

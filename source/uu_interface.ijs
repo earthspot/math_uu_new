@@ -31,7 +31,7 @@ case. 'CONV' do. NB. convert
 case. 'CONS' do. NB. cut "cons" formatted string (c/f UUC)
 		0&udat arg
 case. 'DISP' do. NB. displacement for units
-		displacement uarg
+		rdisplacement uarg	NB. <<<<<<<<<< rational
 case. 'DUMB' do. NB. cut "dumb" formatted string (c/f UUC)
 		udumb arg
 case. 'FUNC' do. NB. cut "func" formatted string (c/f UUC)

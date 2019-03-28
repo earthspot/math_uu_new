@@ -33,15 +33,20 @@ reval ":y
 reval=: 3 : 0 "1
   NB. variant of: eval - returns 'rational'
   NB. used by make_units to evaluate numeric exprns in: UUC
+y__=: y
 y=. deb >y
 NB. ssw '... reval: y=(y)'
     if. all y e. n9 do. ". y,'x'
 elseif. '/' e. y do. __r1&". '/r-_'charsub y
 elseif. 'j' e. y do. rat4sc 'j' taketo y  NB. REAL PART ONLY !!!
+elseif. y-: ,'_' do. _r1
+elseif. y-: '__' do. __r1
 elseif. all y e. n9,'._' do. rat4sc y
 elseif. 'e' e. y do. rat4sc y
 elseif. 'p' e. y do. rat4pi y
-elseif. do. _r1 [ssw '>>> reval: cannot handle y=(y)'
+elseif. 'r' e. y do. rat4r y
+elseif. 'x'= {:y do. rat4x y
+elseif. do. _r1 [ssw '>>> reval: cannot handle y=[(y)]'
 end.
 )
 
@@ -52,6 +57,18 @@ y=. deb >y
 if. 'j' e. y do. rat4sc 'j' takeafter y  NB. IMAGINARY PART ONLY !!!
 else. 0r1
 end.
+)
+
+rat4x=: 3 : 0 "1
+  NB. rational for extended notation (char)y
+msg '... rat4x: y=(y) [(real ".y)]'
+".y
+)
+
+rat4r=: 3 : 0 "1
+  NB. rational for rational notation (char)y
+msg '... rat4r: y=(y) [(real ".y)]'
+".y
 )
 
 rat4pi=: 3 : 0 "1
