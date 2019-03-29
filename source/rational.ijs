@@ -25,8 +25,11 @@ notFloat=: 3 : 0
 -. (datatype y) -: 'floating'
 )
 
+derat=: derationalized=: _1&x:  NB. rational-->floating|integer|Boolean
+
 rat=: rational=: 3 : 0 "0
   NB. convert datatype: floating --> rational
+  NB. >>> SPEED THIS UP by using x: or even x:!.0
 reval ":y
 )
 
@@ -60,19 +63,19 @@ end.
 )
 
 rat4x=: 3 : 0 "1
-  NB. rational for extended notation (char)y
-msg '... rat4x: y=(y) [(real ".y)]'
+  NB. rational for extended numeral (char)y
+msg '... rat4x: y=(y) [(derationalized ".y)]'
 ".y
 )
 
 rat4r=: 3 : 0 "1
-  NB. rational for rational notation (char)y
-msg '... rat4r: y=(y) [(real ".y)]'
+  NB. rational for rational numeral (char)y
+msg '... rat4r: y=(y) [(derationalized ".y)]'
 ".y
 )
 
 rat4pi=: 3 : 0 "1
-  NB. rational for "pi" notation (char)y
+  NB. rational for "pi" numeral (char)y
   NB. PI (constants.ijs) assumed to be RATIONAL - high-precision
 'c d'=. <;._2 y,'p'
 a=. ".c
@@ -82,7 +85,7 @@ NB. ssw '... rat4pi: y=[(y)] a=(a) b=(b) c=(c) d=(d)'
 )
 
 rat4sc=: 3 : 0 "1
-  NB. rational for scientific notation (char)y
+  NB. rational for scientific numeral (char)y
 c=. 'e' taketo y
 a=. ".c-.DT
 b=. ".y
@@ -93,11 +96,17 @@ elseif. scale<0      do. ". ((c-.DT) , (|scale)#'0') , 'r1'
 elseif.              do. ". (c-.DT) , 'r1' , scale#'0'
 end.
 )
+0 :0
+rat4sc '_1.23e_5'
+rat4sc '_1.23E_5'
+rat4sc '_1.23E-5'
+rat4sc '-1.23E-5'
+)
 
 rat_check=: 3 : 0
   NB. verify integrity of rational caches
-assert. all uvalu = real rvalu
-assert. all uvald = real rvald
-assert. all uvalc = real rvalc
+assert. all uvalu = derationalized rvalu
+assert. all uvald = derationalized rvald
+assert. all uvalc = derationalized rvalc
 assert. -. 0 e. uvalc  NB. all units have been resolved
 )

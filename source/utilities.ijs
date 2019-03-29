@@ -13,7 +13,7 @@ if. SL={.y do. x=. }.y end.
 x,SL,y
 )
 
-real=: 9&o.  NB. use also to convert rational --> floating if reqd
+real=: 9&o.
 imag=: 11&o.
 
 NB. boxed substrings in x at the stars of pattern: y
