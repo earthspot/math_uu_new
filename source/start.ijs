@@ -3,7 +3,7 @@
 
 cocurrent 'uu'
 
-DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:sesstrace=:empty
+DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:empty
 blink=: empty	NB. activate with: op'blink'
 
 start=: 3 : 0
@@ -14,9 +14,9 @@ start=: 3 : 0
   NB. But not needed if only the functions library (UUF) changed
 ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
-NB. traceverbs 'ON'  NB. enable diagnostics
+NB. trace 1  NB. enable diagnostics
 NB. wd'msgs'
-traceverbs 'OFF'  NB. disable diagnostics while caches are being built
+trace 0  NB. disable diagnostics while caches are being built
 sess=: empty  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 factory''  NB. assigns: SCI SIC SIG SIZ ZERO
 VERSION=: getversion jpath'~UU'
@@ -28,8 +28,7 @@ make_unitc''  NB. global: unitc uvalc rvalc
 rat_check''
   NB. …verifies integrity of rational caches
 report_complex_nouns''  NB. NO NOUNS should be complex
-traceverbs DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
-sess=: sesstrace  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+trace DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
 NB. wd'msgs'
 ssw '+++ [uu] start: COMPLETED.'
 )

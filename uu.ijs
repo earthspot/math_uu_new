@@ -50,6 +50,14 @@ AABUILT=: '2019-03-28  01:04:22'
 AABUILT=: '2019-03-28  01:40:41'
 AABUILT=: '2019-03-28  01:53:29'
 AABUILT=: '2019-03-28  01:56:12'
+AABUILT=: '2019-03-29  13:05:14'
+AABUILT=: '2019-03-29  13:08:23'
+AABUILT=: '2019-03-29  13:09:26'
+AABUILT=: '2019-03-29  13:14:20'
+AABUILT=: '2019-03-29  13:15:31'
+AABUILT=: '2019-03-29  13:16:08'
+AABUILT=: '2019-03-29  13:23:04'
+AABUILT=: '2019-03-29  13:28:04'
 
 '==================== [uu] constants ===================='
 
@@ -314,7 +322,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-traceverbs 'OFF'
+trace 0
 require '~addons/labs/labs/labs805.ijs'
 lab_jlab_ thelab
 )
@@ -349,7 +357,10 @@ notFloat=: 3 : 0
 -. (datatype y) -: 'floating'
 )
 
+derat=: derationalized=: _1&x:
+
 rat=: rational=: 3 : 0 "0
+
 
 reval ":y
 )
@@ -384,13 +395,13 @@ end.
 
 rat4x=: 3 : 0 "1
 
-msg '... rat4x: y=(y) [(real ".y)]'
+msg '... rat4x: y=(y) [(derationalized ".y)]'
 ".y
 )
 
 rat4r=: 3 : 0 "1
 
-msg '... rat4r: y=(y) [(real ".y)]'
+msg '... rat4r: y=(y) [(derationalized ".y)]'
 ".y
 )
 
@@ -414,12 +425,18 @@ elseif. scale<0      do. ". ((c-.DT) , (|scale)#'0') , 'r1'
 elseif.              do. ". (c-.DT) , 'r1' , scale#'0'
 end.
 )
+0 :0
+rat4sc '_1.23e_5'
+rat4sc '_1.23E_5'
+rat4sc '_1.23E-5'
+rat4sc '-1.23E-5'
+)
 
 rat_check=: 3 : 0
 
-assert. all uvalu = real rvalu
-assert. all uvald = real rvald
-assert. all uvalc = real rvalc
+assert. all uvalu = derationalized rvalu
+assert. all uvald = derationalized rvald
+assert. all uvalc = derationalized rvalc
 assert. -. 0 e. uvalc
 )
 
@@ -880,6 +897,24 @@ upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'
+
+pushme=: empty
+popme=: empty
+
+trace=: 3 : 0
+
+
+
+if. y do.
+  msg=: smoutput&sw
+  sllog=: smoutput&llog
+else.
+  msg=: empty
+  sllog=: empty
+end.
+smoutput '+++ trace ',":y
+i.0 0
+)
 
 '==================== [uu] pp_encoding.ijs ===================='
 
@@ -1643,121 +1678,6 @@ case. 'szer' do.
 case.        do. '>>> uuengine: bad instruction: ';y
 end.
 )
-'==================== [uu] traceverbs ===================='
-
-cocurrent 'uu'
-
-0 :0
-Monday 15 October 2018  19:20:07
--
-Discretionary silencing of unwanted msg and sllog calls.
-Small footprint when facility switched off.
--
-THIS SOURCE FILE IS COMMON TO ALL TABULA ADDONS.
-Check the dates for most recent version.
--
-Traceable verbs must…
- -use msg and/or sllog to output trace messages
- -call pushme on entry
- -call popme on exit (and before all return.s)
-Verb pushme pushes name of running verb onto the ME-list.
-Verb popme (called on exit) pops it.
-LATEST_ONLY silences all except the top of the ME-list
-Correct use of pushme/popme suppresses surplus msg calls.
-(See verb: uniform for example of correct usage.)
-)
-
-TRACEVERBS=: 0$a:
-LATEST_ONLY=: 1
-ME=: ''
-
-msg=: empty
-sesstrace=: empty
-sllog=: empty
-
-pushme=: 1 ddefine
-
-ME=: ~. ME ,~ ;:y
-if. x do. msg '+++ (y): ENTERED' end.
-i.0 0
-)
-
-popme=: 1 ddefine
-
-if. x do. msg '--- (y): EXITS' end.
-ME=: ME -. ;:y
-i.0 0
-)
-
-make_msg=: 1 ddefine
-
-
-
-
-ME=: ''
-talks=. x
-select. y
-case. 0 do.
-  sesstrace=: empty
-  msg=: empty
-  sllog=: empty
-  if. talks do. smoutput '--- make_msg: msg is OFF',LF end.
-case. 1 do.
-  sesstrace=: sesstrace1
-  msg=: sesstrace&sw
-  sllog=: sesstrace&llog
-  if. talks do. smoutput '+++ make_msg: msg is via TRACEVERBS',LF end.
-case. 2 do.
-  sesstrace=: smoutput
-  msg=: sesstrace&sw
-  sllog=: sesstrace&llog
-  if. talks do. smoutput '+++ make_msg: msg is ON',LF end.
-end.
-i.0 0
-)
-
-sesstrace1=: 3 : 'if. traced ME do. smoutput y else. i.0 0 end.'
-
-traced=: 3 : 0
-
-
-
-
-
-
-z=. boxopen y
-if. LATEST_ONLY do. z=. {. z end.
-any z e. a: default 'TRACEVERBS'
-)
-
-traceverbs=: 3 : 0
-
-
-
-
-
-
-
-
-
-
-z=.''
-mm1=. make_msg bind 1
-select. {.y
-case. 'O' do. make_msg (y-:'ON')
-case. 'A' do. make_msg 2
-case. ' ' do. z=. TRACEVERBS  
-case. 0   do. z=. TRACEVERBS=: 0$a:
-case. 1   do. z=. TRACEVERBS=: ;: 'uu'
-case. 2   do. z=. TRACEVERBS=: ;: 'uu formatIN formatOUT'
-case. 3   do. z=. TRACEVERBS=: ;: 'qtcode4i qtcode4anyunit qtcode4bareunit scale4bareunit'
-case. '+' do. mm1 z=. TRACEVERBS=: ~. TRACEVERBS ,~ ;: y-.'+'
-case. '-' do. mm1 z=. TRACEVERBS=: TRACEVERBS -. ;: y-.'-'
-case.     do. mm1 z=. TRACEVERBS=: ~. ;: y
-end.
-smoutput '+++ traceverbs: #traced=',":#z
-smoutput >TRACEVERBS
-)
 
 '==================== [uu] start ===================='
 
@@ -1774,7 +1694,7 @@ start=: 3 : 0
 
 ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
-traceverbs 'OFF'
+trace 0
 sess=: empty
 factory''
 VERSION=: getversion jpath'~UU'
@@ -1786,8 +1706,7 @@ make_unitc''
 rat_check''
 
 report_complex_nouns''
-traceverbs DIAGNOSTICS
-sess=: sesstrace
+trace DIAGNOSTICS
 ssw '+++ [uu] start: COMPLETED.'
 )
 

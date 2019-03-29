@@ -152,7 +152,7 @@ if. -.fexist y do.
   return.
 end.
 ]thelab_z_=: y
-traceverbs 'OFF'	NB. to reset existing verb tracing
+trace 0	NB. to reset existing verb tracing
 require '~addons/labs/labs/labs805.ijs'
 NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
 lab_jlab_ thelab

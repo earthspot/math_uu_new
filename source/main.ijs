@@ -371,3 +371,23 @@ upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
 validunits=: 3 : 'units e.~ <,y'
+
+
+NB. =========== trace ========================
+pushme=: empty	NB. legacy
+popme=: empty	NB. legacy
+
+trace=: 3 : 0
+  NB. enable/disable tracing verbs: msg, sllog
+  NB. y== boolean
+  NB. copied from: [cal] dashboard.ijs
+if. y do.
+  msg=: smoutput&sw
+  sllog=: smoutput&llog
+else.
+  msg=: empty
+  sllog=: empty
+end.
+smoutput '+++ trace ',":y
+i.0 0
+)
