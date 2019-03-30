@@ -183,7 +183,7 @@ qtcode4bareunit 'acre'    NB. │4046.86│4│
 cocurrent 'uu'
 erase 'foo_uu_ foo_z_ foo__'
 foo_z_=: scale4bareunit_uu_
-foo_z_=: cnvj_uu_
+foo_z_=: cnvCunit_uu_
 foo_z_=: qtcode4bareunit_uu_
 redux 10  NB. foo_z_=: cnvCunit_uu_
 redux 11  NB. foo_z_=: qtcode4anyunit_uu_

@@ -58,6 +58,12 @@ AABUILT=: '2019-03-29  13:15:31'
 AABUILT=: '2019-03-29  13:16:08'
 AABUILT=: '2019-03-29  13:23:04'
 AABUILT=: '2019-03-29  13:28:04'
+AABUILT=: '2019-03-30  17:25:57'
+AABUILT=: '2019-03-30  17:27:46'
+AABUILT=: '2019-03-30  17:29:32'
+AABUILT=: '2019-03-30  17:30:15'
+AABUILT=: '2019-03-30  18:11:14'
+AABUILT=: '2019-03-30  18:15:09'
 
 '==================== [uu] constants ===================='
 
@@ -896,8 +902,7 @@ unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
-validunits=: 3 : 'units e.~ <,y'
-
+listedUnits=: 3 : 'units e.~ <,y'
 pushme=: empty
 popme=: empty
 
@@ -1079,7 +1084,7 @@ popme 'qtcode4anyunit'
 muv;mur;muz return.
 )
 
-cnvj=: cnvCunit=: 3 : 0
+cnvCunit=: 3 : 0
 pushme 'cnvCunit'
 
 z=. dltb y
@@ -1097,7 +1102,7 @@ end.
 msg '+++ cnvCunit: y=(y) z=(z) j=(j) p=(p)'
 
 
-if. (-.iskg z) and (not validunits z) do.
+if. (-.iskg z) and (-.listedUnits z) do.
   'k z'=. scale4bareunit z
 end.
 msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
@@ -1124,6 +1129,11 @@ k=. 1
 
 dalen=. #da=. 'da'
 mulen=. #mu=. 'µ'
+
+if. 1=#('/'taketo z) do. k;z return. end.
+if. da-:('/'taketo z) do. k;z return. end.
+if. mu-:('/'taketo z) do. k;z return. end.
+
 if.     z beginsWith da do.	k=. 1e1  [ z=. dalen}.z
 elseif. z beginsWith mu do.	k=. 1e_6 [ z=. mulen}.z
 elseif. do.
@@ -1606,7 +1616,7 @@ case. 'CPAT' do.
 case. 'CPLI' do.
 		compatlist uarg
 case. 'CNVJ' do.
-		cnvj uarg
+		cnvCunit uarg
 case. 'CONV' do.
 		convert uarg
 case. 'CONS' do.

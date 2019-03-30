@@ -18,6 +18,14 @@ NB.	Temperature scales: '1 F.dgr' and '1 C.dgr' are RANGES, not TEMPERATURES.
 NB.	--e.g '1 C.dgr' is equivalent to a rise in temperature of 1 K
 NB.	--but '1 degC' is equivalent to an absolute temperature of 274.15 K
 
+NB. WITHDRAWN DEFINITIONS
+NB. ...because they interfere with orderly re-scaling by menu
+0 :0
+1000 m	[km] kilometre
+0.01 m	[cm] centimetre
+0.001 m	[mm] millimetre
+)
+
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
@@ -33,9 +41,6 @@ UUC=: cmx 0 : 0
 1 eur	[eur]	fundamental unit - euro (currency)
 1 /	[/]	fundamental unit - (dimensionless)
 1 *	[*]	fundamental unit - (matches any units)
-1000 m	[km] kilometre
-0.01 m	[cm] centimetre
-0.001 m	[mm] millimetre
 0.0254 m	[in]	inch
 12 in	[ft]	feet
 36 in	[yd]	yard

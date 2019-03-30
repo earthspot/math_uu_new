@@ -370,8 +370,7 @@ unucode=: 0&ucode
 upost=: 4 : 'y,(x#~*SIC)'
 uurowsc=: 4 : '(UUC ssmx y){UUC [UCASE=: x'
 uurowsf=: 4 : '(UUF ssmx y){UUF [UCASE=: x'
-validunits=: 3 : 'units e.~ <,y'
-
+listedUnits=: 3 : 'units e.~ <,y'
 
 NB. =========== trace ========================
 pushme=: empty	NB. legacy

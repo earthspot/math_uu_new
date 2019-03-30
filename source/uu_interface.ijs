@@ -24,8 +24,8 @@ case. 'CPAT' do. NB. are 2 units compatible?
 		utarg compatible uarg
 case. 'CPLI' do. NB. list of compatible units
 		compatlist uarg
-case. 'CNVJ' do. NB. cut a cunit (eg: '/kg^3')
-		cnvj uarg
+case. 'CNVJ' do. NB. cut a cunit, eg: '/km^3' --> 1;1000;(,'m');3
+		cnvCunit uarg
 case. 'CONV' do. NB. convert
 		convert uarg
 case. 'CONS' do. NB. cut "cons" formatted string (c/f UUC)

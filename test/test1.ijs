@@ -15,7 +15,7 @@ smoutput PLS,'+++ test1.ijs - entered',PLS
 cocurrent'base'
 
   NB. turn off ALL trace messages --which redux will gag at
-trace 0
+trace_uu_ 0
 trace_cal_ 0
 trace_tabby_ 0
 

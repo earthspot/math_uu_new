@@ -180,7 +180,7 @@ popme 'qtcode4anyunit'
 muv;mur;muz return.
 )
 
-cnvj=: cnvCunit=: 3 : 0
+cnvCunit=: 3 : 0
 pushme 'cnvCunit'
   NB. cut prefs/suffs from a cunit (eg: '/kg^3')
 z=. dltb y  NB. (,'m') for y=='m' or y==' m'
@@ -196,16 +196,16 @@ if. PW e. z do.  NB. recognise a power-suffix
   'p z'=. (".{:z) ; (}:}:z)
 end.
 msg '+++ cnvCunit: y=(y) z=(z) j=(j) p=(p)'
-  NB. Identify scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
+  NB. split-off scaling prefixes, eg 'ms' 'Gs' 'µ' (all variants of: s)
   NB. ONLY IF z is not itself in: units, eg 'knot' ...
-if. (-.iskg z) and (not validunits z) do.
+if. (-.iskg z) and (-.listedUnits z) do.
   'k z'=. scale4bareunit z
 end.
 msg '--- cnvCunit: j=(j) k=(k) z=(z) p=(p)'
 popme 'cnvCunit'
 j ; k ; z ; p return.
 )
-  NB. Scaling prefixes recognised above:
+  NB. Scaling prefixes recognised by scale4bareunit (below):
   NB.	------------------------------------------------------------------------------
   NB. 	deca- 	hecto- 	kilo- 	mega- 	giga- 	tera- 	peta- 	exa- 	zetta- 	yotta-
   NB. 	da 	h 	k 	M 	G 	T 	P 	E 	Z 	Y
@@ -222,9 +222,14 @@ scale4bareunit=: 3 : 0
   NB. ...AVOID CALLING WITH y if y is listed in (units) !!!
 z=. ,y  NB. (,'m') for y=='m'
 k=. 1   NB. to be overridden below
-  NB. Identify a multibyte ascii or unicoded scaling prefix...
+  NB. internal constants used below…
 dalen=. #da=. 'da'  NB. deka-
 mulen=. #mu=. 'µ'   NB. micro-
+  NB. Refuse misbehaving units, e.g. 'G' 'm' 'µ' or 'm/…'
+if. 1=#('/'taketo z) do. k;z return. end.
+if. da-:('/'taketo z) do. k;z return. end.
+if. mu-:('/'taketo z) do. k;z return. end.
+  NB. Identify a multibyte ascii or unicoded scaling prefix...
 if.     z beginsWith da do.	k=. 1e1  [ z=. dalen}.z
 elseif. z beginsWith mu do.	k=. 1e_6 [ z=. mulen}.z
 elseif. do.
