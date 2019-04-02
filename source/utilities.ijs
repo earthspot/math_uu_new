@@ -3,56 +3,9 @@
 
 cocurrent 'uu'
 
-sl_z_=: 4 : 0
-  NB. RELIABLE path catenator: should reside in _z_
-  NB. made available in utilities.ijs of both CAL and UU
-  NB. IAC Saturday 22 December 2018  19:25:56
-SL=. '/'
-if. SL={:x do. x=. }:x end.
-if. SL={.y do. x=. }.y end.
-x,SL,y
-)
-
-real=: 9&o.
-imag=: 11&o.
-
 NB. boxed substrings in x at the stars of pattern: y
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
-
-NB. from handy, post-analoc
-isLit=: 2 2048 e.~ 3!:0
-ifdefined=: 0 <: [: 4!:0 <
-isNum=: 1 4 8 64 128 e.~ 3!:0
-isScalar=: [: {. 0 = [: $ $
-isNo=: isNum *. isScalar
-   
-ddefine=: 1 : 'm&$: : (4 : 0)'
-isBoxed=: 0 < L.
-llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
-  NB. smresolve=. is only used by Swift-string verb: sw
-smresolve=. (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
-sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
-emsg=: smoutput&sw		NB. for error signal: always smoutputs
-ssw=: smoutput&sw		NB. the standard verb: always smoutputs
-zeroifabsent=: [: {. ".
-ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
-
-all=: *./
-and=: *.
-any=: +./
-o4b=: b2o=:	}.@((<SP) ;@,. ])
-b4o=: o2b=:	[: <;._1 SP , ]
-b4f=: f2b=:	[: <;._1 LF , ]
-  NB. …use b4o instead of monadic (;:) with open-lists of units
-  NB. because units can contain '.' -which (;:) cuts.
-begins=: beginsWith=: ] -: [ {.~ [: # ]
-brack=:	1 |. '][' , ":  NB. layout tool for message string ->'[y]'
-cmx=: [: > <;._2	NB. expects trailing LF
-nb=: [: ([: }. [: ; ' ' ,&.> ]) ":&.>	 NB. embed nums in string
-or=:  +.
-not=: -.
-to=:    [ + [: i. [: >: -~	NB. eg: 3 to 5 <--> 3 4 5
 
 report_complex_nouns=: 3 : 0
   NB. check for complex nouns in given locale

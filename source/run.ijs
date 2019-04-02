@@ -22,6 +22,8 @@ catch.	load BUILTFILE_z_=: '~Gituu/uu.ijs'
 end.
 )
 
+smclear_z_=: 3 : 'wd ''sm set term text *'',y NB. replaces: smwrite_jijs_ [ smselout_jijs_'
+
 smclear''
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 

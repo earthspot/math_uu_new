@@ -91,7 +91,7 @@ De
 )
 
   NB. data table stubs for basic testing
-UUC=: cmx 0 : 0
+UUC=: >cutopen 0 : 0
 1 /	[saved]	BASIC TESTING ONLY
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
@@ -121,7 +121,7 @@ UUC=: cmx 0 : 0
 1 deg	[dms]	degrees as deg min sec
 )
 
-UUF=: cmx 0 : 0
+UUF=: >cutopen 0 : 0
 PI*r*r : r(m)		[m^2]	area of circle
 sin a ; a(rad)		[/]	sine
 cos a ; a(rad)		[/]	cosine

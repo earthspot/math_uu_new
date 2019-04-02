@@ -64,6 +64,21 @@ AABUILT=: '2019-03-30  17:29:32'
 AABUILT=: '2019-03-30  17:30:15'
 AABUILT=: '2019-03-30  18:11:14'
 AABUILT=: '2019-03-30  18:15:09'
+AABUILT=: '2019-04-02  02:22:55'
+AABUILT=: '2019-04-02  02:48:08'
+AABUILT=: '2019-04-02  02:52:01'
+AABUILT=: '2019-04-02  02:56:11'
+AABUILT=: '2019-04-02  03:00:01'
+AABUILT=: '2019-04-02  03:01:02'
+AABUILT=: '2019-04-02  03:02:36'
+AABUILT=: '2019-04-02  17:40:50'
+AABUILT=: '2019-04-02  17:45:23'
+AABUILT=: '2019-04-02  17:47:30'
+AABUILT=: '2019-04-02  17:52:26'
+AABUILT=: '2019-04-02  17:54:26'
+AABUILT=: '2019-04-02  17:58:06'
+AABUILT=: '2019-04-02  18:07:11'
+AABUILT=: '2019-04-02  18:08:08'
 
 '==================== [uu] constants ===================='
 
@@ -142,7 +157,7 @@ De
 )
 
 
-UUC=: cmx 0 : 0
+UUC=: >cutopen 0 : 0
 1 /	[saved]	BASIC TESTING ONLY
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
@@ -172,7 +187,7 @@ UUC=: cmx 0 : 0
 1 deg	[dms]	degrees as deg min sec
 )
 
-UUF=: cmx 0 : 0
+UUF=: >cutopen 0 : 0
 PI*r*r : r(m)		[m^2]	area of circle
 sin a ; a(rad)		[/]	sine
 cos a ; a(rad)		[/]	cosine
@@ -188,53 +203,8 @@ PI=: 314159265358979323846264338327950288419716939937510r10000000000000000000000
 '==================== [uu] utilities ===================='
 
 cocurrent 'uu'
-
-sl_z_=: 4 : 0
-
-
-
-SL=. '/'
-if. SL={:x do. x=. }:x end.
-if. SL={.y do. x=. }.y end.
-x,SL,y
-)
-
-real=: 9&o.
-imag=: 11&o.
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
-isLit=: 2 2048 e.~ 3!:0
-ifdefined=: 0 <: [: 4!:0 <
-isNum=: 1 4 8 64 128 e.~ 3!:0
-isScalar=: [: {. 0 = [: $ $
-isNo=: isNum *. isScalar
-   
-ddefine=: 1 : 'm&$: : (4 : 0)'
-isBoxed=: 0 < L.
-llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
-
-smresolve=. (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
-sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
-emsg=: smoutput&sw
-ssw=: smoutput&sw
-zeroifabsent=: [: {. ".
-ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
-
-all=: *./
-and=: *.
-any=: +./
-o4b=: b2o=:	}.@((<SP) ;@,. ])
-b4o=: o2b=:	[: <;._1 SP , ]
-b4f=: f2b=:	[: <;._1 LF , ]
-
-
-begins=: beginsWith=: ] -: [ {.~ [: # ]
-brack=:	1 |. '][' , ":
-cmx=: [: > <;._2
-nb=: [: ([: }. [: ; ' ' ,&.> ]) ":&.>
-or=:  +.
-not=: -.
-to=:    [ + [: i. [: >: -~
 
 report_complex_nouns=: 3 : 0
 
@@ -336,6 +306,92 @@ lab_jlab_ thelab
 uuc_z_=: 3 : 'open ''~UUC'''
 uuf_z_=: 3 : 'open ''~UUF'''
 uum_z_=: 3 : 'open ''~UUM'''
+
+'==================== [uu] handy4uu ===================='
+cocurrent 'z'
+
+real=: 9&o.
+imag=: 11&o.
+
+ifdefined=: 0 <: [: 4!:0 <
+
+isLit=: 2 2048 e.~ 3!:0
+isNum=: 1 4 8 64 128 e.~ 3!:0
+isScalar=: [: {. 0 = [: $ $
+isNo=: isNum *. isScalar
+   
+ddefine=: 1 : 'm&$: : (4 : 0)'
+isBoxed=: 0 < L.
+llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
+
+smresolve=: (((<0),(<3 3 2$1 0 0 0 0 0 2 1 2 1 2 1 2 0 0 3 2 0),<'(';')') ;: ucp)"1
+sw=: ] rplc [: , (paren&.> ,. ":&".&.>)&smresolve
+emsg=: smoutput&sw
+ssw=: smoutput&sw
+zeroifabsent=: [: {. ".
+ifabsent=: 4 : 'if. ifdefined y do. ".y else. x end.'
+
+all=: *./
+and=: *.
+any=: +./
+o4b=: b2o=:	}.@((<SP) ;@,. ])
+b4o=: o2b=:	[: <;._1 SP , ]
+b4f=: f2b=:	[: <;._1 LF , ]
+
+
+begins=: beginsWith=: ] -: [ {.~ [: # ]
+brack=:	1 |. '][' , ":
+nb=: [: ([: }. [: ; ' ' ,&.> ]) ":&.>
+or=:  +.
+not=: -.
+to=:    [ + [: i. [: >: -~
+
+
+
+
+AZ=: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+CO=: ':'
+DT=: '.'
+NUL=: 0{a.
+az=: 'abcdefghijklmnopqrstuvwxyz'
+
+NaNoun=: 0 ~: [: nc ;:
+
+cmx=: [: > <;._2
+
+date=: 6!:0@('YYYY-MM-DD  hh:mm:ss'"_)
+day=: dayy&daterev
+
+default=: 0&$: :(4 : 0)
+
+
+
+
+
+
+if. 0<: 4!:0 <y do. y~ return. end.
+(y)=:x
+)
+
+min=: $:/ :<.
+n9=: '0123456789'
+paren=: 1 |. ')(' , ":
+rnd=: 0&$: :(4 : '(<. 0.5 + y*10^x)%10^x')
+
+sl=: 4 : 0
+
+
+SL=. '/'
+if. SL={:x do. x=. }:x end.
+if. SL={.y do. x=. }.y end.
+x,SL,y
+)
+
+term=: 3 : '>{:{. wd''sm get term'''
+edwn=: 3 : '>{:{. wd''sm get edit'''
+
+vv=: ":@|:@,:
+x2f=: }.@((<10{a.) ;@,. ])@([: (#~ ([: +./\. ' '&~:))&.> <"1)
 
 '==================== [uu] rational ===================='
 

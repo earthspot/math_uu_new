@@ -1,8 +1,9 @@
 NB. uu manifest
+NB. IAC Tuesday 2 April 2019  02:19:32
 
 CAPTION=: 'Scientific units conversion package'
 
-VERSION=: '1.1.01'
+VERSION=: '2.1.00'
 
 FILES=: 0 : 0
 manifest.ijs
