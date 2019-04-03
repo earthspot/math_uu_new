@@ -2,6 +2,8 @@
 '==================== [uu] handy4uu ===================='
 cocurrent 'z'
 
+Cut=: <;._1
+
 real=: 9&o.
 imag=: 11&o.
 
@@ -12,6 +14,8 @@ isNum=: 1 4 8 64 128 e.~ 3!:0
 isScalar=: [: {. 0 = [: $ $
 isNo=: isNum *. isScalar
    
+daterev=: 3 : 'if. 31<2{y do. |.3{.y else. 3{.y end.'
+dayy=: (Cut ' Sunday Monday Tuesday Wednesday Thursday Friday Saturday') pick~ [: weekday 3 {. ]
 ddefine=: 1 : 'm&$: : (4 : 0)'
 isBoxed=: 0 < L.
 llog=: (1 { ":)@(,@([: ] ;: ,. [: ".&.> ;:))
