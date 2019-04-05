@@ -8,13 +8,19 @@ onload_z_=: empty
 
 AABUILT=: '2019-04-03  09:29:27'
 AABUILT=: '2019-04-03  12:02:48'
+AABUILT=: '2019-04-05  02:20:26'
+AABUILT=: '2019-04-05  02:26:39'
+AABUILT=: '2019-04-05  03:58:36'
+AABUILT=: '2019-04-05  04:21:32'
+AABUILT=: '2019-04-05  04:44:53'
+AABUILT=: '2019-04-05  05:53:09'
 
 '==================== [uu] constants ===================='
 
 cocurrent 'uu'
 
 0 :0
-Wednesday 20 March 2019  19:21:15
+Friday 5 April 2019  03:32:51
 )
 
 
@@ -22,16 +28,10 @@ Wednesday 20 March 2019  19:21:15
 CUTAB0=: 2 2$<;._1 ' USD 1.3 GBP 0.8'
 CUTAB=: CUTAB0
 BADQTY=: '0 ??'
-BOIL_F=: 212
-BOIL_C=: 100
-BOIL_K=: 373.15
-ICE_F=: 32
-ICE_C=: 0
-ICE_K=: 273.15
+BADRAT=: _r1
 HD=: '·'
 MI=: '-'
 NUN=: '??'
-PI=: o.1
 PWM=: '^-'
 PWU=: '^_'
 PW=: '^'
@@ -127,7 +127,33 @@ UUM=: ''
 SIbu=: ;:'m kg s A K mol cd'
 mks=:   SIbu,'rad';'eur'
 
-PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
+cocurrent 'z'
+
+s4x=: 3 : 0
+
+assert. 'extended' -: datatype y
+L=. <: # R=. ":y
+".R,'r1',L#'0'
+)
+
+
+PI=: s4x 31415926535897932384626433832795028841971693993751x
+
+EXP=: s4x 271828182845904509x
+
+PI2=:	PI * 2
+PI4=:	PI * 4
+PIb3=:	PI * 1r3
+PI4b3=:	PI * 4r3
+RT2=:	(x:!.0) 2 ^ 1r2
+RT3=:	(x:!.0) 3 ^ 1r2
+
+ICE_F=: 32x
+ICE_C=: 0x
+ICE_K=: 27315r100
+BOIL_F=: 180x + ICE_F
+BOIL_C=: 100x + ICE_C
+BOIL_K=: 100x + ICE_K
 
 '==================== [uu] utilities ===================='
 
@@ -235,6 +261,36 @@ lab_jlab_ thelab
 uuc_z_=: 3 : 'open ''~UUC'''
 uuf_z_=: 3 : 'open ''~UUF'''
 uum_z_=: 3 : 'open ''~UUM'''
+cocurrent 'z'
+
+
+dfr=: *&(%PI%180)
+rfd=: *&(PI%180)
+abs=: |
+avg=: +/ % #
+exp=: ^
+div=: %
+int=: [: <. ] + 0 > ]
+mod=: |~
+times=: *
+
+choice=: 4 : '((0>.1<.x)){y'
+
+sin=: 1&o."0
+cos=: 2&o."0
+tan=: 3&o."0
+
+sinh=: 5&o."0
+cosh=: 6&o."0
+tanh=: 7&o."0
+
+arcsin=: _1&o."0
+arccos=: _2&o."0
+arctan=: _3&o."0
+
+arcsinh=: _5&o."0
+arccosh=: _6&o."0
+arctanh=: _7&o."0
 
 '==================== [uu] handy4uu ===================='
 cocurrent 'z'
@@ -352,13 +408,8 @@ notFloat=: 3 : 0
 -. (datatype y) -: 'floating'
 )
 
-derat=: derationalized=: _1&x:
-
-rat=: rational=: 3 : 0 "0
-
-
-reval ":y
-)
+float_z_=: _1&x:
+rat_z_=: rational=: rationalized=: x:!.0
 
 reval=: 3 : 0 "1
 
@@ -372,10 +423,10 @@ elseif. y-: ,'_' do. _r1
 elseif. y-: '__' do. __r1
 elseif. all y e. n9,'._' do. rat4sc y
 elseif. 'e' e. y do. rat4sc y
-elseif. 'p' e. y do. rat4pi y
+elseif. 'E' e. y do. rat4sc y
 elseif. 'r' e. y do. rat4r y
 elseif. 'x'= {:y do. rat4x y
-elseif. do. _r1 [ssw '>>> reval: cannot handle y=[(y)]'
+elseif.          do. rat4p y
 end.
 )
 
@@ -388,29 +439,32 @@ else. 0r1
 end.
 )
 
+rat4p=: 3 : 0 "1
+
+try.
+  assert. 0= 4!:0 <y
+  y~
+catch.
+  ssw '>>> reval: cannot handle y=''(y)'''
+  BADRAT
+end.
+)
+
 rat4x=: 3 : 0 "1
 
-msg '... rat4x: y=(y) [(derationalized ".y)]'
+msg '... rat4x: y=(y) [(float ".y)]'
 ".y
 )
 
 rat4r=: 3 : 0 "1
 
-msg '... rat4r: y=(y) [(derationalized ".y)]'
+msg '... rat4r: y=(y) [(float ".y)]'
 ".y
-)
-
-rat4pi=: 3 : 0 "1
-
-
-'c d'=. <;._2 y,'p'
-a=. ".c
-b=. ".d
-". sw '(a)*PI^(b)'
 )
 
 rat4sc=: 3 : 0 "1
 
+y=. y rplc 'E' ; 'e' ; '-' ; '_'
 c=. 'e' taketo y
 a=. ".c-.DT
 b=. ".y
@@ -425,14 +479,24 @@ rat4sc '_1.23e_5'
 rat4sc '_1.23E_5'
 rat4sc '_1.23E-5'
 rat4sc '-1.23E-5'
+reval '_1.23e_5'
+reval '_1.23E_5'
+reval '_1.23E-5'
+reval '-1.23E-5'
 )
 
 rat_check=: 3 : 0
 
-assert. all uvalu = derationalized rvalu
-assert. all uvald = derationalized rvald
-assert. all uvalc = derationalized rvalc
-assert. -. 0 e. uvalc
+try.
+assert. all boo=. uvalu = float rvalu
+assert. all boo=. uvald = float rvald
+assert. all boo=. uvalc = float rvalc
+assert. all boo=. uvalc ~: 0
+catch.
+  bads=. I. -.boo
+  smoutput '>>> rat_check: failed at these UUC rows…'
+  smoutput vt bads
+end.
 )
 
 '==================== [uu] syntax_machines ===================='
@@ -835,12 +899,13 @@ ssymb=: <;._1 '|π|Å|Ω|⁻¹|⁻²|⁻³|⁻⁴|²|³|⁴'
 cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|′|″'
 'v uv us'=: <"1 |: cutuuc UUC
+openv=: >v
 unitv=: deb each uv -.each TAB
 units=: deb each us
-uvald=: imag eval >v
-assert. notFloat rvald=: ieval >v
-uvalu=: real eval >v
-assert. notFloat rvalu=: reval >v
+uvald=: imag eval openv
+assert. notFloat rvald=: ieval openv
+uvalu=: real eval openv
+assert. notFloat rvalu=: reval openv
 i.0 0
 )
 

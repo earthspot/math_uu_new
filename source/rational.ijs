@@ -25,13 +25,8 @@ notFloat=: 3 : 0
 -. (datatype y) -: 'floating'
 )
 
-derat=: derationalized=: _1&x:  NB. rational-->floating|integer|Boolean
-
-rat=: rational=: 3 : 0 "0
-  NB. convert datatype: floating --> rational
-  NB. >>> SPEED THIS UP by using x: or even x:!.0
-reval ":y
-)
+float_z_=: _1&x:  NB. rational-->floating|integer|Boolean
+rat_z_=: rational=: rationalized=: x:!.0
 
 reval=: 3 : 0 "1
   NB. variant of: eval - returns 'rational'
@@ -46,10 +41,10 @@ elseif. y-: ,'_' do. _r1
 elseif. y-: '__' do. __r1
 elseif. all y e. n9,'._' do. rat4sc y
 elseif. 'e' e. y do. rat4sc y
-elseif. 'p' e. y do. rat4pi y
+elseif. 'E' e. y do. rat4sc y
 elseif. 'r' e. y do. rat4r y
 elseif. 'x'= {:y do. rat4x y
-elseif. do. _r1 [ssw '>>> reval: cannot handle y=[(y)]'
+elseif.          do. rat4p y
 end.
 )
 
@@ -62,30 +57,32 @@ else. 0r1
 end.
 )
 
+rat4p=: 3 : 0 "1
+  NB. rational for pronoun (=constant) (char)y, eg PI, PI2 …
+try.
+  assert. 0= 4!:0 <y  NB. is (y) a pronoun?
+  y~
+catch.
+  ssw '>>> reval: cannot handle y=''(y)'''
+  BADRAT  NB. a bona-fide rational, but representing an error
+end.
+)
+
 rat4x=: 3 : 0 "1
   NB. rational for extended numeral (char)y
-msg '... rat4x: y=(y) [(derationalized ".y)]'
+msg '... rat4x: y=(y) [(float ".y)]'
 ".y
 )
 
 rat4r=: 3 : 0 "1
   NB. rational for rational numeral (char)y
-msg '... rat4r: y=(y) [(derationalized ".y)]'
+msg '... rat4r: y=(y) [(float ".y)]'
 ".y
-)
-
-rat4pi=: 3 : 0 "1
-  NB. rational for "pi" numeral (char)y
-  NB. PI (constants.ijs) assumed to be RATIONAL - high-precision
-'c d'=. <;._2 y,'p'
-a=. ".c
-b=. ".d
-NB. ssw '... rat4pi: y=[(y)] a=(a) b=(b) c=(c) d=(d)'
-". sw '(a)*PI^(b)'
 )
 
 rat4sc=: 3 : 0 "1
   NB. rational for scientific numeral (char)y
+y=. y rplc 'E' ; 'e' ; '-' ; '_'
 c=. 'e' taketo y
 a=. ".c-.DT
 b=. ".y
@@ -101,12 +98,23 @@ rat4sc '_1.23e_5'
 rat4sc '_1.23E_5'
 rat4sc '_1.23E-5'
 rat4sc '-1.23E-5'
+reval '_1.23e_5'
+reval '_1.23E_5'
+reval '_1.23E-5'
+reval '-1.23E-5'
 )
 
 rat_check=: 3 : 0
   NB. verify integrity of rational caches
-assert. all uvalu = derationalized rvalu
-assert. all uvald = derationalized rvald
-assert. all uvalc = derationalized rvalc
-assert. -. 0 e. uvalc  NB. all units have been resolved
+try.
+assert. all boo=. uvalu = float rvalu
+assert. all boo=. uvald = float rvald
+assert. all boo=. uvalc = float rvalc
+assert. all boo=. uvalc ~: 0  NB. all units have been resolved
+NB. assert. -. 0 e. uvalc  NB. all units have been resolved
+catch.
+  bads=. I. -.boo
+  smoutput '>>> rat_check: failed at these UUC rows…'
+  smoutput vt bads
+end.
 )

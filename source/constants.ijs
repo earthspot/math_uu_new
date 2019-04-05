@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Wednesday 20 March 2019  19:21:15
+Friday 5 April 2019  03:32:51
 )
 
 NB. =========================================================
@@ -21,16 +21,10 @@ NB. General purpose constants
 NB. =========================================================
 
 BADQTY=: '0 ??'	NB. error returned qty by verb: uu
-BOIL_F=: 212	NB. water boils [°F]
-BOIL_C=: 100 	NB. water boils [°C]
-BOIL_K=: 373.15	NB. water boils [K]
-ICE_F=: 32	NB. water freezes [°F]
-ICE_C=: 0 	NB. water freezes [°C]
-ICE_K=: 273.15	NB. water freezes [K]
+BADRAT=: _r1	NB. rational infinity - returned by: reval
 HD=: '·'		NB. hi-dot, optional SI convention
 MI=: '-'		NB. minus (==HY)
 NUN=: '??'	NB. unrecognised-units placeholder, used by: convert
-PI=: o.1		NB. π
 PWM=: '^-'	NB. power,minus (precedes a negative power)
 PWU=: '^_'	NB. power,underscore (precedes a negative power)
 PW=: '^'		NB. power
@@ -143,9 +137,35 @@ NB. =========================================================
 SIbu=: ;:'m kg s A K mol cd'  NB. the official SI "base units"
 mks=:   SIbu,'rad';'eur'      NB. UU adds extra "dimensions"
 
-NB. ==============================================
-NB. RATIONAL CONSTANTS can override floating defns
-NB. ==============================================
+
+NB. ================================================
+NB. RATIONAL CONSTANTS - may override floating defns
+NB. ================================================
+
+cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
+
+s4x=: 3 : 0
+  NB. make a long rational out of long extended (y)
+assert. 'extended' -: datatype y
+L=. <: # R=. ":y
+".R,'r1',L#'0'
+)
 
   NB. π (rational - accurate to 50 decimal places)
-PI=: 314159265358979323846264338327950288419716939937510r100000000000000000000000000000000000000000000000000 
+PI=: s4x 31415926535897932384626433832795028841971693993751x
+
+EXP=: s4x 271828182845904509x  NB.  NEEDS MORE PRECISION <<<<<
+
+PI2=:	PI * 2
+PI4=:	PI * 4
+PIb3=:	PI * 1r3
+PI4b3=:	PI * 4r3
+RT2=:	(x:!.0) 2 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
+RT3=:	(x:!.0) 3 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
+
+ICE_F=: 32x		NB. water freezes [°F]
+ICE_C=: 0x		NB. water freezes [°C]
+ICE_K=: 27315r100		NB. water freezes [K]
+BOIL_F=: 180x + ICE_F	NB. water boils [°F]
+BOIL_C=: 100x + ICE_C 	NB. water boils [°C]
+BOIL_K=: 100x + ICE_K	NB. water boils [K]

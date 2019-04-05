@@ -89,8 +89,8 @@ UUC=: cmx 0 : 0
 9.812865328 m/s^2	[grav]	acceleration; gravity
 6.67428e_11 N m^2/kg^2	[G]	gravitational constant
 299792458 m/s [c]	speed of light in free space
-1p1 /	[PI]	pi
-2p1 rad	[cyc]	cycle
+PI /	[PI]	pi
+PI2 rad	[cyc]	cycle
 1 cyc	[circ]	circle
 0.5 cyc	[semicirc]	semicircle
 0.25 cyc	[rt.angle]	right-angle
@@ -113,7 +113,7 @@ UUC=: cmx 0 : 0
 997 kg/m^3	[dens.w]	density of pure water
 789 kg/m^3	[dens.alc]	density of alcohol (ethanol)
 0.789 /	[sg.alc]	SG of alcohol (ethanol)
-1.3e_4 /	[sg.air]	SG of air at surface
+1.3E-4 /	[sg.air]	SG of air at surface
 22.5 /	[sg.Ir]	SG of iridium
 22.4 /	[sg.Os]	SG of osmium
 21.4 /	[sg.Pt]	SG of platinum

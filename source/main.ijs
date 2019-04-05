@@ -314,12 +314,13 @@ NB.     csymb=: ssymb, <;._1 '|°|′|″|€|¢|£'
 cspel=: sspel, <;._1 ' deg amin asec'
 csymb=: ssymb, <;._1 '|°|′|″'
 'v uv us'=: <"1 |: cutuuc UUC
+openv=: >v
 unitv=: deb each uv -.each TAB  NB. defined units
 units=: deb each us    NB. nominal units
-uvald=: imag eval >v   NB. defined value: displacement
-assert. notFloat rvald=: ieval >v  NB. defined value: rdisplacement <<<<< rational
-uvalu=: real eval >v   NB. defined value: factor
-assert. notFloat rvalu=: reval >v  NB. defined value: factor <<<<< rational
+uvald=: imag eval openv   NB. defined value: displacement
+assert. notFloat rvald=: ieval openv  NB. defined value: rdisplacement <<<<< rational
+uvalu=: real eval openv   NB. defined value: factor
+assert. notFloat rvalu=: reval openv  NB. defined value: factor <<<<< rational
 i.0 0
 )
 

@@ -114,3 +114,41 @@ lab_jlab_ thelab
 uuc_z_=: 3 : 'open ''~UUC'''
 uuf_z_=: 3 : 'open ''~UUF'''
 uum_z_=: 3 : 'open ''~UUM'''
+
+NB. ======================================
+NB. SCIENTIFIC UTILITIES
+NB. ======================================
+
+cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
+
+  NB. checked against long PI: IAC Friday 5 April 2019  01:58:01
+dfr=: *&(%PI%180)
+rfd=: *&(PI%180)
+
+NB. >>>>>>>> REPLACE WITH HUI VERBS <<<<<<<<<
+
+abs=: |
+avg=: +/ % #
+exp=: ^	NB. used in UUF for [radioactive] decay only
+div=: %
+int=: [: <. ] + 0 > ]
+mod=: |~
+times=: *
+
+choice=: 4 : '((0>.1<.x)){y'
+
+sin=: 1&o."0
+cos=: 2&o."0
+tan=: 3&o."0
+
+sinh=: 5&o."0
+cosh=: 6&o."0
+tanh=: 7&o."0
+
+arcsin=: _1&o."0
+arccos=: _2&o."0
+arctan=: _3&o."0
+
+arcsinh=: _5&o."0
+arccosh=: _6&o."0
+arctanh=: _7&o."0
