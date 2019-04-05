@@ -12,6 +12,7 @@ start=: 3 : 0
   NB.  but should be called by apps using UU whenever
   NB.  the constants library (UUC) has been changed.
   NB. But not needed if only the functions library (UUF) changed
+ssw=. empty
 ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
 NB. trace 1  NB. enable diagnostics
@@ -35,6 +36,9 @@ ssw '+++ [uu] start: COMPLETED.'
 
 create=: start
 destroy=: codestroy
+
+runlab_z_=: runlab_uu_  NB. for: runlab''
+uu_z_=: uu_uu_  NB. for: runlab''
 
 NB. uuinit_z_=: 3 : 0
 NB. ulo=. y conew 'uu'

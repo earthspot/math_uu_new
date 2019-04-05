@@ -57,7 +57,7 @@ isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 make_unitc=: 1 ddefine
   NB. x=pass# (1,2,3…)
   NB. does NOT use: msg or sllog, but ssw instead
-  NB. -to suppress smoutput, set: ssw=:empty
+ssw=. empty  NB. -to suppress smoutput, set: ssw to: empty
 pass=. x
 rebuild=. pass<:1
 ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)'
@@ -71,7 +71,6 @@ for_i. i.#UUC [n=.0 do.
   val=. i{uvalc [code=. i{unitc
   rval=. i{rvalc		NB. <<<<<<<<<< rational
   if. (-. isGoodCode code) or (0=rval) do.	NB. <<<<<<<<<< rational
-NB.   if. (-. isGoodCode code) or (0=val) do.
     ssw '--- id=(i) val=(val) code=(crex code) [(i pick units)]'
     NB. …use of crex prints 4x instead of 4 (say)
     'val rval code'=. qtcode4i i	NB. <<<<<<<<<< rational
@@ -341,9 +340,9 @@ elseif. do.		NB. target units are (x)
 	sllog 'uu_1 targ unit'
 	sllog 'uu_1 coeft coefu rcoeft rcoefu codet codeu'
   if. codet ~: codeu do.
-    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) rcoeft=(coeft) rcoefu=(coefu) codet=(codet) codeu=(codeu)'
-    BADQTY return.
+    z=. sw'>>> uu: incompatible units: x=[(x)] targ=[(targ)] unit=[(unit)]'
+NB. z=. z,LF, '... coeft=(coeft) coefu=(coefu) rcoeft=(coeft) rcoefu=(coefu) codet=(codet) codeu=(codeu)'
+    z return.
   end.
 end.
   NB. compute target value: vatarg

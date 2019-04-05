@@ -14,6 +14,14 @@ AABUILT=: '2019-04-05  03:58:36'
 AABUILT=: '2019-04-05  04:21:32'
 AABUILT=: '2019-04-05  04:44:53'
 AABUILT=: '2019-04-05  05:53:09'
+AABUILT=: '2019-04-05  15:16:46'
+AABUILT=: '2019-04-05  16:51:20'
+AABUILT=: '2019-04-05  16:55:18'
+AABUILT=: '2019-04-05  17:10:25'
+AABUILT=: '2019-04-05  17:20:43'
+AABUILT=: '2019-04-05  17:35:25'
+AABUILT=: '2019-04-05  17:37:59'
+AABUILT=: '2019-04-05  17:43:40'
 
 '==================== [uu] constants ===================='
 
@@ -254,8 +262,12 @@ if. -.fexist y do.
 end.
 ]thelab_z_=: y
 trace 0
-require '~addons/labs/labs/labs805.ijs'
-lab_jlab_ thelab
+require '~addons/labs/labs/labs.ijs'
+try. lab_jlab_ thelab
+catch.
+  require '~addons/labs/labs/labs805.ijs'
+  lab_jlab805_ thelab
+end.
 )
 
 uuc_z_=: 3 : 'open ''~UUC'''
@@ -496,6 +508,7 @@ catch.
   bads=. I. -.boo
   smoutput '>>> rat_check: failed at these UUC rows…'
   smoutput vt bads
+  wd'beep'
 end.
 )
 
@@ -971,7 +984,6 @@ else.
   msg=: empty
   sllog=: empty
 end.
-smoutput '+++ trace ',":y
 i.0 0
 )
 
@@ -1021,7 +1033,7 @@ isGoodCode=: ([: -. (ZEROCODE,%ZEROCODE) e.~ ])"0
 make_unitc=: 1 ddefine
 
 
-
+ssw=. empty
 pass=. x
 rebuild=. pass<:1
 ssw '+++ make_unitc: pass=(pass) rebuild=(rebuild) #UUC=(#UUC)'
@@ -1298,9 +1310,8 @@ elseif. do.
 	sllog 'uu_1 targ unit'
 	sllog 'uu_1 coeft coefu rcoeft rcoefu codet codeu'
   if. codet ~: codeu do.
-    emsg '>>> uu: incompatible units: x=(x) targ=(targ) unit=(unit)'
-    emsg '... coeft=(coeft) coefu=(coefu) rcoeft=(coeft) rcoefu=(coefu) codet=(codet) codeu=(codeu)'
-    BADQTY return.
+    z=. sw'>>> uu: incompatible units: x=[(x)] targ=[(targ)] unit=[(unit)]'
+    z return.
   end.
 end.
 
@@ -1756,6 +1767,7 @@ start=: 3 : 0
 
 
 
+ssw=. empty
 ssw '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
 trace 0
@@ -1776,4 +1788,7 @@ ssw '+++ [uu] start: COMPLETED.'
 
 create=: start
 destroy=: codestroy
+
+runlab_z_=: runlab_uu_
+uu_z_=: uu_uu_
 start''

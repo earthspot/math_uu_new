@@ -116,5 +116,6 @@ catch.
   bads=. I. -.boo
   smoutput '>>> rat_check: failed at these UUC rows…'
   smoutput vt bads
+  wd'beep'
 end.
 )

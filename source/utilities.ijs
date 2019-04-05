@@ -106,9 +106,12 @@ if. -.fexist y do.
 end.
 ]thelab_z_=: y
 trace 0	NB. to reset existing verb tracing
-require '~addons/labs/labs/labs805.ijs'
-NB. lab805_jlab_ thelab  NB. alternative (WHEN TO USE??)
-lab_jlab_ thelab
+require '~addons/labs/labs/labs.ijs'
+try. lab_jlab_ thelab
+catch.
+  require '~addons/labs/labs/labs805.ijs'
+  lab_jlab805_ thelab
+end.
 )
 
 uuc_z_=: 3 : 'open ''~UUC'''

@@ -29,7 +29,7 @@ NB. ...because they interfere with orderly re-scaling by menu
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Wednesday 26 December 2018  10:48:00
+1 /	[saved]	Friday 5 April 2019  17:43:12
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
