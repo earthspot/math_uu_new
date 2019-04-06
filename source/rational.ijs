@@ -26,7 +26,12 @@ notFloat=: 3 : 0
 )
 
 float_z_=: _1&x:  NB. rational-->floating|integer|Boolean
-rat_z_=: rational=: rationalized=: x:!.0
+rat_z_=: rational_z_=: rationalized_z_=: x:!.0
+
+isRational=: 3 : '64 128 e.~ 3!:0 y'
+isRational=: 64 128 e.~ 3!:0  NB. also covers: isExtended
+isExtended=: 64 = 3!:0
+isFloating=: 8 = 3!:0
 
 reval=: 3 : 0 "1
   NB. variant of: eval - returns 'rational'
@@ -44,7 +49,9 @@ elseif. 'e' e. y do. rat4sc y
 elseif. 'E' e. y do. rat4sc y
 elseif. 'r' e. y do. rat4r y
 elseif. 'x'= {:y do. rat4x y
-elseif.          do. rat4p y
+elseif. y begins '10^' do. rat4pt ::rat4po y
+elseif. '^' e. y do. rat4po y
+elseif. 0=nc <y  do. rat4pn y
 end.
 )
 
@@ -57,13 +64,14 @@ else. 0r1
 end.
 )
 
-rat4p=: 3 : 0 "1
+rat4pn=: 3 : 0 "1
   NB. rational for pronoun (=constant) (char)y, eg PI, PI2 …
+msg '... rat4pn: y=(y) [(float ".y)]'
 try.
   assert. 0= 4!:0 <y  NB. is (y) a pronoun?
   y~
 catch.
-  ssw '>>> reval: cannot handle y=''(y)'''
+  ssw '>>> rat4pn: cannot handle y=''(y)'''
   BADRAT  NB. a bona-fide rational, but representing an error
 end.
 )
@@ -80,6 +88,35 @@ msg '... rat4r: y=(y) [(float ".y)]'
 ".y
 )
 
+rat4pt=: 3 : 0 "1
+  NB. rational for power-of-ten numeral (char)y of form: 10^…
+msg '... rat4pt: y=(y) [(float ".y)]'
+if. (y begins '10^_') or (y begins '10^-') do. ". NN=:'1r1',(".4}.y)#'0'
+elseif. y begins '10^' do. ". NN=:'x' ,~ '1',(".3}.y)#'0'
+NB. elseif. do.
+NB.   ssw '>>> rat4pt: cannot handle y=''(y)'''
+NB.   BADRAT  NB. a bona-fide rational, but representing an error
+end.
+)
+0 :0
+rat4pt '10^21'
+rat4pt '10^3'
+rat4pt '10^-21'
+rat4pt '10^-5'
+rat4pt '10^_5'
+)
+
+rat4po=: 3 : 0 "1
+  NB. rational for power numeral (char)y of form: a^b
+msg '... rat4po: y=(y) [(float ".y)]'
+rat ".y
+)
+0 :0
+rat4po'10^1.0001'
+rat4po'10^-5.0001'
+rat4po'10^_5.0001'
+)
+
 rat4sc=: 3 : 0 "1
   NB. rational for scientific numeral (char)y
 y=. y rplc 'E' ; 'e' ; '-' ; '_'
@@ -87,8 +124,8 @@ c=. 'e' taketo y
 a=. ".c-.DT
 b=. ".y
 scale=. rnd 10^. a%b
-NB. ssw 'rat4sc: y=[(y)] scale=(scale) c=(c) a=(a) b=(b)'
-if. 'rational'-:datatype b do. b
+msg '... rat4sc: y=(y) [(float ".y)] scale=(scale) c=(c) a=(a) b=(b)'
+if. isRational b do. b
 elseif. scale<0      do. ". ((c-.DT) , (|scale)#'0') , 'r1'
 elseif.              do. ". (c-.DT) , 'r1' , scale#'0'
 end.
@@ -110,8 +147,8 @@ try.
 assert. all boo=. uvalu = float rvalu
 assert. all boo=. uvald = float rvald
 assert. all boo=. uvalc = float rvalc
-assert. all boo=. uvalc ~: 0  NB. all units have been resolved
-NB. assert. -. 0 e. uvalc  NB. all units have been resolved
+assert. all boo=. -. uvalc e. 0 _ __
+  NB. …means: all units have been resolved
 catch.
   bads=. I. -.boo
   smoutput '>>> rat_check: failed at these UUC rows…'
@@ -119,3 +156,29 @@ catch.
   wd'beep'
 end.
 )
+
+test_reval=: 3 : 0
+  NB. verify the function of: reval
+  NB. TEST: rat4sc rat4pn rat4po rat4pt rat4r rat4x
+z=. _123r10000000
+assert. z -: reval '_1.23e_5'
+assert. z -: reval '_1.23E_5'
+assert. z -: reval '_1.23E-5'
+assert. z -: reval '-1.23E-5'
+z=. 1000000000000000000000
+assert. z -: reval '10^21'
+z=. 1r1000000000000000000000
+assert. z -: reval '10^-21'
+z=. 6832167611r683374095687762
+assert. z -: reval '10^-5.0001'
+assert. z -: reval '10^_5.0001'
+assert. z -: reval '6832167611r683374095687762'
+z=. 6832167611683374095687762x
+assert. z -: reval '6832167611683374095687762x'
+z=. PI
+assert. z -: reval 'PI'
+smoutput '--- test_reval: completed'
+)
+
+onload 'test_reval$0'
+

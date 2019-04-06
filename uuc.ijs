@@ -29,7 +29,7 @@ NB. ...because they interfere with orderly re-scaling by menu
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Friday 5 April 2019  17:43:12
+1 /	[saved]	Saturday 6 April 2019  03:23:41
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
 1 s	[s]	fundamental unit - second (time)
@@ -89,11 +89,11 @@ UUC=: cmx 0 : 0
 9.812865328 m/s^2	[grav]	acceleration; gravity
 6.67428e_11 N m^2/kg^2	[G]	gravitational constant
 299792458 m/s [c]	speed of light in free space
-PI /	[PI]	pi
+PI rad	[PI]	pi
+PI rad	[semicirc] semicircle
 PI2 rad	[cyc]	cycle
-1 cyc	[circ]	circle
-0.5 cyc	[semicirc]	semicircle
-0.25 cyc	[rt.angle]	right-angle
+PI2 rad	[circ]	circle
+PIb2 rad	[rt.angle] right-angle
 1 cyc	[rev]	revolution
 1/360 cyc	[deg]	degree of arc
 1/60 deg	[amin]	minute of arc

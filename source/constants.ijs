@@ -145,8 +145,7 @@ NB. ================================================
 cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
 
 s4x=: 3 : 0
-  NB. make a long rational out of long extended (y)
-assert. 'extended' -: datatype y
+  NB. make rational in interval (1,10) out of integer|extended (y)
 L=. <: # R=. ":y
 ".R,'r1',L#'0'
 )
@@ -158,7 +157,9 @@ EXP=: s4x 271828182845904509x  NB.  NEEDS MORE PRECISION <<<<<
 
 PI2=:	PI * 2
 PI4=:	PI * 4
+PIb2=:	PI * 1r2
 PIb3=:	PI * 1r3
+PIb4=:	PI * 1r4
 PI4b3=:	PI * 4r3
 RT2=:	(x:!.0) 2 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
 RT3=:	(x:!.0) 3 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
