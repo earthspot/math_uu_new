@@ -128,17 +128,22 @@ cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
 dfr=: *&(%PI%180)
 rfd=: *&(PI%180)
 
-NB. >>>>>>>> REPLACE WITH HUI VERBS <<<<<<<<<
+choice=: 4 : '((0>.1<.x)){y'
 
 abs=: |
 avg=: +/ % #
-exp=: ^	NB. used in UUF for [radioactive] decay only
 div=: %
 int=: [: <. ] + 0 > ]
 mod=: |~
 times=: *
 
-choice=: 4 : '((0>.1<.x)){y'
+NB. >>>>>>>> REPLACE WITH HUI VERBS <<<<<<<<<
+NB.  arccos arcsin arctan arctan0 arctan1 asin0 asin1 cnt
+NB.  cos cosh erf exp ln n01cdf pi round sin sinh sqrt
+
+
+0 :0
+exp=: ^	NB. used in UUF for [radioactive] decay only
 
 sin=: 1&o."0
 cos=: 2&o."0
@@ -155,3 +160,4 @@ arctan=: _3&o."0
 arcsinh=: _5&o."0
 arccosh=: _6&o."0
 arctanh=: _7&o."0
+)

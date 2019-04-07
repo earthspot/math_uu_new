@@ -2,6 +2,7 @@ header.ijs
 constants.ijs
 utilities.ijs
 handy4uu.ijs
+extended.ijs
 rational.ijs
 syntax_machines.ijs
 main.ijs
