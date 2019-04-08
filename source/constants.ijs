@@ -4,7 +4,12 @@
 cocurrent 'uu'
 
 0 :0
-Friday 5 April 2019  03:32:51
+Monday 8 April 2019  21:46:55
+)
+
+ABOUT=: 0 : 0
+UU: scientific quantity converter
+-works with SI units, also Imperial and misc systems.
 )
 
 NB. =========================================================
@@ -150,10 +155,25 @@ L=. <: # R=. ":y
 ".R,'r1',L#'0'
 )
 
-  NB. π (rational - accurate to 50 decimal places)
-PI=: s4x 31415926535897932384626433832795028841971693993751x
+  NB. PI, EXP, RT2 have been copy/pasted from OEIS,
+  NB.  which [in 2019] displays 105 digits for π and e, and 99 digits for "root 2",
+  NB.  then digit(s) have been dropped off the end until an odd digit is reached.
+  NB.  NO OTHER ADJUSTMENTS WERE MADE BY HAND/EYE TO THE DATA DIGITS.
+  NB. This trick preserves each constant's appearance as a rational J number,
+  NB.  else a final even digit would make J cancel out by a factor of 2 or more.
 
-EXP=: s4x 271828182845904509x  NB.  NEEDS MORE PRECISION <<<<<
+  NB. π (rational - accurate to >100 decimal places - 104 digits shown)
+  NB. https://oeis.org/A000796	IAC Monday 8 April 2019  21:12:05
+PI=:  s4x 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821x 
+
+  NB. e (rational - accurate to >100 decimal places - 103 digits shown)
+  NB. https://oeis.org/A001113	IAC Monday 8 April 2019  21:12:05
+EXP=: s4x 2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427x
+
+  NB. √2 (rational approximation to >98 decimal places - 99 digits shown)
+  NB. https://oeis.org/A002193	IAC Monday 8 April 2019  21:43:31
+RT2=: s4x 141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157x
+assert (_1&x: 2 - RT2*RT2) = 7.735787349235917e_99
 
 PI2=:	PI * 2
 PI4=:	PI * 4
@@ -161,8 +181,6 @@ PIb2=:	PI * 1r2
 PIb3=:	PI * 1r3
 PIb4=:	PI * 1r4
 PI4b3=:	PI * 4r3
-RT2=:	(x:!.0) 2 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
-RT3=:	(x:!.0) 3 ^ 1r2	NB. NEEDS MORE PRECISION <<<<<
 
 ICE_F=: 32x		NB. water freezes [°F]
 ICE_C=: 0x		NB. water freezes [°C]
