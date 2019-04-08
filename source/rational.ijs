@@ -20,18 +20,22 @@ Be suspicious of: __r1&".
 
 cocurrent 'uu'
 
-notFloat=: 3 : 0
-  NB. Boolean: y is NOT floating
--. (datatype y) -: 'floating'
-)
+NB. notFloat=: 3 : 0
+NB.   NB. Boolean: y is NOT floating
+NB. -. (datatype y) -: 'floating'
+NB. )
 
-float_z_=: _1&x:  NB. rational-->floating|integer|Boolean
-rat_z_=: rational_z_=: rationalized_z_=: x:!.0
+rat_z_=: rational_z_=: x:!.0
+float_z_=: _1&x:  		NB. rational-->	float|int|Bool
+extended_z_=: x:!.0	NB. integer -->	extended
+numDenom_z_=: 2&x:		NB. rational -->	(extended,extended)
+rat4pair_z_=: (_2&x:)&x:	NB. (num,num)-->	rational
 
-isRational=: 3 : '64 128 e.~ 3!:0 y'
+NB. isRational=: 3 : '64 128 e.~ 3!:0 y'
 isRational=: 64 128 e.~ 3!:0  NB. also covers: isExtended
 isExtended=: 64 = 3!:0
 isFloating=: 8 = 3!:0
+notFloat=: 8 ~: 3!:0
 
 reval=: 3 : 0 "1
   NB. variant of: eval - returns 'rational'

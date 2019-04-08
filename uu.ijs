@@ -25,6 +25,7 @@ AABUILT=: '2019-04-05  17:43:40'
 AABUILT=: '2019-04-06  01:27:43'
 AABUILT=: '2019-04-06  02:42:47'
 AABUILT=: '2019-04-07  01:57:15'
+AABUILT=: '2019-04-07  22:31:00'
 
 '==================== [uu] constants ===================='
 
@@ -563,19 +564,15 @@ Be suspicious of: __r1&".
 )
 
 cocurrent 'uu'
-
-notFloat=: 3 : 0
-
--. (datatype y) -: 'floating'
-)
-
-float_z_=: _1&x:
 rat_z_=: rational_z_=: rationalized_z_=: x:!.0
-
-isRational=: 3 : '64 128 e.~ 3!:0 y'
+float_z_=: _1&x:
+extended_z_=: x:!.0
+numDenom_z_=: 2&x:
+rat4pair_z_=: (_2&x:)&x:
 isRational=: 64 128 e.~ 3!:0
 isExtended=: 64 = 3!:0
 isFloating=: 8 = 3!:0
+notFloat=: 8 ~: 3!:0
 
 reval=: 3 : 0 "1
 
