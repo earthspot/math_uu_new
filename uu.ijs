@@ -1,37 +1,19 @@
 0 :0
-Wednesday 3 April 2019  09:28:08
+Wednesday 10 April 2019  05:35:01
 -
 UU: scientific units conversion package
 )
 coclass 'uu'
 onload_z_=: empty
 
-AABUILT=: '2019-04-03  09:29:27'
-AABUILT=: '2019-04-03  12:02:48'
-AABUILT=: '2019-04-05  02:20:26'
-AABUILT=: '2019-04-05  02:26:39'
-AABUILT=: '2019-04-05  03:58:36'
-AABUILT=: '2019-04-05  04:21:32'
-AABUILT=: '2019-04-05  04:44:53'
-AABUILT=: '2019-04-05  05:53:09'
-AABUILT=: '2019-04-05  15:16:46'
-AABUILT=: '2019-04-05  16:51:20'
-AABUILT=: '2019-04-05  16:55:18'
-AABUILT=: '2019-04-05  17:10:25'
-AABUILT=: '2019-04-05  17:20:43'
-AABUILT=: '2019-04-05  17:35:25'
-AABUILT=: '2019-04-05  17:37:59'
-AABUILT=: '2019-04-05  17:43:40'
-AABUILT=: '2019-04-06  01:27:43'
-AABUILT=: '2019-04-06  02:42:47'
-AABUILT=: '2019-04-07  01:57:15'
-AABUILT=: '2019-04-07  22:31:00'
-AABUILT=: '2019-04-08  18:05:05'
-AABUILT=: '2019-04-08  21:26:39'
-AABUILT=: '2019-04-08  21:27:38'
-AABUILT=: '2019-04-08  21:42:48'
-AABUILT=: '2019-04-08  21:43:07'
-AABUILT=: '2019-04-08  21:47:01'
+CREATOR=: ;(4!:4<'zx'){4!:3''[zx=.''
+
+AABUILT=: '2019-04-10  06:00:04'
+AABUILT=: '2019-04-10  06:00:46'
+AABUILT=: '2019-04-10  06:06:40'
+AABUILT=: '2019-04-10  06:27:37'
+AABUILT=: '2019-04-10  06:29:32'
+AABUILT=: '2019-04-10  06:32:00'
 
 '==================== [uu] constants ===================='
 
@@ -299,10 +281,18 @@ catch.
 end.
 )
 
-uuc_z_=: 3 : 'open ''~UUC'''
-uuf_z_=: 3 : 'open ''~UUF'''
-uum_z_=: 3 : 'open ''~UUM'''
+uut_z_=: openlab=: open bind '~Gituu/uu.ijt'
+uuc_z_=: open bind '~UUC'
+uuf_z_=: open bind '~UUF'
+uum_z_=: open bind '~UUM'
+uuc_z_=: open bind '~Gitcal/source/cal_interface.ijs'
+uui_z_=: open bind '~Gituu/source/uu_interface.ijs'
 cocurrent 'z'
+
+
+
+
+sister=: 4 : 'SP-.~ CREATOR rplc (''.ijs'',~ x) ; (''.ijs'',~ y)' "1
 
 
 dfr=: *&(%PI%180)
@@ -1987,11 +1977,15 @@ end.
 )
 
 '==================== [uu] start ===================='
+0 :0
+Wednesday 10 April 2019  06:26:39
+)
 
 cocurrent 'uu'
 
+VERSION=: '<UNSET>'
+
 DIAGNOSTICS=: 0
-blink=: empty
 
 start=: 3 : 0
 
@@ -1999,23 +1993,22 @@ start=: 3 : 0
 
 
 
-ssw=. empty
-ssw '+++ [uu] start: ENTERED. y=(y)'
+trace DIAGNOSTICS
+msg '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
 trace 0
-sess=: empty
 factory''
-VERSION=: getversion jpath'~UU'
-load jpath'~UUC'
-load jpath'~UUF'
-load jpath'~UUM'
+load 'uu' sister 'uuc'
+load 'uu' sister 'uuf'
+load 'uu' sister 'uum'
+load 'uu' sister 'manifest'
+erase'CAPTION FILES DESCRIPTION RELEASE FOLDER LABCATEGORY PLATFORMS'
 make_units''
 make_unitc''
 rat_check''
-
 report_complex_nouns''
 trace DIAGNOSTICS
-ssw '+++ [uu] start: COMPLETED.'
+msg '--- [uu] start: COMPLETED.'
 )
 
 create=: start
@@ -2023,4 +2016,5 @@ destroy=: codestroy
 
 runlab_z_=: runlab_uu_
 uu_z_=: uu_uu_
+blink=: empty
 start''

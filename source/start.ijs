@@ -1,10 +1,14 @@
 	NB. uu - start.ijs
 '==================== [uu] start ===================='
+0 :0
+Wednesday 10 April 2019  06:26:39
+)
 
 cocurrent 'uu'
 
+VERSION=: '<UNSET>'
+
 DIAGNOSTICS=: 0	NB. y==0 sets msg=:sllog=:empty
-blink=: empty	NB. activate with: op'blink'
 
 start=: 3 : 0
   NB. start the UU locale - which may be a numbered one.
@@ -12,26 +16,22 @@ start=: 3 : 0
   NB.  but should be called by apps using UU whenever
   NB.  the constants library (UUC) has been changed.
   NB. But not needed if only the functions library (UUF) changed
-ssw=. empty
-ssw '+++ [uu] start: ENTERED. y=(y)'
+trace DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
+msg '+++ [uu] start: ENTERED. y=(y)'
 if. isNo y do. SIC=: y end.
-NB. trace 1  NB. enable diagnostics
-NB. wd'msgs'
 trace 0  NB. disable diagnostics while caches are being built
-sess=: empty  NB. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 factory''  NB. assigns: SCI SIC SIG SIZ ZERO
-VERSION=: getversion jpath'~UU'
-load jpath'~UUC'
-load jpath'~UUF'
-load jpath'~UUM'
+load 'uu' sister 'uuc'
+load 'uu' sister 'uuf'
+load 'uu' sister 'uum'
+load 'uu' sister 'manifest'
+erase'CAPTION FILES DESCRIPTION RELEASE FOLDER LABCATEGORY PLATFORMS'
 make_units''  NB. globals: cspel csymb units unitv uvald rvald uvalu rvalu
 make_unitc''  NB. global: unitc uvalc rvalc
-rat_check''
-  NB. …verifies integrity of rational caches
+rat_check''   NB. …verifies integrity of rational caches
 report_complex_nouns''  NB. NO NOUNS should be complex
-trace DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
-NB. wd'msgs'
-ssw '+++ [uu] start: COMPLETED.'
+trace DIAGNOSTICS  NB. re-enable tracing if DIAGNOSTICS=1
+msg '--- [uu] start: COMPLETED.'
 )
 
 create=: start
@@ -39,6 +39,7 @@ destroy=: codestroy
 
 runlab_z_=: runlab_uu_  NB. for: runlab''
 uu_z_=: uu_uu_  NB. for: runlab''
+blink=: empty	NB. activate with: op'blink'
 
 NB. uuinit_z_=: 3 : 0
 NB. ulo=. y conew 'uu'

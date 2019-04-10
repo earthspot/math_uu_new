@@ -114,15 +114,23 @@ catch.
 end.
 )
 
-uuc_z_=: 3 : 'open ''~UUC'''
-uuf_z_=: 3 : 'open ''~UUF'''
-uum_z_=: 3 : 'open ''~UUM'''
+uut_z_=: openlab=: open bind '~Gituu/uu.ijt'
+uuc_z_=: open bind '~UUC'
+uuf_z_=: open bind '~UUF'
+uum_z_=: open bind '~UUM'
+uuc_z_=: open bind '~Gitcal/source/cal_interface.ijs'
+uui_z_=: open bind '~Gituu/source/uu_interface.ijs'
 
 NB. ======================================
 NB. SCIENTIFIC UTILITIES
 NB. ======================================
 
 cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
+
+  NB. sister -returns fullpathname of sister script: (y)
+  NB. Needs CREATOR assigned correctly in header.ijs, thus:
+  NB. CREATOR=: ;(4!:4<'zx'){4!:3''[zx=.''
+sister=: 4 : 'SP-.~ CREATOR rplc (''.ijs'',~ x) ; (''.ijs'',~ y)' "1
 
   NB. checked against long PI: IAC Friday 5 April 2019  01:58:01
 dfr=: *&(%PI%180)

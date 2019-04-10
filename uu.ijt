@@ -1,33 +1,40 @@
 LABTITLE=: 'Scientific Units'
 LABDEPENDS=: 'math/uu'
 
-NB. Monday 13 August 2018  19:00:00
-NB. This version assumes "qty" format not supported anymore.
-NB. Also: _base_ assumed, so _uu_ can be dropped.
+0 :0
+Tuesday 9 April 2019  12:15:19
+-
+done to…
+NB. ========…
+NB. ========…
+-
+open'~Desktop/UU-runlab.txt'  NB. for rewriting notes
+)
 
 NB. =========================================================
 Lab Section INTRO
-UU is an addon to convert quantities between different
-units of measurement.
+Addon: UU converts quantities between different units of
+measurement.
+
 It is based on the International System of Units
-(Le Système International d'Unités) or "SI".
+"Le Système International d'Unités" or "SI".
    http://en.wikipedia.org/wiki/SI_units
+   https://www.bipm.org/utils/common/pdf/si_summary_en.pdf
 
 But it knows some other units too.
-You can even define your own, by editing "UU-constants":
+You can even define your own units by editing the table of
+UU constants: uuc.ijs
    open '~addons/math/uu/uuc.ijs'
 )
-
-NB. require 'math/uu'
-NB. ---ASSUME _uu_ ALREADY LOADED ... BY build/run
+load 'math/uu'
 
 uu '3 ft'
 uu '1 yd'
-uu '1 min'
+uu '1 kWh'
 
 NB. =========================================================
 Lab Section CONVERT
-Monadic uu will convert to the fundamental units of SI:
+Monadic uu converts to the base units of SI:
    metre [m], kilogram [kg], second [s], Ampere [A],
    Kelvin [K], candela [cd], mole [mol].
 
@@ -37,15 +44,14 @@ uu will convert to those units instead...
 
 'ft' uu '1 yd'
 'yd' uu '6 ft'
-'km' uu '56789 m'
+'J'  uu '1 kWh'
 
 NB. =========================================================
 Lab Section COMPATIBLE1
 ...But of course only if the units are compatible.
 )
 
-'km' uu '100 s'
-
+'ft'  uu '1 kWh'
 
 NB. =========================================================
 Lab Section COMPATIBLE2
@@ -53,22 +59,27 @@ The Joule [J] is the SI unit of energy.
 
 How do you find out which units are compatible with [J]?
 
-Energy units all share the same expansion as basic units:
-   [kg m^2/s^2], or [kg m²/s²]
+All energy units expand into the base units: [kg m²/s²]
 
-You could dream up various units to test one-by-one...
+You could try to recall energy units one-by-one
+and test them to see if they expand into: [kg m²/s²]
 )
 
-uu '1 J'
-uu '1 erg'
-uu '1 eV'
-uu '1 cal'
-uu '1 Mton.TNT'
-uu '1 kW'  NB. No: kilowatt is a unit of power, not energy
+uu '1 J'         NB. yes - J is an energy unit
+uu '1 erg'       NB. yes - erg is an energy unit
+uu '1 eV'        NB. yes - eV is an energy unit
+uu '1 cal'       NB. yes - cal is an energy unit
+uu '1 kW'        NB. NO -- kW is a unit of power, not energy
 
+NB. =========================================================
+NB. =========================================================
 NB. =========================================================
 Lab Section COMPATIBLE3
 But UU has a verb to help you: compatible''
+
+	>>>>> Transfer notes from UU-runlab.txt
+
+	>>>>> NO use a uuengine instruction
 )
 
 public_uu_ 'base'
@@ -77,13 +88,16 @@ cocurrent 'base'
 
 'cal' compatible 'J'
 'J' compatible 'cal'
-'J' compatible 'kW'	NB. Kilowatt is a unit of power, not energy
+'J' compatible 'kW'
 'J' compatible 'kWh'
 
 NB. =========================================================
 Lab Section COMPATLIST1
 You can even ask UU to tell you all the units it knows
 which are compatible with [J]...
+
+	>>>>> NO use a uuengine instruction
+
 )
 
 compatlist 'J'
@@ -97,18 +111,21 @@ But if UU doesn't know the units you give it
 public_uu_ 'base'
 cocurrent 'base'
 
-'J' compatible 'oodles'
+'J' compatible 'thingy'
 
 NB. =========================================================
 Lab Section COMPATLIST3
-NOTE the behavior for: unknown units...
+NOTE the behavior of uu with unknown units...
 )
 
-uu '1 oodles'
+'thingy' uu '1 yd'
+uu '1 thingy'
 
 NB. =========================================================
 Lab Section SLASH1
 '/' is the UU convention for DIMENSIONLESS UNITS.
+
+	>>>>> also mention [*]
 
 This prevents the units string vanishing when you divide
 compatible units by each other.)
