@@ -49,6 +49,8 @@ uu will convert to those units instead...
 NB. =========================================================
 Lab Section COMPATIBLE1
 ...But of course only if the units are compatible.
+
+If they are not, uu returns a (string) error message...
 )
 
 'ft'  uu '1 kWh'
@@ -65,62 +67,88 @@ You could try to recall energy units one-by-one
 and test them to see if they expand into: [kg m²/s²]
 )
 
-uu '1 J'         NB. yes - J is an energy unit
-uu '1 erg'       NB. yes - erg is an energy unit
-uu '1 eV'        NB. yes - eV is an energy unit
-uu '1 cal'       NB. yes - cal is an energy unit
-uu '1 kW'        NB. NO -- kW is a unit of power, not energy
+uu '1 J'       NB. yes - J is an energy unit
+uu '1 erg'     NB. yes - erg is an energy unit
+uu '1 eV'      NB. yes - eV is an energy unit
+uu '1 cal'     NB. yes - cal is an energy unit
+uu '1 kW h'    NB. yes - [kW h] are energy units
+uu '1 kWh'     NB. yes - UU knows that kWh is equivalent
+uu '1 kW'      NB. NO -- kW is a unit of power not energy!
 
-NB. =========================================================
-NB. =========================================================
 NB. =========================================================
 Lab Section COMPATIBLE3
-But UU has a verb to help you: compatible''
+But uu has a way to help you.
 
-	>>>>> Transfer notes from UU-runlab.txt
-
-	>>>>> NO use a uuengine instruction
+If the argument starts with '*' then uu calls uuengine...
 )
 
-public_uu_ 'base'
-NB. >>> Introduce public'base'
-cocurrent 'base'
+uu'*CPAT kg m²/s² > J' NB. yes - J is an energy unit
+uu'*CPAT erg > J'  NB. yes - erg is compatible with J
+uu'*CPAT eV > J'   NB. yes - ev is compatible with J
+uu'*CPAT cal > J'  NB. yes - cal is compatible with J
+uu'*CPAT kWh > J'  NB. yes - kWh is compatible with J
+uu'*CPAT kW > J'   NB. NO -- kW is not compatible
 
-'cal' compatible 'J'
-'J' compatible 'cal'
-'J' compatible 'kW'
-'J' compatible 'kWh'
+NB. =========================================================
+Lab Section COMPATIBLE4
+Verb: uuengine is an all-purpose portal into the UU package.
+
+Its "instructions" are all strings (ascii or utf-8).
+
+The first 4 letters are the instruction code.
+
+uuengine can return:
+ • scalar Boolean or integer numbers
+ • strings which are units
+ • boxed lists
+
+If there is no leading '*' then uu always returns a string.
+
+If the returned string is not a valid quantity
+(a number followed by units, in the form of a single string)
+then it is an error message
+(which always begin with '>>>')
+
+We saw an error message earlier:
+ >>> uu: incompatible units: x=[ft] targ=[ft] unit=[kWh]
+
+Here is the same uuengine instruction called directly,
+and also (for comparison) via uu
+)
+
+uuengine_uu_ 'CPAT J > erg'
+uu'*CPAT J > erg'
+uu'*CPAT J'  NB. WRONG - CPAT needs 2 units separated by '>'
 
 NB. =========================================================
 Lab Section COMPATLIST1
-You can even ask UU to tell you all the units it knows
+uuengine can be even more helpful.
+
+You can ask it for a list of all the units it knows about
 which are compatible with [J]...
-
-	>>>>> NO use a uuengine instruction
-
 )
 
-compatlist 'J'
+uu '*CPLI J'
 
 NB. =========================================================
 Lab Section COMPATLIST2
-But if UU doesn't know the units you give it
-(or you've misspelt them) then it will reply with 0...
+But if uuengine doesn't know the units you give it
+(or you've misspelt them) then it will reply with 0,
+NOT with an error message...
 )
 
-public_uu_ 'base'
-cocurrent 'base'
-
-'J' compatible 'thingy'
+uu'*CPAT J > gizmo'
 
 NB. =========================================================
 Lab Section COMPATLIST3
-NOTE the behavior of uu with unknown units...
+NOTE the behavior of uu (as opposed to uuengine)
+with unknown units...
 )
 
-'thingy' uu '1 yd'
-uu '1 thingy'
+'gizmo' uu '1 yd'
+uu '1 gizmo'
 
+NB. =========================================================
 NB. =========================================================
 Lab Section SLASH1
 '/' is the UU convention for DIMENSIONLESS UNITS.

@@ -3,6 +3,12 @@
 
 cocurrent 'uu'
 
+  NB. NEEDS CHECKING against long PI again >>>>>>>>>>>>>>>>>>>>
+NB. dfr=: *&(%PI%180)  NO... needs latest truncated PI!
+NB. rfd=: *&(PI%180)
+dfr=: 3 : '180*y%PI'
+rfd=: 3 : 'PI*y%180'
+
 NB. boxed substrings in x at the stars of pattern: y
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
@@ -38,10 +44,6 @@ utoks=: 3 : 0
 z=. sp1 y	NB. ensure leading sign-byte: SP|SL
 z=. (z e. SP,SL) <;.1 z
 )
-
-NB. ======================================
-NB. TEST-ONLY utilities, some redundant...
-NB. ======================================
 
 vt=: viewtable=: '' ddefine
   NB. y == list of indexes into UUC -- OR ALTERNATIVELY...
@@ -114,45 +116,9 @@ catch.
 end.
 )
 
-uut_z_=: openlab=: open bind '~Gituu/uu.ijt'
-uuc_z_=: open bind '~UUC'
-uuf_z_=: open bind '~UUF'
-uum_z_=: open bind '~UUM'
-uuc_z_=: open bind '~Gitcal/source/cal_interface.ijs'
-uui_z_=: open bind '~Gituu/source/uu_interface.ijs'
-
-NB. ======================================
-NB. SCIENTIFIC UTILITIES
-NB. ======================================
-
-cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
-
-  NB. sister -returns fullpathname of sister script: (y)
-  NB. Needs CREATOR assigned correctly in header.ijs, thus:
-  NB. CREATOR=: ;(4!:4<'zx'){4!:3''[zx=.''
-sister=: 4 : 'SP-.~ CREATOR rplc (''.ijs'',~ x) ; (''.ijs'',~ y)' "1
-
-  NB. checked against long PI: IAC Friday 5 April 2019  01:58:01
-dfr=: *&(%PI%180)
-rfd=: *&(PI%180)
-
-choice=: 4 : '((0>.1<.x)){y'
-
-abs=: |
-avg=: +/ % #
-div=: %
-int=: [: <. ] + 0 > ]
-mod=: |~
-times=: *
-
-NB. >>>>>>>> REPLACE WITH HUI VERBS <<<<<<<<<
-NB.  arccos arcsin arctan arctan0 arctan1 asin0 asin1 cnt
-NB.  cos cosh erf exp ln n01cdf pi round sin sinh sqrt
-
-
-0 :0
-exp=: ^	NB. used in UUF for [radioactive] decay only
-
+originalsin=: 3 : 0
+  NB. restore the floating pt trig defns
+cocurrent 'z'
 sin=: 1&o."0
 cos=: 2&o."0
 tan=: 3&o."0
@@ -168,4 +134,20 @@ arctan=: _3&o."0
 arcsinh=: _5&o."0
 arccosh=: _6&o."0
 arctanh=: _7&o."0
+i.0 0
 )
+
+NB. ======================================
+NB. SCIENTIFIC UTILITIES
+NB. ======================================
+
+cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL TOO
+
+choice=: 4 : '((0>.1<.x)){y'
+
+abs=: |
+avg=: +/ % #
+div=: %
+int=: [: <. ] + 0 > ]
+mod=: |~
+times=: *

@@ -2,7 +2,7 @@
 '==================== [uu] rational ===================='
 
 0 :0
-Tuesday 19 March 2019  17:10:47
+Friday 12 April 2019  11:59:16
 -
 from: tempuu 76
 -
@@ -20,10 +20,13 @@ Be suspicious of: __r1&".
 
 cocurrent 'uu'
 
-NB. notFloat=: 3 : 0
-NB.   NB. Boolean: y is NOT floating
-NB. -. (datatype y) -: 'floating'
-NB. )
+s4x=: 16 ddefine
+  NB. make rational number in interval (1,10) out of integer|extended (y)
+  NB. Cap #P at (x) digits
+P=. ":y
+if. x<#P do. P=. x{.P end.
+".P,'r1',(<:#P)#'0'
+)
 
 rat_z_=: rational_z_=: x:!.0
 float_z_=: _1&x:  		NB. rational-->	float|int|Bool

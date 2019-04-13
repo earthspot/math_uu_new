@@ -14,13 +14,34 @@ AABUILT=: '2019-04-10  06:06:40'
 AABUILT=: '2019-04-10  06:27:37'
 AABUILT=: '2019-04-10  06:29:32'
 AABUILT=: '2019-04-10  06:32:00'
+AABUILT=: '2019-04-10  23:26:05'
+AABUILT=: '2019-04-10  23:28:51'
+AABUILT=: '2019-04-12  11:58:10'
+AABUILT=: '2019-04-12  12:01:31'
+AABUILT=: '2019-04-12  12:01:50'
+AABUILT=: '2019-04-12  12:03:15'
+AABUILT=: '2019-04-12  12:04:53'
+AABUILT=: '2019-04-12  12:07:02'
+AABUILT=: '2019-04-12  12:10:29'
+AABUILT=: '2019-04-12  12:33:34'
+AABUILT=: '2019-04-12  12:43:00'
+AABUILT=: '2019-04-12  12:43:53'
+AABUILT=: '2019-04-12  12:50:38'
+AABUILT=: '2019-04-12  13:16:27'
+AABUILT=: '2019-04-12  13:19:00'
+AABUILT=: '2019-04-12  13:44:21'
+AABUILT=: '2019-04-13  03:22:49'
+AABUILT=: '2019-04-13  03:42:02'
+AABUILT=: '2019-04-13  06:14:43'
+AABUILT=: '2019-04-13  18:48:08'
+AABUILT=: '2019-04-13  18:51:59'
 
 '==================== [uu] constants ===================='
 
 cocurrent 'uu'
 
 0 :0
-Monday 8 April 2019  21:46:55
+Friday 12 April 2019  12:51:30
 )
 
 ABOUT=: 0 : 0
@@ -59,15 +80,14 @@ SIZ=: 1e_9
 ZERO=: 'NO'
 i.0 0
 )
-b4f=: f2b=:	[: <;._1 LF , ]
 
-CANNOTSCALE=: b4f }: 0 : 0
+CANNOTSCALE=: cutopen 0 : 0
 gas.mark
 midino
 note
 )
 
-TEMPERATURE_SCALES=: b4f }: 0 : 0
+TEMPERATURE_SCALES=: cutopen 0 : 0
 K
 Kelvin
 C
@@ -91,7 +111,7 @@ De
 )
 
 
-UUC=: >cutopen 0 : 0
+REF_UUC=: >cutopen 0 : 0
 1 /	[saved]	BASIC TESTING ONLY
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
@@ -104,9 +124,6 @@ UUC=: >cutopen 0 : 0
 1 eur	[eur]	fundamental unit - euro (currency)
 1 /	[/]	fundamental unit - (dimensionless)
 1 *	[*]	fundamental unit - (matches any units)
-1000 m	[km] kilometre
-0.01 m	[cm] centimetre
-0.001 m	[mm] millimetre
 0.0254 m	[in]	inch
 12 in	[ft]	feet
 36 in	[yd]	yard
@@ -121,24 +138,19 @@ UUC=: >cutopen 0 : 0
 1 deg	[dms]	degrees as deg min sec
 )
 
-UUF=: >cutopen 0 : 0
+REF_UUF=: >cutopen 0 : 0
 PI*r*r : r(m)		[m^2]	area of circle
 sin a ; a(rad)		[/]	sine
 cos a ; a(rad)		[/]	cosine
 tan a ; a(rad)		[/]	tangent
 )
 
-UUM=: ''
+REF_UUM=: ''
 SIbu=: ;:'m kg s A K mol cd'
 mks=:   SIbu,'rad';'eur'
 
 cocurrent 'z'
 
-s4x=: 3 : 0
-
-L=. <: # R=. ":y
-".R,'r1',L#'0'
-)
 
 
 
@@ -148,24 +160,16 @@ L=. <: # R=. ":y
 
 
 
-
-PI=:  s4x 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821x 
-
-
-
-EXP=: s4x 2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427x
+REF_PI=:  31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821x 
 
 
 
-RT2=: s4x 141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157x
-assert (_1&x: 2 - RT2*RT2) = 7.735787349235917e_99
+REF_EXP=: 2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427x
 
-PI2=:	PI * 2
-PI4=:	PI * 4
-PIb2=:	PI * 1r2
-PIb3=:	PI * 1r3
-PIb4=:	PI * 1r4
-PI4b3=:	PI * 4r3
+
+
+REF_RT2=: 141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157x
+assert (_1&x: 2 - REF_RT2*REF_RT2) = _2e196
 
 ICE_F=: 32x
 ICE_C=: 0x
@@ -177,6 +181,10 @@ BOIL_K=: 100x + ICE_K
 '==================== [uu] utilities ===================='
 
 cocurrent 'uu'
+
+
+dfr=: 3 : '180*y%PI'
+rfd=: 3 : 'PI*y%180'
 cutByPattern=: 13 : '((;:y) -. <,ST) -.~ ;:x'
 cutByPattern=: ((<,'*') -.~ [: ;: ]) -.~ [: ;: [
 
@@ -210,6 +218,7 @@ utoks=: 3 : 0
 z=. sp1 y
 z=. (z e. SP,SL) <;.1 z
 )
+
 vt=: viewtable=: '' ddefine
 
 
@@ -281,35 +290,9 @@ catch.
 end.
 )
 
-uut_z_=: openlab=: open bind '~Gituu/uu.ijt'
-uuc_z_=: open bind '~UUC'
-uuf_z_=: open bind '~UUF'
-uum_z_=: open bind '~UUM'
-uuc_z_=: open bind '~Gitcal/source/cal_interface.ijs'
-uui_z_=: open bind '~Gituu/source/uu_interface.ijs'
+originalsin=: 3 : 0
+
 cocurrent 'z'
-
-
-
-
-sister=: 4 : 'SP-.~ CREATOR rplc (''.ijs'',~ x) ; (''.ijs'',~ y)' "1
-
-
-dfr=: *&(%PI%180)
-rfd=: *&(PI%180)
-
-choice=: 4 : '((0>.1<.x)){y'
-
-abs=: |
-avg=: +/ % #
-div=: %
-int=: [: <. ] + 0 > ]
-mod=: |~
-times=: *
-
-0 :0
-exp=: ^
-
 sin=: 1&o."0
 cos=: 2&o."0
 tan=: 3&o."0
@@ -325,7 +308,18 @@ arctan=: _3&o."0
 arcsinh=: _5&o."0
 arccosh=: _6&o."0
 arctanh=: _7&o."0
+i.0 0
 )
+cocurrent 'z'
+
+choice=: 4 : '((0>.1<.x)){y'
+
+abs=: |
+avg=: +/ % #
+div=: %
+int=: [: <. ] + 0 > ]
+mod=: |~
+times=: *
 
 '==================== [uu] handy4uu ===================='
 cocurrent 'z'
@@ -561,7 +555,7 @@ n01cdf=: DP&$: : (4 : 0) " 0
 '==================== [uu] rational ===================='
 
 0 :0
-Tuesday 19 March 2019  17:10:47
+Friday 12 April 2019  11:59:16
 -
 from: tempuu 76
 -
@@ -578,6 +572,15 @@ Be suspicious of: __r1&".
 )
 
 cocurrent 'uu'
+
+s4x=: 16 ddefine
+
+
+P=. ":y
+if. x<#P do. P=. x{.P end.
+".P,'r1',(<:#P)#'0'
+)
+
 rat_z_=: rational_z_=: x:!.0
 float_z_=: _1&x:
 extended_z_=: x:!.0
@@ -954,15 +957,6 @@ end.
 )
 
 exrate=: exrate_exch_
-getversion=: 3 : 0
-
-VERSION=: 'v.v.v'
-assert. fexist y
-load y sl 'manifest.ijs'
-assert. -. NaNoun 'VERSION'
-erase 'FILES RELEASE LABCATEGORY PLATFORMS'
-VERSION return.
-)
 
 hy=: '_-' charsub ]
 isNaN=: 128!:5
@@ -1978,14 +1972,16 @@ end.
 
 '==================== [uu] start ===================='
 0 :0
-Wednesday 10 April 2019  06:26:39
+Saturday 13 April 2019  18:48:04
 )
 
 cocurrent 'uu'
 
-VERSION=: '<UNSET>'
+VERSION=: '0.0.0'
 
 DIAGNOSTICS=: 0
+
+CAPPED=: 40
 
 start=: 3 : 0
 
@@ -1993,16 +1989,34 @@ start=: 3 : 0
 
 
 
+
 trace DIAGNOSTICS
 msg '+++ [uu] start: ENTERED. y=(y)'
-if. isNo y do. SIC=: y end.
+
+try.	load (pathof CREATOR) sl 'tpathdev.ijs'
+catch.	load (pathof CREATOR) sl 'tpathjal.ijs'
+end.
+load TPMU sl 'manifest.ijs'
+
+erase'CAPTION FILES DESCRIPTION RELEASE FOLDER LABCATEGORY PLATFORMS'
+
 trace 0
 factory''
-load 'uu' sister 'uuc'
-load 'uu' sister 'uuf'
-load 'uu' sister 'uum'
-load 'uu' sister 'manifest'
-erase'CAPTION FILES DESCRIPTION RELEASE FOLDER LABCATEGORY PLATFORMS'
+if. isNo y do. SIC=: y end.
+
+RT2_z_=:   CAPPED s4x REF_RT2
+EXP_z_=:   CAPPED s4x REF_EXP
+PI_z_=:    CAPPED s4x REF_PI
+PI2_z_=:   PI * 2
+PI4_z_=:   PI * 4
+PIb2_z_=:  PI * 1r2
+PIb3_z_=:  PI * 1r3
+PIb4_z_=:  PI * 1r4
+PI4b3_z_=: PI * 4r3
+
+load TPUC sl 'uuc.ijs'
+load TPUF sl 'uuf.ijs'
+load TPUM sl 'uum.ijs'
 make_units''
 make_unitc''
 rat_check''
@@ -2017,4 +2031,10 @@ destroy=: codestroy
 runlab_z_=: runlab_uu_
 uu_z_=: uu_uu_
 blink=: empty
+
+0 :0
+uuinit_z_=: 3 : 0
+ulo=. y conew 'uu'
+)
+
 start''

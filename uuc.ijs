@@ -8,9 +8,9 @@ NB.	-a final '=' in <description> means "persistent hold",
 NB.	--but '=' should not appear below:
 NB.	--it is added by TABULA to appended lines.
 NB.
-NB.	WARNING: The fundamental unit of mass in SI units is not [g] but [kg].
+NB.	WARNING: The base unit of mass in SI units is not [g] but [kg].
 NB.	This means that scaleunits_cal_ gives [g] and [kg] special treatment.
-NB.	The first 11 lines of UUC define fundamental units in terms of themselves.
+NB.	The first 11 lines of UUC define base units in terms of themselves.
 NB.	They are not active definitions: their conversion factors are always 1.
 NB.	They appear below as appendable lines for the sake of completeness.
 NB.
@@ -29,30 +29,34 @@ NB. ...because they interfere with orderly re-scaling by menu
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Saturday 6 April 2019  03:23:41
-1 m	[m]	fundamental unit - metre (distance)
-1 kg	[kg]	fundamental unit - kilogramme (mass)
-1 s	[s]	fundamental unit - second (time)
-1 A	[A]	fundamental unit - Ampere (electric current)
-1 K	[K]	fundamental unit - Kelvin (temperature)
-1 cd	[cd]	fundamental unit - candela (light intensity)
-1 mol	[mol]	fundamental unit - mole (amount of matter)
-1 rad	[rad]	fundamental unit - radian (angle)
-1 eur	[eur]	fundamental unit - euro (currency)
-1 /	[/]	fundamental unit - (dimensionless)
-1 *	[*]	fundamental unit - (matches any units)
+1 /	[saved]	Saturday 13 April 2019  02:08:50
+1 m	[m]	base unit - metre (distance)
+1 kg	[kg]	base unit - kilogramme (mass)
+1 s	[s]	base unit - second (time)
+1 A	[A]	base unit - Ampere (electric current)
+1 K	[K]	base unit - Kelvin (temperature)
+1 cd	[cd]	base unit - candela (light intensity)
+1 mol	[mol]	base unit - mole (amount of matter)
+1 rad	[rad]	base unit - radian (angle)
+1 eur	[eur]	base unit - euro (currency)
+1 /	[/]	base unit - (dimensionless)
+1 *	[*]	base unit - (matches any units)
 0.0254 m	[in]	inch
 12 in	[ft]	feet
 36 in	[yd]	yard
 22 yd	[ch]	chain
 220 yd	[fu]	furlong
 1760 yd	[mi]	mile
-0.001 kg	[g]	gram (based on kg)
+1e_6 m	[mu]	micron; micrometre
+1e_6 m	[mum]	micron; micrometre
+1e_6 m	[µ]	micron; micrometre
+1e_10 m	[Ang]	Angstrom-unit
+0.001 kg	[g]	gram (needs defining because SI base-unit is kg)
 1 s	[sec]	second (time)
 60 s	[min]	minute
 60 min	[h]	hour
 24 h	[d]	day
-1 h	[hms] h as h:min:s
+1 h	[hms]	h as h:min:s
 30.4375 d [mo]	average month
 0.01 /	[%]	Percent
 1 *	[!]	YES-NO
@@ -75,8 +79,6 @@ UUC=: cmx 0 : 0
 1 Wb/A	[H]	Inductance; Henry
 1 cd m s	[lm]	Luminous flux; lumen
 1 lm/m/m	[lx]	Illumination; lux
-1e_6 m	[mu]	micron; micrometre
-1e_10 m	[Ang]	Angstrom-unit
 1e3 kg	[t]	tonne; metric
 1e4 m^2	[ha]	hectare
 4840 yd^2	[acre]	acre

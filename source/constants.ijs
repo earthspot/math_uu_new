@@ -4,7 +4,7 @@
 cocurrent 'uu'
 
 0 :0
-Monday 8 April 2019  21:46:55
+Friday 12 April 2019  12:51:30
 )
 
 ABOUT=: 0 : 0
@@ -57,16 +57,13 @@ ZERO=: 'NO'	NB. used by: format
 i.0 0
 )
 
-NB. A FORWARD DEFINITION WHICH IS REQD HERE:
-b4f=: f2b=:	[: <;._1 LF , ]
-
-CANNOTSCALE=: b4f }: 0 : 0
+CANNOTSCALE=: cutopen 0 : 0
 gas.mark
 midino
 note
 )
 
-TEMPERATURE_SCALES=: b4f }: 0 : 0
+TEMPERATURE_SCALES=: cutopen 0 : 0
 K
 Kelvin
 C
@@ -90,7 +87,7 @@ De
 )
 
   NB. data table stubs for basic testing
-UUC=: >cutopen 0 : 0
+REF_UUC=: >cutopen 0 : 0
 1 /	[saved]	BASIC TESTING ONLY
 1 m	[m]	fundamental unit - metre (distance)
 1 kg	[kg]	fundamental unit - kilogramme (mass)
@@ -103,9 +100,6 @@ UUC=: >cutopen 0 : 0
 1 eur	[eur]	fundamental unit - euro (currency)
 1 /	[/]	fundamental unit - (dimensionless)
 1 *	[*]	fundamental unit - (matches any units)
-1000 m	[km] kilometre
-0.01 m	[cm] centimetre
-0.001 m	[mm] millimetre
 0.0254 m	[in]	inch
 12 in	[ft]	feet
 36 in	[yd]	yard
@@ -120,14 +114,14 @@ UUC=: >cutopen 0 : 0
 1 deg	[dms]	degrees as deg min sec
 )
 
-UUF=: >cutopen 0 : 0
+REF_UUF=: >cutopen 0 : 0
 PI*r*r : r(m)		[m^2]	area of circle
 sin a ; a(rad)		[/]	sine
 cos a ; a(rad)		[/]	cosine
 tan a ; a(rad)		[/]	tangent
 )
 
-UUM=: ''
+REF_UUM=: ''
 
 NB. =========================================================
 NB. mks -is UU's reference list of base units
@@ -149,12 +143,6 @@ NB. ================================================
 
 cocurrent 'z'  NB. <<<<< MAKE VISIBLE TO CAL
 
-s4x=: 3 : 0
-  NB. make rational in interval (1,10) out of integer|extended (y)
-L=. <: # R=. ":y
-".R,'r1',L#'0'
-)
-
   NB. PI, EXP, RT2 have been copy/pasted from OEIS,
   NB.  which [in 2019] displays 105 digits for π and e, and 99 digits for "root 2",
   NB.  then digit(s) have been dropped off the end until an odd digit is reached.
@@ -164,23 +152,16 @@ L=. <: # R=. ":y
 
   NB. π (rational - accurate to >100 decimal places - 104 digits shown)
   NB. https://oeis.org/A000796	IAC Monday 8 April 2019  21:12:05
-PI=:  s4x 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821x 
+REF_PI=:  31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821x 
 
   NB. e (rational - accurate to >100 decimal places - 103 digits shown)
   NB. https://oeis.org/A001113	IAC Monday 8 April 2019  21:12:05
-EXP=: s4x 2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427x
+REF_EXP=: 2718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427x
 
   NB. √2 (rational approximation to >98 decimal places - 99 digits shown)
   NB. https://oeis.org/A002193	IAC Monday 8 April 2019  21:43:31
-RT2=: s4x 141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157x
-assert (_1&x: 2 - RT2*RT2) = 7.735787349235917e_99
-
-PI2=:	PI * 2
-PI4=:	PI * 4
-PIb2=:	PI * 1r2
-PIb3=:	PI * 1r3
-PIb4=:	PI * 1r4
-PI4b3=:	PI * 4r3
+REF_RT2=: 141421356237309504880168872420969807856967187537694807317667973799073247846210703885038753432764157x
+assert (_1&x: 2 - REF_RT2*REF_RT2) = _2e196
 
 ICE_F=: 32x		NB. water freezes [°F]
 ICE_C=: 0x		NB. water freezes [°C]

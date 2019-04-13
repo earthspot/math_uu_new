@@ -118,26 +118,6 @@ end.
 
 exrate=: exrate_exch_
 
-NB. getversion=: 3 : 0
-NB. try.
-NB. badresult=. fread''
-NB. assert. -. badresult -: z=. fread y sl 'manifest.ijs'
-NB. assert. 0< # z=. LF taketo 'VERSION' dropto z
-NB. ".z 
-NB. catch. end.
-NB. )
-
-getversion=: 3 : 0
-  NB. get VERSION from manifest.ijs in (path) y
-VERSION=: 'v.v.v'
-assert. fexist y  NB. y operationally is jpath'~UU'
-load y sl 'manifest.ijs'
-assert. -. NaNoun 'VERSION'
-erase 'FILES RELEASE LABCATEGORY PLATFORMS'
-NB. empty erase 'CAPTION DESCRIPTION FOLDER'
-VERSION return.
-)
-
 hy=: '_-' charsub ]
 isNaN=: 128!:5
 
