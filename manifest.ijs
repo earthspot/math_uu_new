@@ -1,5 +1,4 @@
 NB. math/uu manifest
-NB. IAC Sunday 14 April 2019  07:39:23
 
 CAPTION=: 'Scientific units conversion package'
 
@@ -23,10 +22,8 @@ UU (units-to-units) is a scientific units conversion package
 based on the SI system of units.
 )
 
-RELEASE=: 'j805 j807'
+RELEASE=: 'j805'
 
 FOLDER=: 'math/uu'
 
 LABCATEGORY=: 'Math'
-
-PLATFORMS=: 'darwin macOS OSX'
