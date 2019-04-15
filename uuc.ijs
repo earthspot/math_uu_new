@@ -24,12 +24,15 @@ NB. ...because they interfere with orderly re-scaling by menu
 1000 m	[km] kilometre
 0.01 m	[cm] centimetre
 0.001 m	[mm] millimetre
+0.001 l	[ml] millilitre
+0.01 l	[cl] centilitre
+0.88 eur	[usd] US dollars [u gets replaced by µ]
 )
 
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Saturday 13 April 2019  02:08:50
+1 /	[saved]	Monday 15 April 2019  22:40:40
 1 m	[m]	base unit - metre (distance)
 1 kg	[kg]	base unit - kilogramme (mass)
 1 s	[s]	base unit - second (time)
@@ -85,7 +88,7 @@ UUC=: cmx 0 : 0
 0.25 acre	[rd]	rood
 7140 m^2	[soccer.pitch]	area of typical football field
 1e_3 m^3	[l]	litre
-1e_3 l	[ml]	millilitre
+1e_2 l	[alu]	unit of alcohol; dietary
 1 m/s	[v.si]	unit velocity
 1 m/s^2	[ac.si]	unit acceleration; SI
 9.812865328 m/s^2	[grav]	acceleration; gravity
@@ -104,14 +107,15 @@ PIb2 rad	[rt.angle] right-angle
 1 cyc/s	[r.p.s]	rev per sec
 1 cyc/min	[r.p.m]	rev per min
 1 cyc/h	[r.p.h]	rev per hour
-1.5 eur	[gbp]	UK pounds
-0.01 gbp	[p]	UK penny
-0.9 eur	[usd]	US dollars
-0.01 usd	[cent]	US cent
-1.60705 gbp/m^3	[cost.ws]	cost of water+sewerage - Yorkshire Water
-0.1659 gbp/kWh	[cost.ned]	cost of npower electricity - day units
-0.0331 gbp/kWh	[cost.nen]	cost of npower electricity - night units
-0.0258 gbp/kWh	[cost.neh]	cost of npower electricity - heat units
+1.16 eur	[GBP]	UK pounds
+1 GBP	[gbp]	UK pounds
+0.01 GBP	[p]	UK penny
+0.88 eur	[USD]	US dollars
+0.01 USD	[cent]	US cent
+1.60705 GBP/m^3	[cost.ws]	cost of water+sewerage - Yorkshire Water
+0.1659 GBP/kWh	[cost.ned]	cost of npower electricity - day units
+0.0331 GBP/kWh	[cost.nen]	cost of npower electricity - night units
+0.0258 GBP/kWh	[cost.neh]	cost of npower electricity - heat units
 997 kg/m^3	[dens.w]	density of pure water
 789 kg/m^3	[dens.alc]	density of alcohol (ethanol)
 0.789 /	[sg.alc]	SG of alcohol (ethanol)
