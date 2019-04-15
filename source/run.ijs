@@ -1,6 +1,6 @@
-NB. uu - run
+NB. math_uu_new repo - run
 0 :0
-Saturday 29 December 2018  14:54:00
+Monday 15 April 2019  06:17:38
 -
 cocurrent 'base'
 open BUILTFILE
@@ -10,7 +10,11 @@ open '~Gituu/test/test2.ijs'
 open '~Gituu/test/test3.ijs'
 )
 
-TESTFILE_z_=: '~Gituu/test/test.ijs'
+NB.=================================
+GIT=: '~Gituu'  NB. for DEV
+NB.=================================
+
+TESTFILE_z_=: GIT,'/test/test.ijs'
 
 NB. ---------------------------------------------------------
 
@@ -18,11 +22,9 @@ clear 'uu'
 
 3 : 0''
 try.	load BUILTFILE
-catch.	load BUILTFILE_z_=: '~Gituu/uu.ijs'
+catch.	load BUILTFILE_z_=: GIT,'/uu.ijs'
 end.
 )
-
-smclear_z_=: 3 : 'wd ''sm set term text *'',y NB. replaces: smwrite_jijs_ [ smselout_jijs_'
 
 smclear''
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
