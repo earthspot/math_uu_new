@@ -22,8 +22,8 @@ start=: 3 : 0
 trace DIAGNOSTICS  NB. enable tracing if DIAGNOSTICS=1
 msg '+++ [uu] start: ENTERED. y=(y)'
   NB. Create the TP*_z_ nouns (the JAL addon lacks tpathdev)
-try.	load (pathof CREATOR) sl 'tpathdev.ijs'
-catch.	load (pathof CREATOR) sl 'tpathjal.ijs'
+if. fexist p=. (pathof CREATOR) sl 'tpathdev.ijs' do. load p
+else.     load (pathof CREATOR) sl 'tpathjal.ijs'
 end.
 load TPMU sl 'manifest.ijs'  NB. to get VERSION
   NB. erase unwanted globals loaded by manifest

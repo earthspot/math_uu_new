@@ -35,6 +35,8 @@ AABUILT=: '2019-04-13  03:42:02'
 AABUILT=: '2019-04-13  06:14:43'
 AABUILT=: '2019-04-13  18:48:08'
 AABUILT=: '2019-04-13  18:51:59'
+AABUILT=: '2019-04-15  03:10:35'
+AABUILT=: '2019-04-15  03:14:37'
 
 '==================== [uu] constants ===================='
 
@@ -1993,8 +1995,8 @@ start=: 3 : 0
 trace DIAGNOSTICS
 msg '+++ [uu] start: ENTERED. y=(y)'
 
-try.	load (pathof CREATOR) sl 'tpathdev.ijs'
-catch.	load (pathof CREATOR) sl 'tpathjal.ijs'
+if. fexist p=. (pathof CREATOR) sl 'tpathdev.ijs' do. load p
+else.     load (pathof CREATOR) sl 'tpathjal.ijs'
 end.
 load TPMU sl 'manifest.ijs'
 
