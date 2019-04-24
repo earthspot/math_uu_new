@@ -26,7 +26,7 @@ You can even define your own units by editing the table of
 UU constants: uuc.ijs
    open '~addons/math/uu/uuc.ijs'
 )
-load 'math/uu'
+require 'math/uu'
 
 uu '3 ft'
 uu '1 yd'
@@ -149,37 +149,23 @@ with unknown units...
 uu '1 gizmo'
 
 NB. =========================================================
-NB. =========================================================
 Lab Section SLASH1
-'/' is the UU convention for DIMENSIONLESS UNITS.
+[/] is the UU convention for DIMENSIONLESS UNITS.
 
-	>>>>> also mention [*]
+This convention prevents the units string vanishing when
+you divide compatible quantities one by another.
 
-This prevents the units string vanishing when you divide
-compatible units by each other.)
-
-Dimensionless units are mostly ratios:
+Dimensionless quantities are usually ratios:
    sin, cos, specific gravities, %, etc.
+
+NOTE: A dimensionless quantity is NOT compatible with any
+dimensioned quantity. 
 )
 
-uu '1 km/mi'		NB. conversion factor: km --> miles
-'%' uu '1 km/mi'	NB. ditto, as a percentage
+uu '1 km/mi'       NB. conversion factor: km --> miles
+'%' uu '1 km/mi'   NB. ditto, as a percentage
 
 NB. =========================================================
-Lab Section SLASH2
-To "divide" two arbitrary units strings, use: udiv
-
-(Don't just put '/' between them, unless you know for certain
-that the denominator doesn't contain slash).
-
-Then use: uu -to cancel-out...
-)
-
-u1=: 'kg m^2/A^2/s^3'		NB. energy
-u2=: 'kg m^2/A^2/s^2'		NB. power
-u1 udiv u2
-uu  '1 ', u1 udiv u2
-
 NB. =========================================================
 Lab Section SI_LOOK1
 uu approximates the "SI look-and-feel" with unicode chars
@@ -190,6 +176,11 @@ To suppress this behavior, enter: uunicode 0
 If you enter: uunicode 1
 -then uu will not only output utf-8 chars,
 but accept them as input too.
+
+
+>>> …ALWAYS accepts unicode chars whatever the SIC setting!!
+
+
 )
 
 'Ohm' uu '1 kg m^2/A^2/s^3'
@@ -206,6 +197,11 @@ Lab Section SI_LOOK2
 Strict SI units do not use '/' to represent units quotients.
 Thus uu accepts [m/s/s] and [m/s^2] (units of acceleration)
 whereas SI insists on the format [m s⁻²].
+
+
+>>> No, it doesn't insist! Merely a recommendation
+
+
 
 You can force UU to output units in the strict SI convention
 by setting: uunicode 2
@@ -225,8 +221,11 @@ Lab Section ZEPTO1
 "SI" allows you to attach a scaling prefix to units.
 
 Most people know about kilo [k-], mega [M-], milli [m-]
-and micro [mu-] or [µ]. But there are others.
-The full range is:
+and micro [u-] or [µ-].
+
+But there are others.
+
+The full repertoire is:
 
  	deca- 	hecto- 	kilo- 	mega- 	giga-
  	da 	h 	k 	M 	G
@@ -237,7 +236,7 @@ The full range is:
  	10^12 	10^15 	10^18 	10^21 	10^24
 	--------------------------------------
  	deci- 	centi- 	milli- 	micro- 	nano-
- 	d 	c 	m 	µ [mu]	n
+ 	d 	c 	m 	µ [u] 	n
  	10^−1 	10^−2 	10^−3 	10^−6 	10^−9
 	--------------------------------------
  	pico- 	femto- 	atto- 	zepto- 	yocto-
@@ -259,9 +258,18 @@ but officially revoked by the ISI in 1967.
 
 However UU accepts [µ] by itself to mean "micron".
 
+
+>>> Cannot get uu to accept: '100 µ'
+
+
 WARNING: not every unicode variant of µ will work!
 
-Use either 'mu' or 'µ' for entering microns [µm]...
+
+>>> …which one is it then??
+
+
+
+Use either 'u' or 'µ' for entering microns [µm]...
 )
 
 uu '100 mum'	NB. 100 microns

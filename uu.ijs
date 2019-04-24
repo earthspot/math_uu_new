@@ -273,11 +273,11 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-runlab=: 3 : 0
+runlabuu_z_=: 3 : 0
 
 
 if. 0=#y do.
-  ]y=. jpath'~Gituu/uu.ijt'
+  ]y=. jpath TPUU,'/uu.ijt'
 end.
 if. -.fexist y do.
   smoutput '>>> runlab: file not found: ',y

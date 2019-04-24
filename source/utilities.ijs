@@ -96,11 +96,11 @@ ID=: 3 : 0
 units i. ;:y
 )
 
-runlab=: 3 : 0
+runlabuu_z_=: 3 : 0
   NB. private way to run uu.ijt in j807
   NB.   see: temp 16
 if. 0=#y do.
-  ]y=. jpath'~Gituu/uu.ijt'
+  ]y=. jpath TPUU,'/uu.ijt'
 end.  NB. THE LAB UNDER DEVT
 if. -.fexist y do.
   smoutput '>>> runlab: file not found: ',y
