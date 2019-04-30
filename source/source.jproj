@@ -1,8 +1,7 @@
 header.ijs
-constants.ijs
 handy4uu.ijs
+constants.ijs
 utilities.ijs
-extended.ijs
 rational.ijs
 syntax_machines.ijs
 main.ijs

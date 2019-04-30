@@ -32,7 +32,7 @@ NB. ...because they interfere with orderly re-scaling by menu
 cocurrent 'uu'
 
 UUC=: cmx 0 : 0
-1 /	[saved]	Monday 15 April 2019  22:40:40
+1 /	[saved]	Monday 29 April 2019  00:34:02
 1 m	[m]	base unit - metre (distance)
 1 kg	[kg]	base unit - kilogramme (mass)
 1 s	[s]	base unit - second (time)
@@ -244,9 +244,6 @@ _2r3j373.15 K	[degDe]	temperature; Delisle
 2 gal.Imp	[bucket]	bucketful
 0.159 m^3	[barrel.oil]	barrel; petroleum
 1181 l	[oil.t]		vol of tonne of petroleum
-2.241e_2 m^3/mol	[molv.0]	molar volume at 0 degC
-2.447e_2 m^3/mol	[molv.25]	molar volume at 25 degC
-6.022e23 /mol	[Avogadro]	Avogadro constant
 0.5 pt.USA		[cup.USA]	cup; USA
 1/16 cup.USA	[tbl.USA]	tablespoon; USA
 1/3 tbl.USA	[tsp.USA]	teaspoon; USA
@@ -301,9 +298,18 @@ _2r3j373.15 K	[degDe]	temperature; Delisle
 1.674920e_27 kg	[neut.mass]	mass of neutron
 1.672614e_27 kg	[prot.mass]	mass of proton
 9.109558e_31 kg	[elect.mass]	mass of electron
+2.241e_2 m^3/mol	[molv.0]	molar volume at 0 degC
+2.447e_2 m^3/mol	[molv.25]	molar volume at 25 degC
+602214078000000000000000x /	[NA]	Avogadro constant
 28.96 g/mol	[mwt.air]	molecular weight of air
-32 g/mol	[mwt.oxy]	molecular weight of oxygen
-28 g/mol	[mwt.nitr]	molecular weight of nitrogen
+28.014 g/mol	[mwt.N2]	molecular weight of nitrogen
+31.998 g/mol	[mwt.O2]	molecular weight of oxygen
+39.948 g/mol	[mwt.Ar]	molecular weight of argon
+44.009 g/mol	[mwt.CO2]	molecular weight of carbon dioxide
+20.18 g/mol	[mwt.Ne]	molecular weight of neon
+4.003 g/mol	[mwt.He]	molecular weight of helium
+16.043 g/mol	[mwt.CH4]	molecular weight of methane
+18.015 g/mol	[mwt.H2O]	molecular weight of water
 1 /s	[Bq]	radioactivity; becquerel
 3.7e10 Bq	[Ci]	radioactivity; curie
 1 J/kg	[Gy]	absorbed dose; gray
@@ -316,8 +322,9 @@ _2r3j373.15 K	[degDe]	temperature; Delisle
 1500 m/s	[snd.sea]	speed of sound in ocean/approx
 11.2 km/s	[ea.esc]	earth escape velocity
 350 ppm	[p.S]	est sulphur content of gasoline
-170 kg	[wt.human]	weight of typical man
 1.9 m	[ht.human]	height of typical man
+170 kg	[wt.human]	weight of typical man
+8e9 wt.human	[wt.humanity]	weight of all mankind
 1 cal/cm^2	[langley]	langley
 1.381e_23 J/K	[Boltzmann]	Boltzmann constant
 6.62606957e_34 J s	[Planck]	Planck constant

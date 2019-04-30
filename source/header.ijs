@@ -8,7 +8,7 @@ NB. clear 'uu'	NB. >>>>> DISABLE THIS LINE IN RELEASED ADDON
 coclass 'uu'
 onload_z_=: empty
 
-CREATOR=: ;(4!:4<'zx'){4!:3''[zx=.''
+PARENTDIR=: (zx i:'/'){.zx=.jpathsep>(4!:4<'zx'){4!:3''[zx=.''
 
 AABUILT=: '2019-04-10  06:00:04'
 AABUILT=: '2019-04-10  06:00:46'
@@ -40,3 +40,4 @@ AABUILT=: '2019-04-13  18:51:59'
 AABUILT=: '2019-04-15  03:10:35'
 AABUILT=: '2019-04-15  03:14:37'
 AABUILT=: '2019-04-15  06:23:55'
+AABUILT=: '2019-04-24  23:28:48'
