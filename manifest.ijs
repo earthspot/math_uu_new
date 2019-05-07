@@ -8,6 +8,7 @@ DEPENDS=: ''
 
 FILES=: 0 : 0
 manifest.ijs
+handy4uu.ijs
 readme_uuc_uuf.txt
 tpathjal.ijs
 uu.ijs

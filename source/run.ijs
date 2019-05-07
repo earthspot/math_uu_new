@@ -26,7 +26,6 @@ catch.	load BUILTFILE_z_=: GIT,'/uu.ijs'
 end.
 )
 
-smclear''
 smoutput '--- run.ijs: BUILTFILE loaded: ',BUILTFILE
 
 NB. create an instance of class UU for testing...
